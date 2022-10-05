@@ -1,0 +1,174 @@
+@startuml test
+!define primary_key(x) <b><color:#b8861b><&key></color> x</b>
+!define foreign_key(x) <color:#aaaaaa><&key></color> x
+!define column(x) <color:#efefef><&media-record></color> x
+!define table(x) entity x << (T, white) >>
+
+
+table( User ) {
+  primary_key( id ): BIGINT 
+  column( name ): VARCHAR NOT NULL UNIQUE
+  column( password ): VARCHAR NOT NULL
+  foreign_key( permissions_id ): SMALLINT <<FK>> NOT NULL
+}
+
+table( Permissions ) {
+  primary_key( id ): SMALLINT 
+  column( name ): VARCHAR NOT NULL UNIQUE
+}
+
+table( Dosseir ) {
+  primary_key( id ): BIGINT
+  foreign_key( author_id ): BIGINT <<FK>> NOT NULL
+  column( create_date ): DATE NOT NULL
+  column( crime_id ): BIGINT NOT NULL
+  UNIQUE(author_id, crime_id, create_date)
+  }
+
+table( Crime ) {
+  primary_key( id ): BIGINT
+  column( title ): VARCHAR NOT NULL UNIQUE
+  column( description ): VARCHAR NOT NULL
+  column( date_begin ): DATE NOT NULL
+  column( date_end ): DATE NOT NULL
+  column( main_detective_id ): BIGINT NOT NULL
+  column( is_solved ): BOOLEAN NOT NULL
+  column( damage_description ): VARCHAR 
+  foreign_key( location_id ): SMALLINT <<FK>> NOT NULL
+}
+
+table(Take_part){
+  primary_key( id ): UUID
+  foreign_key( detective_id ): INTEGER <<FK>> NOT NULL
+  foreign_key( crime_id ): INTEGER <<FK>> NOT NULL
+  UNIQUE(detective_id, crime_id)
+}
+
+table( Creature ) {
+  primary_key( id ): BIGINT 
+  column( name ): VARCHAR NOT NULL
+  column( birthday ): DATE
+  column( race ): VARCHAR NOT NULL
+  column( is_alive ): BOOLEAN NOT NULL
+  column( sex ): VARCHAR NOT NULL
+}
+
+table( Criminals ) {
+  primary_key( id ): UUID 
+  foreign_key( creature_id ): BIGINT <<FK>> NOT NULL
+  foreign_key( crime_id ): BIGINT <<FK>> NOT NULL 
+  column( punishment_id ): BIGINT
+  UNIQUE(date, crime_id, magic_id)
+}
+
+table( Location ) {
+  primary_key( id ): SMALLINT 
+  column( name ): VARCHAR NOT NULL UNIQUE
+}
+
+table( Victims ) {
+  primary_key( id ): UUID 
+  foreign_key( creature_id ): BIGINT <<FK>> NOT NULL
+  foreign_key( crime_id ): BIGINT <<FK>> NOT NULL
+  UNIQUE(creature_id, crime_id)
+}
+
+table( Used_magic ) {
+  primary_key( id ): BIGINT
+  column( date ): DATE NOT NULL
+  foreign_key( crime_id ): BIGINT <<FK>> NOT NULL
+  foreign_key( magic_id ): SMALLINT <<FK>> NOT NULL
+  UNIQUE(date, crime_id, magic_id)
+}
+
+table( Magic ) {
+  primary_key( id ): SMALLINT
+  column( name ): VARCHAR NOT NULL UNIQUE
+}
+
+table( True_magic ) {
+  primary_key( id ): SMALLINT
+  column( magic_id ): SMALLINT NOT NULL UNIQUE
+}
+
+table( Obvious_magic ) {
+  primary_key( id ): SMALLINT 
+  column( magic_id ): INTEGER NOT NULL
+  foreign_key( color_id ): SMALLINT <<FK>> NOT NULL
+  column( level ): INTEGER NOT NULL
+  column( damage ): INTEGER NOT NULL
+  UNIQUE(magic_id, color_id, level, damage)
+}
+
+table( Color ) {
+  primary_key( id ): SMALLINT
+  column( value ): VARCHAR NOT NULL UNIQUE
+}
+
+table( Orden ) {
+  primary_key( id ): SMALLINT
+  column( name ): VARCHAR NOT NULL UNIQUE
+  column( description ): VARCHAR 
+}
+
+table( Orden_member ) {
+  primary_key( id ): BIGINT 
+  column( creature_id ): BIGINT NOT NULL
+  foreign_key( orden_id ): SMALLINT <<FK>> NOT NULL
+  foreign_key( orden_rank_id ): SMALLINT <<FK>> NOT NULL
+  UNIQUE(creature_id, orden_id, orden_rank_id)
+}
+
+table( Orden_rank ) {
+  primary_key( id ): SMALLINT
+  column( name ): VARCHAR NOT NULL UNIQUE
+}
+
+table( Detective ) {
+  primary_key( id ): BIGINT 
+  column( creature_id ): INTEGER NOT NULL UNIQUE
+  column( position ): VARCHAR NOT NULL
+}
+
+table( Punishment ) {
+  primary_key( id ): BIGINT 
+  column( type ): VARCHAR NOT NULL
+  column( date_begin ): DATE NOT NULL
+  column( date_end ): DATE NOT NULL
+  column( fine_amonut ): INTEGER
+  UNIQUE(type, date_begin, date_end, fine_amonut)
+}
+
+Crime ||--|| Detective 
+Crime ||--|| Dosseir
+Crime ||--|{ Criminals
+
+Creature ||--|| Detective
+Criminals }|--|| Creature
+Creature ||--|| Orden_member
+Punishment ||--|| Criminals
+Orden ||--|{  Orden_member
+Orden_rank ||--|{ Orden_member
+
+Used_magic }|--|| Crime
+Magic ||--|{ Used_magic
+
+' true and obvious magic a optional
+Magic ||--|| True_magic 
+Magic ||--|| Obvious_magic
+
+Take_part }|--|| Crime
+Detective ||--|{ Take_part
+
+Victims }|--|| Crime
+Victims }|--|| Creature
+
+Location ||--|{ Crime
+
+Color ||--|{ Obvious_magic
+
+Dosseir }|--|| User
+
+User }|--|| Permissions
+
+@enduml

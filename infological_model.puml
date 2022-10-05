@@ -1,0 +1,164 @@
+@startuml test
+!define primary_key(x) <b><color:#b8861b><&key></color> x</b>
+!define foreign_key(x) <color:#aaaaaa><&key></color> x
+!define column(x) <color:#efefef><&media-record></color> x
+!define table(x) entity x << (T, white) >>
+
+
+table( User ) {
+  primary_key( id ) 
+  column( name )
+  column( login )
+  column( password )
+  column( read_only )
+}
+
+table( Permissions ) {
+  primary_key( id )
+  column( name )
+}
+
+table( Dosseir ) {
+  primary_key( id )
+  column( author_id ) 
+  column( create_date )
+  column( crime_id )
+}
+
+table( Crime ) {
+  primary_key( id )
+  column( title )
+  column( description )
+  column( date_begin )
+  column( date_end )
+  column( main_detective_id )
+  column( is_solved ) 
+  column( damage_description )
+  column( location_id )
+}
+
+table(Take_part){
+  primary_key( id )
+  column( detective_id )
+  column( crime_id )
+}
+
+table( Creature ) {
+  primary_key( id ) 
+  column( name )
+  column( birthday )
+  column( race )
+  column( is_alive )
+  column( sex )
+}
+
+table( Criminals ) {
+  primary_key( id ) 
+  column( creature_id )
+  column( crime_id )
+  column( punishment_id )
+}
+
+table( Location ) {
+  primary_key( id ) 
+  column( name )
+}
+
+table( Victims ) {
+  primary_key( id ) 
+  column( creature_id )
+  column( crime_id )
+}
+
+table( Used_magic ) {
+  primary_key( id )
+  column( crime_id )
+  column( magic_id )
+  column( date )
+}
+
+table( Magic ) {
+  primary_key( id )
+  column( name )
+}
+
+table( True_magic ) {
+  primary_key( id )
+  column( magic_id )
+}
+
+table( Obvious_magic ) {
+  primary_key( id ) 
+  column( magic_id )
+  column( color_id )
+  column( level )
+  column( damage )
+}
+
+table( Color ) {
+  primary_key( id ) 
+  column( value )
+}
+
+table( Orden ) {
+  primary_key( id )
+  column( name )
+  column( description )
+}
+
+table( Orden_member ) {
+  primary_key( id ) 
+  column( creature_id )
+  column( orden_id )
+  column( orden_rank_id )
+}
+
+table( Orden_rank ) {
+  primary_key( id )
+  column( name )
+}
+
+table( Detective ) {
+  primary_key( id ) 
+  column( creature_id )
+  column( position )
+}
+
+table( Punishment ) {
+  primary_key( id ) 
+  column( type )
+  column( date_begin )
+  column( date_end )
+  column( fine_amonut )
+}
+
+Crime ||--|| Detective 
+Crime ||--|| Dosseir
+Crime ||--|{ Criminals
+Creature ||--|| Detective
+Criminals }|--|| Creature
+Creature ||--|| Orden_member
+Punishment ||--|| Criminals
+Orden ||--|{  Orden_member
+Orden_rank ||--|{ Orden_member
+
+Used_magic }|--|| Crime
+Used_magic }|--|| Magic
+' true and obvious magic a optional
+Magic ||--|| True_magic 
+Magic ||--|| Obvious_magic
+
+Take_part }|--|| Crime
+Detective ||--|{ Take_part
+
+Victims }|--|| Crime
+Victims }|--|| Creature
+
+Location ||--|{ Crime
+
+Color ||--|{ Obvious_magic
+
+Dosseir }|--|| User
+
+User }|--|| Permissions
+@enduml
