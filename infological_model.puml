@@ -10,7 +10,7 @@ table( User ) {
   column( name )
   column( login )
   column( password )
-  column( read_only )
+  column( permissions_id )
 }
 
 table( Permissions ) {
@@ -53,10 +53,11 @@ table( Creature ) {
 }
 
 table( Criminals ) {
-  primary_key( id ) 
+  primary_key( id )???????? 
   column( creature_id )
   column( crime_id )
   column( punishment_id )
+  column( is_proved )
 }
 
 table( Location ) {
@@ -65,7 +66,6 @@ table( Location ) {
 }
 
 table( Victims ) {
-  primary_key( id ) 
   column( creature_id )
   column( crime_id )
 }

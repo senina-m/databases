@@ -58,7 +58,8 @@ table( Criminals ) {
   foreign_key( creature_id ): BIGINT <<FK>> NOT NULL
   foreign_key( crime_id ): BIGINT <<FK>> NOT NULL 
   column( punishment_id ): BIGINT
-  UNIQUE(date, crime_id, magic_id)
+  column( is_proved ): BOOLEAN
+  UNIQUE(date, crime_id)
 }
 
 table( Location ) {
@@ -67,7 +68,6 @@ table( Location ) {
 }
 
 table( Victims ) {
-  primary_key( id ): UUID 
   foreign_key( creature_id ): BIGINT <<FK>> NOT NULL
   foreign_key( crime_id ): BIGINT <<FK>> NOT NULL
   UNIQUE(creature_id, crime_id)
