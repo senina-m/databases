@@ -92,6 +92,7 @@ table( Obvious_magic ) {
   column( magic_id )
   column( color_id )
   column( level )
+  column( is_allowed )
   column( damage )
 }
 
@@ -118,12 +119,6 @@ table( Orden_rank ) {
   column( name )
 }
 
-table( Detective ) {
-  primary_key( id ) 
-  column( creature_id )
-  column( position )
-}
-
 table( Punishment ) {
   primary_key( id ) 
   column( type )
@@ -132,9 +127,34 @@ table( Punishment ) {
   column( fine_amonut )
 }
 
-Crime ||--|| Detective 
+table( Detective ) {
+  primary_key( id ) 
+  column( creature_id )
+  column( position_id )
+}
+
+table( Position ) {
+  primary_key( id )
+  column( name )
+}
+
+table( Salary ) {
+  primary_key( id )
+  column( value )
+  column( position_id )
+}
+
+table( Allowance ) {
+  primary_key( id )
+  column( name )
+  column( value )
+  column( min_crimes )
+}
+
+Crime }|--|| Detective 
 Crime ||--|| Dosseir
 Crime ||--|{ Criminals
+
 Creature ||--|| Detective
 Criminals }|--|| Creature
 Creature ||--|| Orden_member
@@ -143,7 +163,8 @@ Orden ||--|{  Orden_member
 Orden_rank ||--|{ Orden_member
 
 Used_magic }|--|| Crime
-Used_magic }|--|| Magic
+Magic ||--|{ Used_magic
+
 ' true and obvious magic a optional
 Magic ||--|| True_magic 
 Magic ||--|| Obvious_magic
@@ -161,4 +182,7 @@ Color ||--|{ Obvious_magic
 Dosseir }|--|| User
 
 User }|--|| Permissions
+
+Salary ||--|| Position
+Detective }|--|| Position
 @enduml

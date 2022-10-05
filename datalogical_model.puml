@@ -31,7 +31,7 @@ table( Crime ) {
   column( description ): VARCHAR NOT NULL
   column( date_begin ): DATE NOT NULL
   column( date_end ): DATE NOT NULL
-  column( main_detective_id ): BIGINT NOT NULL
+  foreign_key( main_detective_id ): BIGINT <<FK>> NOT NULL
   column( is_solved ): BOOLEAN NOT NULL
   column( damage_description ): VARCHAR 
   foreign_key( location_id ): SMALLINT <<FK>> NOT NULL
@@ -97,6 +97,7 @@ table( Obvious_magic ) {
   foreign_key( color_id ): SMALLINT <<FK>> NOT NULL
   column( level ): INTEGER NOT NULL
   column( damage ): INTEGER NOT NULL
+  column( is_allowed ): BOOLEAN NOT NULL
   UNIQUE(magic_id, color_id, level, damage)
 }
 
@@ -124,11 +125,6 @@ table( Orden_rank ) {
   column( name ): VARCHAR NOT NULL UNIQUE
 }
 
-table( Detective ) {
-  primary_key( id ): BIGINT 
-  column( creature_id ): INTEGER NOT NULL UNIQUE
-  column( position ): VARCHAR NOT NULL
-}
 
 table( Punishment ) {
   primary_key( id ): BIGINT 
@@ -139,7 +135,31 @@ table( Punishment ) {
   UNIQUE(type, date_begin, date_end, fine_amonut)
 }
 
-Crime ||--|| Detective 
+table( Detective ) {
+  primary_key( id ): BIGINT 
+  column( creature_id ): INTEGER NOT NULL UNIQUE
+  foreign_key( position_id ): VARCHAR <<FK>> NOT NULL
+}
+
+table( Position ) {
+  primary_key( id ): SMALLINT 
+  column( name ): VARCHAR NOT NULL UNIQUE
+}
+
+table( Salary ) {
+  primary_key( id ): SMALLINT
+  column( value ): INTEGER NOT NULL
+  column( position_id ): SMALLINT NOT NULL UNIQUE
+}
+
+table( Allowance ) {
+  primary_key( id ): SMALLINT
+  column( name ): VARCHAR NOT NULL UNIQUE
+  column( value ): INTEGER NOT NULL
+  column( min_crimes ): INTEGER NOT NULL UNIQUE
+}
+
+Crime }|--|| Detective 
 Crime ||--|| Dosseir
 Crime ||--|{ Criminals
 
@@ -171,4 +191,6 @@ Dosseir }|--|| User
 
 User }|--|| Permissions
 
+Salary ||--|| Position
+Detective }|--|| Position
 @enduml
