@@ -5,7 +5,7 @@
 !define table(x) entity x << (T, white) >>
 
 
-table( User ) {
+table( Customer ) {
   primary_key( id ): BIGINT 
   column( name ): VARCHAR NOT NULL UNIQUE
   column( password ): VARCHAR NOT NULL
@@ -59,7 +59,7 @@ table( Criminals ) {
   foreign_key( crime_id ): BIGINT <<FK>> NOT NULL 
   column( punishment_id ): BIGINT
   column( is_proved ): BOOLEAN
-  UNIQUE(date, crime_id)
+  UNIQUE(creature_id, crime_id, punishment_id)
 }
 
 table( Location ) {
@@ -131,7 +131,7 @@ table( Punishment ) {
   column( type ): VARCHAR NOT NULL
   column( date_begin ): DATE NOT NULL
   column( date_end ): DATE NOT NULL
-  column( fine_amonut ): INTEGER
+  column( fine_amonut ): INTEGER NOT NULL
   UNIQUE(type, date_begin, date_end, fine_amonut)
 }
 
@@ -187,9 +187,9 @@ Location ||--|{ Crime
 
 Color ||--|{ Obvious_magic
 
-Dosseir }|--|| User
+Dosseir }|--|| Customer
 
-User }|--|| Permissions
+Customer }|--|| Permissions
 
 Salary ||--|| Position
 Detective }|--|| Position

@@ -5,7 +5,7 @@
 !define table(x) entity x << (T, white) >>
 
 
-table( User ) {
+table( Customer ) {
   primary_key( id ) 
   column( name )
   column( login )
@@ -179,9 +179,9 @@ Location ||--|{ Crime
 
 Color ||--|{ Obvious_magic
 
-Dosseir }|--|| User
+Dosseir }|--|| Customer
 
-User }|--|| Permissions
+Customer }|--|| Permissions
 
 Salary ||--|| Position
 Detective }|--|| Position
