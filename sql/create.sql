@@ -74,7 +74,7 @@ create table s312986.Used_magic (
   date DATE NOT NULL,
   criminals_id BIGINT NOT NULL REFERENCES Criminals(id),
   magic_id SMALLINT NOT NULL REFERENCES Magic(id),
-  UNIQUE(date, crime_id, magic_id)
+  UNIQUE(date, criminals_id, magic_id)
 );
 
 create table s312986.True_magic (
@@ -82,15 +82,17 @@ create table s312986.True_magic (
   magic_id SMALLINT NOT NULL UNIQUE REFERENCES Magic(id)
 );
 
-create table s312986.Color (
-  id SMALLINT PRIMARY KEY,
-  value VARCHAR NOT NULL UNIQUE
-);
+-- create table s312986.Color (
+--   id SMALLINT PRIMARY KEY,
+--   value VARCHAR NOT NULL UNIQUE
+-- );
+
+create type s312986.Color as enum ('black', 'white');
 
 create table s312986.Obvious_magic (
   id SMALLINT PRIMARY KEY,
   magic_id INTEGER NOT NULL UNIQUE REFERENCES Magic(id),
-  color_id SMALLINT NOT NULL REFERENCES Color(id),
+  color_id s312986.Color NOT NULL,
   level INTEGER NOT NULL,
   damage INTEGER NOT NULL,
   is_allowed BOOLEAN NOT NULL
@@ -102,19 +104,19 @@ create table s312986.Orden (
   description VARCHAR
 );
 
-create table s312986.Orden_rank (
-  id SMALLINT PRIMARY KEY,
-  name VARCHAR NOT NULL UNIQUE
-);
+-- create table s312986.Orden_rank (
+--   id SMALLINT PRIMARY KEY,
+--   name VARCHAR NOT NULL UNIQUE
+-- );
 
-create type s312986.Orden_rank as enum ('orden_woman', 'novice', 'junior_master', 'chief_master')
+create type s312986.Orden_rank as enum ('orden_woman', 'novice', 'junior_master', 'chief_master');
 
 create table s312986.Orden_member (
   id BIGINT PRIMARY KEY,
   creature_id BIGINT NOT NULL,
   orden_id SMALLINT NOT NULL REFERENCES Orden(id),
-  orden_rank_id SMALLINT NOT NULL REFERENCES Orden_rank(id),
-  UNIQUE(creature_id, orden_id, orden_rank_id)
+  orden_rank s312986.Orden_rank NOT NULL,
+  UNIQUE(creature_id, orden_id, orden_rank)
 );
 
 create table s312986.Punishment (
