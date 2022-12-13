@@ -21,7 +21,7 @@ table( Dosseir ) {
   primary_key( id ): BIGINT
   foreign_key( author_id ): BIGINT <<FK>> NOT NULL
   column( create_date ): DATE NOT NULL
-  column( crime_id ): BIGINT NOT NULL
+  foreign_key( crime_id ): BIGINT <<FK>> NOT NULL
   UNIQUE(author_id, crime_id, create_date)
   }
 
@@ -88,17 +88,16 @@ table( Magic ) {
 
 table( True_magic ) {
   primary_key( id ): SMALLINT
-  column( magic_id ): SMALLINT NOT NULL UNIQUE
+  foreign_key( magic_id ): SMALLINT <<FK>> NOT NULL UNIQUE
 }
 
 table( Obvious_magic ) {
   primary_key( id ): SMALLINT 
-  column( magic_id ): INTEGER NOT NULL
+  foreign_key( magic_id ): UNIQUE INTEGER <<FK>> NOT NULL
   foreign_key( color_id ): SMALLINT <<FK>> NOT NULL
   column( level ): INTEGER NOT NULL
   column( damage ): INTEGER NOT NULL
   column( is_allowed ): BOOLEAN NOT NULL
-  UNIQUE(magic_id, color_id, level, damage)
 }
 
 table( Color ) {
@@ -114,7 +113,7 @@ table( Orden ) {
 
 table( Orden_member ) {
   primary_key( id ): BIGINT 
-  column( creature_id ): BIGINT NOT NULL
+  foreign_key( creature_id ): BIGINT <<FK>> NOT NULL
   foreign_key( orden_id ): SMALLINT <<FK>> NOT NULL
   foreign_key( orden_rank_id ): SMALLINT <<FK>> NOT NULL
   UNIQUE(creature_id, orden_id, orden_rank_id)
@@ -137,7 +136,7 @@ table( Punishment ) {
 
 table( Detective ) {
   primary_key( id ): BIGINT 
-  column( creature_id ): INTEGER NOT NULL UNIQUE
+  foreign_key( creature_id ): INTEGER <<FK>> NOT NULL UNIQUE
   foreign_key( position_id ): VARCHAR <<FK>> NOT NULL
 }
 
@@ -149,7 +148,7 @@ table( Position ) {
 table( Salary ) {
   primary_key( id ): SMALLINT
   column( value ): INTEGER NOT NULL
-  column( position_id ): SMALLINT NOT NULL UNIQUE
+  foreign_key( position_id ): SMALLINT <<FK>> NOT NULL UNIQUE
 }
 
 table( Allowance ) {

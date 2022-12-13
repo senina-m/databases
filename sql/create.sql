@@ -89,12 +89,11 @@ create table s312986.Color (
 
 create table s312986.Obvious_magic (
   id SMALLINT PRIMARY KEY,
-  magic_id INTEGER NOT NULL REFERENCES Magic(id),
+  magic_id INTEGER NOT NULL UNIQUE REFERENCES Magic(id),
   color_id SMALLINT NOT NULL REFERENCES Color(id),
   level INTEGER NOT NULL,
   damage INTEGER NOT NULL,
-  is_allowed BOOLEAN NOT NULL,
-  UNIQUE(magic_id, color_id, level, damage)
+  is_allowed BOOLEAN NOT NULL
 );
 
 create table s312986.Orden (
@@ -153,3 +152,36 @@ create table s312986.Dosseir (
   crime_id BIGINT NOT NULL REFERENCES Crime(id),
   UNIQUE(author_id, crime_id, create_date)
 );
+
+-- если существо женского пола, то в орден_мембер может быть орден_ранг только женщина ордена. 
+-- А если пол мужской, то такого ранга быть не может
+
+-- - если permission - это детектив, то детектив с таким именем должен быть в табличке детективов
+
+-- заклинание должно встречаться только в одном виде магии в истенной или в очевидной
+
+-- - в очевидной магии нельзя чтобы is_allowed было true у черной магии больше 
+-- 22 ступени и у белой больше 10
+create function magic_level_check() returns trigger as $psql$
+  begin
+    if new.level > 22 and (
+      select value
+      from Color
+      where new.color_id = Color.id
+    ) = "black" then
+        return null;
+    end if;
+
+    if new.level > 10 and (
+      select value
+      from Color
+      where new.color_id = Color.id
+    ) = "white" then
+        return null;
+    end if;
+    return new;
+  end;
+$psql$ language plpgsql;
+
+create or replace trigger magic_level_check_trigger before insert on Obvious_magic
+for each row execute procedure magic_level_check();
