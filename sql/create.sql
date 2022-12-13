@@ -153,8 +153,7 @@ create table s312986.Dosseir (
   id BIGINT PRIMARY KEY,
   author_id BIGINT NOT NULL REFERENCES Customer(id),
   create_date DATE NOT NULL,
-  crime_id BIGINT NOT NULL REFERENCES Crime(id),
-  UNIQUE(author_id, crime_id, create_date)
+  crime_id BIGINT NOT NULL UNIQUE REFERENCES Crime(id),
 );
 
 create or replace function count_prize(date, date, bigint) returns integer as $psql$

@@ -21,8 +21,7 @@ table( Dosseir ) {
   primary_key( id ): BIGINT
   foreign_key( author_id ): BIGINT <<FK>> NOT NULL
   column( create_date ): DATE NOT NULL
-  foreign_key( crime_id ): BIGINT <<FK>> NOT NULL
-  UNIQUE(author_id, crime_id, create_date)
+  foreign_key( crime_id ): BIGINT <<FK>> NOT NULL UNIQUE
   }
 
 table( Crime ) {
