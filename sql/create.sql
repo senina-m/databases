@@ -72,7 +72,7 @@ create table s312986.Magic (
 create table s312986.Used_magic (
   id BIGINT PRIMARY KEY,
   date DATE NOT NULL,
-  criminals_id UUID NOT NULL REFERENCES Criminals(id),
+  criminals_id BIGINT NOT NULL REFERENCES Criminals(id),
   magic_id SMALLINT NOT NULL REFERENCES Magic(id),
   UNIQUE(date, criminals_id, magic_id)
 );
@@ -226,11 +226,18 @@ for each row execute procedure obvious_magic_check();
 -- если существо женского пола, то в орден_мембер может быть орден_ранг только женщина ордена. 
 -- А если пол мужской, то такого ранга быть не может
 
-create or replace function woman_orden_rank_check() returns trigger as $psql$
+create or replace function sex_orden_rank_check() returns trigger as $psql$
   begin
-    if (select sex from Creature c where c.id=new.creature_id) = 'female' and new.orden_rank != 'orden_woman'
+    if (select sex from Creature c where c.id=new.creature_id) = 'female'
     then
-      RAISE EXCEPTION 'Woman can be only orden_woman';
+      if (new.orden_rank != 'orden_woman')
+      then
+        RAISE EXCEPTION 'Woman can be only orden_woman';
+        return null;
+      end if;
+    elsif (new.orden_rank = 'orden_woman')
+    then
+      RAISE EXCEPTION 'Man cant be an orden_woman';
       return null;
     end if;
 
@@ -238,14 +245,11 @@ create or replace function woman_orden_rank_check() returns trigger as $psql$
   end;
 $psql$ language plpgsql;
 
-create or replace trigger insert_woman_orden_rank_check_trigger before insert on Orden_member
-for each row execute procedure woman_orden_rank_check();
+create or replace trigger insert_sex_orden_rank_check_trigger before insert on Orden_member
+for each row execute procedure sex_orden_rank_check();
 
-create or replace trigger update_woman_orden_rank_check_trigger before update on Orden_member
-for each row execute procedure woman_orden_rank_check();
-
--- - если permission - это детектив, то детектив с таким именем должен быть в табличке детективов
-
+create or replace trigger update_sex_orden_rank_check_trigger before update on Orden_member
+for each row execute procedure sex_orden_rank_check();
 
 -- - если permission - это детектив, то детектив с таким именем должен быть в табличке детективов
 

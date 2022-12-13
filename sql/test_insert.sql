@@ -36,3 +36,23 @@ insert into True_magic(id, magic_id) values
 insert into Obvious_magic(id, magic_id, color_id, level, damage, is_allowed) values
     -- black magic make kamra level=23, damage=3 NOTallowed ==> not ok (such spell exist in true magic)
     (7, 5, 'black', 23, 3, false);
+
+insert into Creature(id, name, birthday, race, death_date, sex) values
+    (1, 'Max', '2017-03-14', 'human', '2022-03-14', 'male'),
+    (2, 'Lonli-locli', '2015-02-11', 'human', '2022-03-14', 'male'),
+    (3, 'Milifaro', '2003-03-10', 'human', '2022-03-14', 'male'),
+    (4, 'Sophi', '2003-03-10', 'human', '2022-03-14', 'female');
+
+insert into Orden(id, name, description) values
+    (1, 'Wather crow', 'jds;lfkajsaljdfla'),
+    (2, 'Hidden grass', 'lkj;weiurqui');
+
+insert into Orden_member(id, creature_id, orden_id, orden_rank) values
+    (1, 1, 1, 'orden_woman');
+insert into Orden_member(id, creature_id, orden_id, orden_rank) values
+    (2, 1, 1, 'novice');
+
+insert into Orden_member(id, creature_id, orden_id, orden_rank) values
+    (3, 4, 2, 'novice');
+insert into Orden_member(id, creature_id, orden_id, orden_rank) values
+    (4, 4, 2, 'orden_woman');
