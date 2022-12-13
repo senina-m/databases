@@ -90,14 +90,13 @@ table( True_magic ) {
 table( Obvious_magic ) {
   primary_key( id ) 
   column( magic_id )
-  column( color_id )
+  column( color)
   column( level )
   column( is_allowed )
   column( damage )
 }
 
 table( Color ) {
-  primary_key( id ) 
   column( value )
 }
 
@@ -111,11 +110,10 @@ table( Orden_member ) {
   primary_key( id ) 
   column( creature_id )
   column( orden_id )
-  column( orden_rank_id )
+  column( orden_rank)
 }
 
 table( Orden_rank ) {
-  primary_key( id )
   column( name )
 }
 

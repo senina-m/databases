@@ -48,7 +48,7 @@ create table s312986.Creature (
 );
 
 create table s312986.Criminals (
-  id UUID PRIMARY KEY,
+  id BIGINT PRIMARY KEY,
   creature_id BIGINT NOT NULL REFERENCES Creature(id),
   crime_id BIGINT NOT NULL REFERENCES Crime(id),
   punishment_id BIGINT,
@@ -160,20 +160,12 @@ create table s312986.Dosseir (
 -- - в очевидной магии нельзя чтобы is_allowed было true у черной магии больше 22 ступени и у белой больше 10
 create or replace function true_magic_level_check() returns trigger as $psql$
   begin
-    if new.level > 22 and new.is_allowed = true and(
-      select value
-      from Color
-      where new.color_id = Color.id
-    ) = 'black' then
+    if new.level > 22 and new.is_allowed = true and new.color_id = 'black' then
       RAISE EXCEPTION 'level = % > 22, is allowed for black magic', new.level;
       return null;
     end if;
 
-    if new.level > 10 and new.is_allowed = true and (
-      select value
-      from Color
-      where new.color_id = Color.id
-    ) = 'white' then
+    if new.level > 10 and new.is_allowed = true and new.color_id = 'white' then
       RAISE EXCEPTION 'level = % > 10, is allowed for white magic', new.level;
       return null;
     end if;
@@ -236,10 +228,9 @@ for each row execute procedure obvious_magic_check();
 
 create or replace function woman_orden_rank_check() returns trigger as $psql$
   begin
-    if (select sex from Creature c where c.id=new.creature_id) = "female"
-      and (select name from Orden_rank r where r.id = new.orden_rank_id) = image.png
+    if (select sex from Creature c where c.id=new.creature_id) = 'female' and new.orden_rank != 'orden_woman'
     then
-      RAISE EXCEPTION 'magic_id = % is already in true_magic table', new.magic_id;
+      RAISE EXCEPTION 'Woman can be only orden_woman';
       return null;
     end if;
 
@@ -253,6 +244,7 @@ for each row execute procedure woman_orden_rank_check();
 create or replace trigger update_woman_orden_rank_check_trigger before update on Orden_member
 for each row execute procedure woman_orden_rank_check();
 
+-- - если permission - это детектив, то детектив с таким именем должен быть в табличке детективов
 
 
 -- - если permission - это детектив, то детектив с таким именем должен быть в табличке детективов

@@ -21,3 +21,5 @@ drop table if exists s312986.Position cascade;
 drop table if exists s312986.Salary cascade;
 drop table if exists s312986.Color cascade;
 drop table if exists s312986.Allowance cascade;
+drop type if exists s312986.Color cascade;
+drop type if exists s312986.Orden_rank cascade;

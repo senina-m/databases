@@ -94,14 +94,13 @@ table( True_magic ) {
 table( Obvious_magic ) {
   primary_key( id ): SMALLINT 
   foreign_key( magic_id ): UNIQUE INTEGER <<FK>> NOT NULL
-  foreign_key( color_id ): SMALLINT <<FK>> NOT NULL
+  column( color ): Color NOT NULL
   column( level ): INTEGER NOT NULL
   column( damage ): INTEGER NOT NULL
   column( is_allowed ): BOOLEAN NOT NULL
 }
 
 table( Color ) {
-  primary_key( id ): SMALLINT
   column( value ): VARCHAR NOT NULL UNIQUE
 }
 
@@ -115,12 +114,11 @@ table( Orden_member ) {
   primary_key( id ): BIGINT 
   foreign_key( creature_id ): BIGINT <<FK>> NOT NULL
   foreign_key( orden_id ): SMALLINT <<FK>> NOT NULL
-  foreign_key( orden_rank_id ): SMALLINT <<FK>> NOT NULL
+  column( orden_rank): Orden_rank NOT NULL
   UNIQUE(creature_id, orden_id, orden_rank_id)
 }
 
 table( Orden_rank ) {
-  primary_key( id ): SMALLINT
   column( name ): VARCHAR NOT NULL UNIQUE
 }
 
