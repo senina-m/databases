@@ -47,9 +47,9 @@ table(Take_part){
 table( Creature ) {
   primary_key( id ): BIGINT 
   column( name ): VARCHAR NOT NULL
-  column( birthday ): DATE
+  column( birthday ): DATE NOT NULL
   column( race ): VARCHAR NOT NULL
-  column( is_alive ): BOOLEAN NOT NULL
+  column( death_date ): DATE
   column( sex ): VARCHAR NOT NULL
 }
 

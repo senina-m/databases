@@ -48,7 +48,7 @@ table( Creature ) {
   column( name )
   column( birthday )
   column( race )
-  column( is_alive )
+  column( death_date )
   column( sex )
 }
 

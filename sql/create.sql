@@ -41,9 +41,9 @@ create table s312986.Crime (
 create table s312986.Creature (
   id BIGINT PRIMARY KEY,
   name VARCHAR NOT NULL,
-  birthday DATE,
+  birthday DATE NOT NULL,
   race VARCHAR NOT NULL,
-  is_alive BOOLEAN NOT NULL,
+  death_date DATE,
   sex VARCHAR NOT NULL
 );
 
