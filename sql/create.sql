@@ -158,19 +158,16 @@ create table s312986.Dosseir (
 
 -- - если permission - это детектив, то детектив с таким именем должен быть в табличке детективов
 
--- заклинание должно встречаться только в одном виде магии в истенной или в очевидной
-
-
-
 -- в очевидной магии нельзя чтобы is_allowed было true у черной магии больше 22 ступени и у белой больше 10
-create or replace function magic_level_check() returns trigger as $psql$
+create or replace function true_magic_level_check() returns trigger as $psql$
   begin
     if new.level > 22 and new.is_allowed = true and(
       select value
       from Color
       where new.color_id = Color.id
     ) = 'black' then
-        return null;
+      RAISE EXCEPTION 'level = % > 22, is allowed for black magic', new.level;
+      return null;
     end if;
 
     if new.level > 10 and new.is_allowed = true and (
@@ -178,14 +175,60 @@ create or replace function magic_level_check() returns trigger as $psql$
       from Color
       where new.color_id = Color.id
     ) = 'white' then
-        return null;
+      RAISE EXCEPTION 'level = % > 10, is allowed for white magic', new.level;
+      return null;
     end if;
     return new;
   end;
 $psql$ language plpgsql;
 
-create or replace trigger magic_level_check_trigger before insert on Obvious_magic
-for each row execute procedure magic_level_check();
+create or replace trigger insert_magic_level_check_trigger before insert on Obvious_magic
+for each row execute procedure true_magic_level_check();
 
-create or replace trigger magic_level_check_trigger before update on Obvious_magic
-for each row execute procedure magic_level_check();
+create or replace trigger update_magic_level_check_trigger before update on Obvious_magic
+for each row execute procedure true_magic_level_check();
+
+
+-- заклинание должно встречаться только в одном виде магии в истенной или в очевидной
+
+create or replace function obvious_magic_check() returns trigger as $psql$
+  begin
+        if exists(
+      select magic_id
+      from Obvious_magic m
+      where m.magic_id=new.magic_id)
+    then
+      RAISE EXCEPTION 'magic_id = % is already in obvious_magic table', new.magic_id;
+      return null;
+    end if;
+
+    return new;
+  end;
+$psql$ language plpgsql;
+
+create or replace function true_magic_check() returns trigger as $psql$
+  begin
+    if exists(
+      select magic_id
+      from True_magic m
+      where m.magic_id=new.magic_id)
+    then
+      RAISE EXCEPTION 'magic_id = % is already in true_magic table', new.magic_id;
+      return null;
+    end if;
+
+    return new;
+  end;
+$psql$ language plpgsql;
+
+create or replace trigger insert_magic_true_or_obvious_check_trigger before insert on Obvious_magic
+for each row execute procedure true_magic_check();
+
+create or replace trigger update_magic_true_or_obvious_check_trigger before update on Obvious_magic
+for each row execute procedure true_magic_check();
+
+create or replace trigger insert_magic_true_or_obvious_check_trigger before insert on True_magic
+for each row execute procedure obvious_magic_check();
+
+create or replace trigger update_magic_true_or_obvious_check_trigger before update on True_magic
+for each row execute procedure obvious_magic_check();

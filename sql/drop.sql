@@ -21,4 +21,3 @@ drop table if exists s312986.Position cascade;
 drop table if exists s312986.Salary cascade;
 drop table if exists s312986.Color cascade;
 drop table if exists s312986.Allowance cascade;
-drop function if exists magic_level_check() cascade;
