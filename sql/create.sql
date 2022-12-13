@@ -157,6 +157,24 @@ create table s312986.Dosseir (
   UNIQUE(author_id, crime_id, create_date)
 );
 
+create or replace function count_prize(date, date, bigint) returns integer as $psql$
+  begin
+    return 
+    2*(select count(*) from Crime c 
+    where c.main_detective_id = $3 
+    and $1 < c.date_begin 
+    and c.date_begin < $2);
+  end;
+$psql$ language plpgsql;
+
+-- - расчет зарплаты для детектива (дата начала, дата конца, должность_ид, детектив_ид)
+create or replace function count_selary(date, date, smallint, bigint) returns integer as $psql$
+  begin
+    return (select value from Salary s where s.position_id = $3) 
+    * abs(extract(day from $1::timestamp - $2::timestamp))
+    + count_prize($1, $2, $4);
+  end;
+$psql$ language plpgsql;
 
 -- - расчет урона сердцу мира за указанный месяц
 create or replace function count_world_heart_damage_per_dates(date, date) returns integer as $psql$
