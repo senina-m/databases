@@ -157,6 +157,18 @@ create table s312986.Dosseir (
   UNIQUE(author_id, crime_id, create_date)
 );
 
+
+-- - расчет урона сердцу мира за указанный месяц
+create or replace function count_world_heart_damage_per_dates(date, date) returns integer as $psql$
+  begin
+    return 
+      (select sum(om.damage) from Used_magic um
+      inner join Obvious_magic om
+      on om.magic_id = um.magic_id
+      where $1 < um.date and um.date < $2);
+  end;
+$psql$ language plpgsql;
+
 -- - в очевидной магии нельзя чтобы is_allowed было true у черной магии больше 22 ступени и у белой больше 10
 create or replace function true_magic_level_check() returns trigger as $psql$
   begin
@@ -250,8 +262,6 @@ for each row execute procedure sex_orden_rank_check();
 
 create or replace trigger update_sex_orden_rank_check_trigger before update on Orden_member
 for each row execute procedure sex_orden_rank_check();
-
--- - если permission - это детектив, то детектив с таким именем должен быть в табличке детективов
 
 -- на обновление столбца date_begin в Crime
 -- условия:

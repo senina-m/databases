@@ -54,7 +54,7 @@ table( Creature ) {
 }
 
 table( Criminals ) {
-  primary_key( id ): UUID 
+  primary_key( id ): BIGINT 
   foreign_key( creature_id ): BIGINT <<FK>> NOT NULL
   foreign_key( crime_id ): BIGINT <<FK>> NOT NULL 
   column( punishment_id ): BIGINT

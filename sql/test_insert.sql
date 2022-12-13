@@ -37,6 +37,30 @@ insert into Obvious_magic(id, magic_id, color_id, level, damage, is_allowed) val
     -- black magic make kamra level=23, damage=3 NOTallowed ==> not ok (such spell exist in true magic)
     (7, 5, 'black', 23, 3, false);
 
+insert into Position values
+    (1, 'detective');
+
+insert into Detective values
+    (1, 1, 1);
+
+insert into Location values
+    (1, 'earth');
+
+insert into Crime values
+    (1, 'the crime', 'description', '2002-04-15', '2200-04-15', 1, false, 'damage was sooo big', 1);
+
+
+insert into Punishment values
+    (1, 'jail', '2020-04-15', '2021-04-15', 0);
+
+insert into Criminals(id, creature_id, crime_id, punishment_id, is_proved) values
+    (1, 1, 1, 1, false),
+
+insert into Used_magic(id, date, criminals_id, magic_id) values
+    (1, '2017-03-14', 1, 1),
+    (2, '2017-04-15', 1, 2),
+    (3, '2017-10-15', 1, 7);
+
 insert into Creature(id, name, birthday, race, death_date, sex) values
     (1, 'Max', '2017-03-14', 'human', '2022-03-14', 'male'),
     (2, 'Lonli-locli', '2015-02-11', 'human', '2022-03-14', 'male'),
