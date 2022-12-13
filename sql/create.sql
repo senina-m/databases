@@ -50,7 +50,7 @@ create table s312986.Creature (
 create table s312986.Criminals (
   id UUID PRIMARY KEY,
   creature_id BIGINT NOT NULL REFERENCES Creature(id),
-  crime_id BIGINT NOT NULL REFERENCES Crime(id),
+  crime_id BIGINT NOT NULL REFERENCES Criminals(id),
   punishment_id BIGINT,
   is_proved BOOLEAN NOT NULL,
   UNIQUE(creature_id, crime_id, punishment_id)

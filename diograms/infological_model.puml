@@ -55,7 +55,7 @@ table( Creature ) {
 table( Criminals ) {
   primary_key( id )???????? 
   column( creature_id )
-  column( crime_id )
+  column( criminals_id )
   column( punishment_id )
   column( is_proved )
 }

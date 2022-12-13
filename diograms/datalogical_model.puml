@@ -76,7 +76,7 @@ table( Victims ) {
 table( Used_magic ) {
   primary_key( id ): BIGINT
   column( date ): DATE NOT NULL
-  foreign_key( crime_id ): BIGINT <<FK>> NOT NULL
+  foreign_key( criminals_id ): BIGINT <<FK>> NOT NULL
   foreign_key( magic_id ): SMALLINT <<FK>> NOT NULL
   UNIQUE(date, crime_id, magic_id)
 }
