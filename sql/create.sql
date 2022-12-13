@@ -72,7 +72,7 @@ create table s312986.Magic (
 create table s312986.Used_magic (
   id BIGINT PRIMARY KEY,
   date DATE NOT NULL,
-  criminals_id BIGINT NOT NULL REFERENCES Criminals(id),
+  criminals_id UUID NOT NULL REFERENCES Criminals(id),
   magic_id SMALLINT NOT NULL REFERENCES Magic(id),
   UNIQUE(date, criminals_id, magic_id)
 );
@@ -157,7 +157,7 @@ create table s312986.Dosseir (
   UNIQUE(author_id, crime_id, create_date)
 );
 
--- в очевидной магии нельзя чтобы is_allowed было true у черной магии больше 22 ступени и у белой больше 10
+-- - в очевидной магии нельзя чтобы is_allowed было true у черной магии больше 22 ступени и у белой больше 10
 create or replace function true_magic_level_check() returns trigger as $psql$
   begin
     if new.level > 22 and new.is_allowed = true and(
@@ -188,7 +188,8 @@ create or replace trigger update_magic_level_check_trigger before update on Obvi
 for each row execute procedure true_magic_level_check();
 
 
--- заклинание должно встречаться только в одном виде магии в истенной или в очевидной
+-- заклинание должно встречаться только в одном виде магии в истинной или в очевидной
+
 create or replace function obvious_magic_check() returns trigger as $psql$
   begin
         if exists(
@@ -199,7 +200,6 @@ create or replace function obvious_magic_check() returns trigger as $psql$
       RAISE EXCEPTION 'magic_id = % is already in obvious_magic table', new.magic_id;
       return null;
     end if;
-
     return new;
   end;
 $psql$ language plpgsql;
@@ -256,3 +256,139 @@ for each row execute procedure woman_orden_rank_check();
 
 
 -- - если permission - это детектив, то детектив с таким именем должен быть в табличке детективов
+
+-- на обновление столбца date_begin в Crime
+-- условия:
+-- date_begin < Dosseir.create_dt         |
+-- date_begin < min(Used_magic.date)      |
+-- date_begin <= now()                    |
+-- date_begin < date_end                  |
+-- date_begin < max(crime.death_date)     |
+-- date_begin < max(victims.death_date)   |
+
+create or replace function crime_date_begin_check() returns trigger as $psql$
+  declare 
+    dt_to_compare date;
+  begin
+    if new.date_begin > now() then
+      raise exception 'date_begin of crime cannot be in future';
+    end if;
+    if new.date_begin > new.date_end then
+      raise exception 'date_begin cannot be after date_end';
+    end if;
+    select create_dt into dt_to_compare from Dosseir where Dosseir.crime_id = new.id;
+    if dt_to_compare is not null and new.date_begin > dt_to_compare then
+      raise exception 'date_begin cannot be after create_dt of Dosseir';
+    end if;
+    select min(Used_magic.date) into dt_to_compare from Used_magic join Criminals on Used_magic.criminals_id = Criminals.id
+    where Criminals.crime_id = new.id;
+    if dt_to_compare is not null and new.date_begin > dt_to_compare then
+      raise exception 'date_begin of crime cannot be after date of first use magic what was used in this crime';
+    end if;
+    select max(Creature.death_date) into dt_to_compare from Creature join Criminals on Criminals.creature_id = Creature.id
+    where Criminals.crime_id = new.id;
+    if dt_to_compare is not null and new.date_begin > dt_to_compare then
+      raise exception 'date_begin of crime cannot be after the greatest death_date of criminals';
+    end if;
+    select max(Creature.death_date) into dt_to_compare from Creature join Victims on Victims.creature_id = Creature.id
+    where Victims.crime_id = new.id;
+    if dt_to_compare is not null and new.date_begin > dt_to_compare then
+      raise exception 'date_begin of crime cannot be after the greatest death_date of victims';
+    end if;
+    return new;
+  end;
+$psql$ language plpgsql;
+
+create or replace trigger crime_date_begin_insert_trigger before insert on Crime
+for each row
+execute procedure crime_date_begin_check();
+
+create or replace trigger crime_date_begin_update_trigger before update of date_begin on Crime
+for each row when (old.date_begin < new.date_begin)
+execute procedure crime_date_begin_check();
+
+-- date_end > max(crime.birthday)                 |
+-- date_end > max(victims.birthday)               |
+-- date_end > max(Used_magic.date)                |
+-- date_end > main_detective.birthday             |
+-- date_end > max(take_part.birthday)             |
+-- not null is is_solved (and null is not_solved) |
+-- date_end > date_begin                          |
+-- date_end <= now()                              |  
+-- date_end < max(take_part.death_date)           | (c date_begin про транзитивности date_begin < date_end)
+
+create or replace function crime_date_end_check() returns trigger as $psql$
+  declare 
+    dt_to_compare date;
+  begin
+    if new.is_solved = false then
+      raise exception 'crime cannot have date_end if it is not solved';
+    end if;
+    if new.date_end > now() then
+      raise exception 'date_end of crime cannot be in future';
+    end if;
+    if new.date_end < new.date_begin then
+      raise exception 'date_end cannot be before date_begin';
+    end if;
+    select max(Used_magic.date) into dt_to_compare from Used_magic join Criminals on Used_magic.criminals_id = Criminals.id
+    where Criminals.crime_id = new.id;
+    if dt_to_compare is not null and new.date_end < dt_to_compare then
+      raise exception 'date_end of crime cannot be before date of last use magic what was used in this crime';
+    end if;
+    select max(Creature.birthday) into dt_to_compare from Creature join Criminals on Criminals.creature_id = Creature.id
+    where Criminals.crime_id = new.id;
+    if dt_to_compare is not null and new.date_end < dt_to_compare then
+      raise exception 'date_end of crime cannot be before the greatest birthday of criminals';
+    end if;
+    select max(Creature.birthday) into dt_to_compare from Creature join Victims on Victims.creature_id = Creature.id
+    where Victims.crime_id = new.id;
+    if dt_to_compare is not null and new.date_end < dt_to_compare then
+      raise exception 'date_end of crime cannot be before the greatest birthday of victims';
+    end if;
+    select Creature.birthday into dt_to_compare from Creature join Detective on Detective.creature_id = Creature.id
+    where Detective.id = new.main_detective_id;
+    if dt_to_compare is not null and new.date_end < dt_to_compare then
+      raise exception 'date_end of crime cannot be before birthday of main detective';
+    end if;
+    select max(Creature.birthday) into dt_to_compare from Creature join Detective on Detective.creature_id = Creature.id
+    join Take_part on take_part.detective_id = Detective.id
+    where Take_part.crime_id = new.id;
+    if dt_to_compare is not null and new.date_end < dt_to_compare then
+      raise exception 'date_end of crime cannot be before greatest birthday of participating detectives';
+    end if;
+    select max(Creature.death_date) into dt_to_compare from Creature join Detective on Detective.creature_id = Creature.id
+    join Take_part on take_part.detective_id = Detective.id
+    where Take_part.crime_id = new.id;
+    if dt_to_compare is not null and new.date_end > dt_to_compare then
+      raise exception 'date_end of crime cannot be after greatest date_death of participating detectives';
+    end if;
+  end;
+$psql$ language plpgsql;
+
+create or replace trigger crime_date_end_insert_trigger before insert on Crime
+for each row when (new.date_end is not null)
+execute procedure crime_date_end_check();
+
+create or replace trigger crime_date_end_update_trigger before update of date_end on Crime
+for each row when (new.date_end is not null and old.date_end > new.date_end)
+execute procedure crime_date_end_check();
+
+create or replace function crime_is_solved_check() returns trigger as $psql$
+  begin
+    if (new.is_solved = true and new.date_end is null) then
+      raise exception 'crime cannot be solved if it have not date_end';
+    end if;
+    if (new.is_solved = false and new.date_end is not null) then
+      raise exception 'crime cannot have date_end if it is not solved';
+    end if;
+    return new;
+  end;
+$psql$ language plpgsql;
+
+create or replace trigger crime_is_solved_insert_trigger before insert on Crime
+for each row 
+execute procedure crime_is_solved_check();
+
+create or replace trigger crime_is_solved_update_trigger before update of is_solved on Crime
+for each row 
+execute procedure crime_is_solved_check();
