@@ -160,23 +160,24 @@ create table s312986.Dosseir (
 
 -- заклинание должно встречаться только в одном виде магии в истенной или в очевидной
 
--- - в очевидной магии нельзя чтобы is_allowed было true у черной магии больше 
--- 22 ступени и у белой больше 10
-create function magic_level_check() returns trigger as $psql$
+
+
+-- в очевидной магии нельзя чтобы is_allowed было true у черной магии больше 22 ступени и у белой больше 10
+create or replace function magic_level_check() returns trigger as $psql$
   begin
-    if new.level > 22 and (
+    if new.level > 22 and new.is_allowed = true and(
       select value
       from Color
       where new.color_id = Color.id
-    ) = "black" then
+    ) = 'black' then
         return null;
     end if;
 
-    if new.level > 10 and (
+    if new.level > 10 and new.is_allowed = true and (
       select value
       from Color
       where new.color_id = Color.id
-    ) = "white" then
+    ) = 'white' then
         return null;
     end if;
     return new;
@@ -184,4 +185,7 @@ create function magic_level_check() returns trigger as $psql$
 $psql$ language plpgsql;
 
 create or replace trigger magic_level_check_trigger before insert on Obvious_magic
+for each row execute procedure magic_level_check();
+
+create or replace trigger magic_level_check_trigger before update on Obvious_magic
 for each row execute procedure magic_level_check();
