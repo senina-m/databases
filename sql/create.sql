@@ -50,7 +50,7 @@ create table s312986.Creature (
 create table s312986.Criminals (
   id UUID PRIMARY KEY,
   creature_id BIGINT NOT NULL REFERENCES Creature(id),
-  crime_id BIGINT NOT NULL REFERENCES Criminals(id),
+  crime_id BIGINT NOT NULL REFERENCES crime_id(id),
   punishment_id BIGINT,
   is_proved BOOLEAN NOT NULL,
   UNIQUE(creature_id, crime_id, punishment_id)
@@ -72,7 +72,7 @@ create table s312986.Magic (
 create table s312986.Used_magic (
   id BIGINT PRIMARY KEY,
   date DATE NOT NULL,
-  crime_id BIGINT NOT NULL REFERENCES Crime(id),
+  criminals_id BIGINT NOT NULL REFERENCES Criminals(id),
   magic_id SMALLINT NOT NULL REFERENCES Magic(id),
   UNIQUE(date, crime_id, magic_id)
 );
@@ -106,6 +106,8 @@ create table s312986.Orden_rank (
   id SMALLINT PRIMARY KEY,
   name VARCHAR NOT NULL UNIQUE
 );
+
+create type s312986.Orden_rank as enum ('orden_woman', 'novice', 'junior_master', 'chief_master')
 
 create table s312986.Orden_member (
   id BIGINT PRIMARY KEY,
@@ -153,11 +155,6 @@ create table s312986.Dosseir (
   UNIQUE(author_id, crime_id, create_date)
 );
 
--- если существо женского пола, то в орден_мембер может быть орден_ранг только женщина ордена. 
--- А если пол мужской, то такого ранга быть не может
-
--- - если permission - это детектив, то детектив с таким именем должен быть в табличке детективов
-
 -- в очевидной магии нельзя чтобы is_allowed было true у черной магии больше 22 ступени и у белой больше 10
 create or replace function true_magic_level_check() returns trigger as $psql$
   begin
@@ -190,7 +187,6 @@ for each row execute procedure true_magic_level_check();
 
 
 -- заклинание должно встречаться только в одном виде магии в истенной или в очевидной
-
 create or replace function obvious_magic_check() returns trigger as $psql$
   begin
         if exists(
@@ -232,3 +228,29 @@ for each row execute procedure obvious_magic_check();
 
 create or replace trigger update_magic_true_or_obvious_check_trigger before update on True_magic
 for each row execute procedure obvious_magic_check();
+
+-- если существо женского пола, то в орден_мембер может быть орден_ранг только женщина ордена. 
+-- А если пол мужской, то такого ранга быть не может
+
+create or replace function woman_orden_rank_check() returns trigger as $psql$
+  begin
+    if (select sex from Creature c where c.id=new.creature_id) = "female"
+      and (select name from Orden_rank r where r.id = new.orden_rank_id) = image.png
+    then
+      RAISE EXCEPTION 'magic_id = % is already in true_magic table', new.magic_id;
+      return null;
+    end if;
+
+    return new;
+  end;
+$psql$ language plpgsql;
+
+create or replace trigger insert_woman_orden_rank_check_trigger before insert on Orden_member
+for each row execute procedure woman_orden_rank_check();
+
+create or replace trigger update_woman_orden_rank_check_trigger before update on Orden_member
+for each row execute procedure woman_orden_rank_check();
+
+
+
+-- - если permission - это детектив, то детектив с таким именем должен быть в табличке детективов
