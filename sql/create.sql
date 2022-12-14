@@ -130,7 +130,7 @@ create table s312986.Punishment (
 
 
 create table s312986.Take_part (
-  id UUID PRIMARY KEY,
+  id BIGINT PRIMARY KEY,
   detective_id INTEGER NOT NULL REFERENCES Detective(id),
   crime_id INTEGER NOT NULL REFERENCES Crime(id),
   UNIQUE(detective_id, crime_id)
@@ -153,7 +153,7 @@ create table s312986.Dosseir (
   id BIGINT PRIMARY KEY,
   author_id BIGINT NOT NULL REFERENCES Customer(id),
   create_date DATE NOT NULL,
-  crime_id BIGINT NOT NULL UNIQUE REFERENCES Crime(id),
+  crime_id BIGINT NOT NULL UNIQUE REFERENCES Crime(id)
 );
 
 create or replace function count_prize(date, date, bigint) returns integer as $psql$
@@ -385,6 +385,7 @@ create or replace function crime_date_end_check() returns trigger as $psql$
     if dt_to_compare is not null and new.date_end > dt_to_compare then
       raise exception 'date_end of crime cannot be after greatest date_death of participating detectives';
     end if;
+    return new;
   end;
 $psql$ language plpgsql;
 
@@ -420,7 +421,7 @@ execute procedure crime_is_solved_check();
 -- birthday < dead_date (on create too)
 create or replace function creature_birthday_less_death_check() returns trigger as $psql$
   begin
-    if (death_date is not null) and (new.birthday > new.death_date) then
+    if (new.death_date is not null) and (new.birthday > new.death_date) then
       raise exception 'death date cannot be before birthday';
     end if;
     return new;
@@ -574,7 +575,7 @@ create or replace function criminals_dates_check() returns trigger as $psql$
   begin
     select * into creature_result from Creature where Creature.id = new.creature_id;
     select * into crime_result from Crime where Crime.id = new.crime_id;
-    if crime_result.date_end is not null and crime_result.date_end > creature_result.birthday then
+    if crime_result.date_end is not null and crime_result.date_end < creature_result.birthday then
       raise exception 'criminal cannot born after crime ended';
     end if;
     if creature_result.death_date is not null and crime_result.date_begin > creature_result.death_date then
@@ -603,7 +604,7 @@ create or replace function victims_dates_check() returns trigger as $psql$
   begin
     select * into creature_result from Creature where Creature.id = new.creature_id;
     select * into crime_result from Crime where Crime.id = new.crime_id;
-    if crime_result.date_end is not null and crime_result.date_end > creature_result.birthday then
+    if crime_result.date_end is not null and crime_result.date_end < creature_result.birthday then
       raise exception 'victim cannot born after crime ended';
     end if;
     if creature_result.death_date is not null and crime_result.date_begin > creature_result.death_date then
@@ -631,9 +632,9 @@ create or replace function take_part_dates_check() returns trigger as $psql$
     crime_result record;
   begin
     select * into creature_result from Creature join Detective on Detective.creature_id = Creature.id
-    where Detective.id = new.detecitve_id;
+    where Detective.id = new.detective_id;
     select * into crime_result from Crime where Crime.id = new.crime_id;
-    if crime_result.date_end is not null and crime_result.date_end > creature_result.birthday then
+    if crime_result.date_end is not null and crime_result.date_end < creature_result.birthday then
       raise exception 'participating detective cannot born after crime ended';
     end if;
     if creature_result.death_date is not null and crime_result.date_begin > creature_result.death_date then

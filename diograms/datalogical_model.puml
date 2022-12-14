@@ -37,7 +37,7 @@ table( Crime ) {
 }
 
 table(Take_part){
-  primary_key( id ): UUID
+  primary_key( id ): BIGINT
   foreign_key( detective_id ): INTEGER <<FK>> NOT NULL
   foreign_key( crime_id ): INTEGER <<FK>> NOT NULL
   UNIQUE(detective_id, crime_id)
