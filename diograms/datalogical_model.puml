@@ -58,7 +58,7 @@ table( Criminals ) {
   foreign_key( crime_id ): BIGINT <<FK>> NOT NULL 
   column( punishment_id ): BIGINT
   column( is_proved ): BOOLEAN
-  UNIQUE(creature_id, crime_id, punishment_id)
+  UNIQUE(crime_id, creature_id, punishment_id)
 }
 
 table( Location ) {
@@ -69,7 +69,7 @@ table( Location ) {
 table( Victims ) {
   foreign_key( creature_id ): BIGINT <<FK>> NOT NULL
   foreign_key( crime_id ): BIGINT <<FK>> NOT NULL
-  UNIQUE(creature_id, crime_id)
+  UNIQUE(crime_id, creature_id)
 }
 
 table( Used_magic ) {
@@ -77,7 +77,7 @@ table( Used_magic ) {
   column( date ): DATE NOT NULL
   foreign_key( criminals_id ): BIGINT <<FK>> NOT NULL
   foreign_key( magic_id ): SMALLINT <<FK>> NOT NULL
-  UNIQUE(date, crime_id, magic_id)
+  UNIQUE(criminals_id, date, magic_id)
 }
 
 table( Magic ) {
@@ -166,7 +166,7 @@ Punishment ||--|| Criminals
 Orden ||--|{  Orden_member
 Orden_rank ||--|{ Orden_member
 
-Used_magic }|--|| Crime
+Used_magic }|--|| Criminals
 Magic ||--|{ Used_magic
 
 ' true and obvious magic a optional

@@ -38,6 +38,8 @@ create table s312986.Crime (
   location_id SMALLINT NOT NULL REFERENCES Location(id)
 );
 
+create index crime_index on Crime(main_detective_id, date_end);
+
 create table s312986.Creature (
   id BIGINT PRIMARY KEY,
   name VARCHAR NOT NULL,
@@ -53,14 +55,16 @@ create table s312986.Criminals (
   crime_id BIGINT NOT NULL REFERENCES Crime(id),
   punishment_id BIGINT,
   is_proved BOOLEAN NOT NULL,
-  UNIQUE(creature_id, crime_id, punishment_id)
+  UNIQUE(crime_id, creature_id, punishment_id)
 );
+
+create index criminal_index on Criminals(creature_id);
 
 create table s312986.Victims(
   creature_id BIGINT NOT NULL REFERENCES Creature(id),
   crime_id BIGINT NOT NULL REFERENCES Crime(id),
   UNIQUE(creature_id, crime_id),
-  PRIMARY KEY(creature_id, crime_id)
+  PRIMARY KEY(crime_id, creature_id)
 );
 
 
@@ -74,8 +78,10 @@ create table s312986.Used_magic (
   date DATE NOT NULL,
   criminals_id BIGINT NOT NULL REFERENCES Criminals(id),
   magic_id SMALLINT NOT NULL REFERENCES Magic(id),
-  UNIQUE(date, criminals_id, magic_id)
+  UNIQUE(criminals_id, date, magic_id)
 );
+
+create index used_magic_index on Used_magic(criminals_id);
 
 create table s312986.True_magic (
   id SMALLINT PRIMARY KEY,
@@ -119,6 +125,8 @@ create table s312986.Orden_member (
   UNIQUE(creature_id, orden_id, orden_rank)
 );
 
+create index orden_member_index on Orden_member(orden_id);
+
 create table s312986.Punishment (
   id BIGINT PRIMARY KEY,
   type VARCHAR NOT NULL,
@@ -142,6 +150,8 @@ create table s312986.Salary (
   position_id SMALLINT NOT NULL UNIQUE
 );
 
+create index salary_index on Salary(position_id);
+
 create table s312986.Allowance (
   id SMALLINT PRIMARY KEY,
   name VARCHAR NOT NULL UNIQUE,
@@ -161,13 +171,13 @@ create or replace function count_prize(date, date, bigint) returns integer as $p
     return 
     2*(select count(*) from Crime c 
     where c.main_detective_id = $3 
-    and $1 < c.date_begin 
-    and c.date_begin < $2);
+    and $1 < c.date_end 
+    and c.date_end < $2);
   end;
 $psql$ language plpgsql;
 
 -- - расчет зарплаты для детектива (дата начала, дата конца, должность_ид, детектив_ид)
-create or replace function count_selary(date, date, smallint, bigint) returns integer as $psql$
+create or replace function count_salary(date, date, smallint, bigint) returns integer as $psql$
   begin
     return (select value from Salary s where s.position_id = $3) 
     * abs(extract(day from $1::timestamp - $2::timestamp))

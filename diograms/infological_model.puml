@@ -53,7 +53,7 @@ table( Creature ) {
 }
 
 table( Criminals ) {
-  primary_key( id )???????? 
+  primary_key( id )
   column( creature_id )
   column( crime_id )
   column( punishment_id )
@@ -160,7 +160,7 @@ Punishment ||--|| Criminals
 Orden ||--|{  Orden_member
 Orden_rank ||--|{ Orden_member
 
-Used_magic }|--|| Crime
+Used_magic }|--|| Criminals
 Magic ||--|{ Used_magic
 
 ' true and obvious magic a optional
