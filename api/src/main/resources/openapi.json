@@ -1,0 +1,122 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Archive of secret investigation",
+    "description": "Archive of secret investigation. Course work",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080/",
+      "description": "default server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Ordens",
+      "description": "Ордена"
+    }
+  ],
+  "paths": {
+    "/api/v1/ordens": {
+      "get": {
+        "tags": [
+          "Ordens"
+        ],
+        "summary": "Просмотр всех орденов",
+        "operationId": "getOrdens",
+        "responses": {
+          "200": {
+            "description": "Просмотр данных всех орденов",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "title": "Список всех орденов",
+                  "items": {
+                    "$ref": "#/components/schemas/Orden"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Ordens"
+        ],
+        "summary": "Создание ордена",
+        "operationId": "getOrdens",
+        "responses": {
+          "201": {
+            "description": "Просмотр данных всех орденов",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Orden"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "title": "Ошибка",
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Краткое общепринятое обозначение ошибки"
+          },
+          "message": {
+            "type": "string",
+            "title": "Сообщение с описанием ошибки"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "Orden": {
+        "type": "object",
+        "title": "Орден",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "title": "Идентефикатор ордена",
+            "minimum": 1,
+            "maximum": 32767,
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "title": "Название ордена"
+          },
+          "description": {
+            "type": "string",
+            "title": "Описание ордена",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      }
+    }
+  },
+  "securitySchemes": {
+    "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+    }
+  }
+}
