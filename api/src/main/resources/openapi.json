@@ -23,6 +23,10 @@
     {
       "name": "OrdenMembers",
       "description": "Члены ордена"
+    },
+    {
+      "name": "Customers",
+      "description": "Пользователи архива"
     }
   ],
   "paths": {
@@ -647,6 +651,39 @@
           }
         ]
       }
+    },
+    "/api/v1/auth": {
+      "post": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Авторизация",
+        "operationId": "authorization",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Авторизация пройдена успешно",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -741,7 +778,7 @@
       },
       "OrdenMemberResponse": {
         "type": "object",
-        "title": "Член ордена",
+        "title": "Член ордена (ответ)",
         "properties": {
           "id": {
             "type": "integer",
@@ -764,11 +801,16 @@
           "creature": {
             "$ref": "#/components/schemas/Creature"
           }
-        }
+        },
+        "required": [
+          "id",
+          "rank",
+          "creature"
+        ]
       },
       "OrdenMemberRequest": {
         "type": "object",
-        "title": "",
+        "title": "Член ордена (запрос)",
         "properties": {
           "rank": {
             "type": "string",
@@ -783,7 +825,86 @@
           "creatureId": {
             "$ref": "#/components/parameters/creatureId"
           }
-        }
+        },
+        "required": [
+          "rank",
+          "creatureId"
+        ]
+      },
+      "Customer": {
+        "type": "object",
+        "title": "Пользователь архива",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "title": "Идентефикатор пользователя",
+            "minimum": 1,
+            "maximum": 9223372036854775807,
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "title": "Имя пользователя"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "title": "Пароль пользователя"
+          },
+          "permission": {
+            "type": "string",
+            "title": "Права пользователя"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "password",
+          "permission"
+        ]
+      },
+      "AuthRequest": {
+        "type": "object",
+        "title": "Запрос авторизации",
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Имя пользователя"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "title": "Пароль пользователя"
+          }
+        },
+        "required": [
+          "name",
+          "password"
+        ]
+      },
+      "AuthResponse": {
+        "type": "object",
+        "title": "Ответ на запрос авторизации",
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Имя пользователя"
+          },
+          "permission": {
+            "type": "string",
+            "title": "Права пользователя"
+          },
+          "token": {
+            "type": "string",
+            "title": "Json Web Token"
+          }
+        },
+        "required": [
+          "name",
+          "permission",
+          "token"
+        ]
       }
     },
     "parameters": {
