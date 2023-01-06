@@ -15,6 +15,10 @@
     {
       "name": "Ordens",
       "description": "Ордена"
+    },
+    {
+      "name": "Creatures",
+      "description": "Живые существа"
     }
   ],
   "paths": {
@@ -216,6 +220,205 @@
           }
         ]
       }
+    },
+    "/api/v1/creatures": {
+      "get": {
+        "tags": [
+          "Creatures"
+        ],
+        "summary": "Получение списка существ",
+        "operationId": "getCreatures",
+        "responses": {
+          "200": {
+            "description": "Просмотр данных всех существ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "title": "Список всех существ",
+                  "items": {
+                    "$ref": "#/components/schemas/Creature"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Creatures"
+        ],
+        "summary": "Создание записи о существе",
+        "operationId": "createCreature",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Creature"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Запись об существе успешно создана",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Creature"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "409": {
+            "$ref": "#/components/responses/ResponseConflict"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/creatures/{creatureId}": {
+      "get": {
+        "tags": [
+          "Creatures"
+        ],
+        "summary": "Получение записи о существе",
+        "operationId": "getCreature",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/creatureId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Просмотр записи об существе",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Creature"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Creatures"
+        ],
+        "summary": "Изменение записи о существе",
+        "operationId": "updateCreature",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/creatureId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Creature"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Запись о существе успешно изменена",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Creature"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/ResponseConflict"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Creatures"
+        ],
+        "summary": "Удаление существа",
+        "operationId": "deleteCreature",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/creatureId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ResponseDeleted"
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -264,6 +467,49 @@
           "id",
           "name"
         ]
+      },
+      "Creature": {
+        "type": "object",
+        "title": "Живое существо",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "title": "Идентефикатор существа",
+            "minimum": 1,
+            "maximum": 9223372036854775807,
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "title": "Имя существа"
+          },
+          "birthday": {
+            "type": "string",
+            "format": "date",
+            "title": "Дата рождения существа"
+          },
+          "race": {
+            "type": "string",
+            "title": "Раса существа"
+          },
+          "death_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Дата смерти существа"
+          },
+          "sex": {
+            "type": "string",
+            "title": "Пол существа"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "birthday",
+          "race",
+          "sex"
+        ]
       }
     },
     "parameters": {
@@ -277,6 +523,18 @@
           "format": "int32",
           "minimum": 1,
           "maximum": 32767
+        }
+      },
+      "creatureId": {
+        "name": "creatureId",
+        "in": "path",
+        "description": "Идентефикатор существа",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "format": "int64",
+          "minimum": 1,
+          "maximum": 9223372036854775807
         }
       }
     },
