@@ -39,18 +39,38 @@
                 }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       },
       "post": {
         "tags": [
           "Ordens"
         ],
         "summary": "Создание ордена",
-        "operationId": "getOrdens",
+        "operationId": "createOrden",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Orden"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
-            "description": "Просмотр данных всех орденов",
+            "description": "Запись об ордене успешно создана",
             "content": {
               "application/json": {
                 "schema": {
@@ -58,8 +78,143 @@
                 }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "409": {
+            "$ref": "#/components/responses/ResponseConflict"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/ordens/{ordenId}": {
+      "get": {
+        "tags": [
+          "Ordens"
+        ],
+        "summary": "Получение ордена",
+        "operationId": "getOrden",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ordenId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Просмотр данных об ордене",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Orden"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Ordens"
+        ],
+        "summary": "Изменение ордена",
+        "operationId": "updateOrden",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ordenId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Orden"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Запись об ордене успешно изменена",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Orden"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/ResponseConflict"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Ordens"
+        ],
+        "summary": "Удаление ордена",
+        "operationId": "deleteOrden",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ordenId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ResponseDeleted"
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     }
   },
@@ -110,13 +265,80 @@
           "name"
         ]
       }
-    }
-  },
-  "securitySchemes": {
-    "bearerAuth": {
-      "type": "http",
-      "scheme": "bearer",
-      "bearerFormat": "JWT"
+    },
+    "parameters": {
+      "ordenId": {
+        "name": "ordenId",
+        "in": "path",
+        "description": "Идентефикатор ордена",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "format": "int32",
+          "minimum": 1,
+          "maximum": 32767
+        }
+      }
+    },
+    "responses": {
+      "ResponseDeleted": {
+        "description": "Сущность удалена",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "boolean",
+              "title": "Признак успешности операции (всегда true)"
+            }
+          }
+        }
+      },
+      "ResponseConflict": {
+        "description": "Уже существует объект с таким же набором уникальных полей",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "ResponseUnauthorized": {
+        "description": "JWT-токен не найден или невалиден",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "ResponsePermissionDenied": {
+        "description": "Нет доступа к ресурсу или операции",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "ResponseNotFound": {
+        "description": "Ресурс не найден",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
     }
   }
 }
