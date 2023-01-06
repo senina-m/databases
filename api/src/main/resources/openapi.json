@@ -19,6 +19,10 @@
     {
       "name": "Creatures",
       "description": "Живые существа"
+    },
+    {
+      "name": "OrdenMembers",
+      "description": "Члены ордена"
     }
   ],
   "paths": {
@@ -419,6 +423,230 @@
           }
         ]
       }
+    },
+    "/api/v1/ordens/{ordenId}/members": {
+      "get": {
+        "tags": [
+          "OrdenMembers"
+        ],
+        "summary": "Получение списка всех членов ордена",
+        "operationId": "getOrdenMembers",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ordenId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Просмотр данных всех членов ордена",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "title": "Список всех членов ордена",
+                  "items": {
+                    "$ref": "#/components/schemas/OrdenMemberResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "OrdenMembers"
+        ],
+        "summary": "Создание нового члена ордена",
+        "operationId": "createOrdenMember",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ordenId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrdenMemberRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Запись о члене ордена успешно создана",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrdenMemberResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/ResponseConflict"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/ordens/{ordenId}/members/{memberId}": {
+      "get": {
+        "tags": [
+          "OrdenMembers"
+        ],
+        "summary": "Получение члена ордена",
+        "operationId": "getOrdenMember",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ordenId"
+          },
+          {
+            "$ref": "#/components/parameters/ordenMemberId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Просмотр записи о члене ордена",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrdenMemberResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "OrdenMembers"
+        ],
+        "summary": "Изменение информации о члене ордена",
+        "operationId": "updateOrdenMember",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ordenId"
+          },
+          {
+            "$ref": "#/components/parameters/ordenMemberId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrdenMemberRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Запись о члене ордена успешно изменена",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrdenMemberResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/ResponseConflict"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "OrdenMembers"
+        ],
+        "summary": "Удаление информации о члене ордена",
+        "operationId": "deleteOrdenMember",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ordenId"
+          },
+          {
+            "$ref": "#/components/parameters/ordenMemberId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ResponseDeleted"
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -510,6 +738,52 @@
           "race",
           "sex"
         ]
+      },
+      "OrdenMemberResponse": {
+        "type": "object",
+        "title": "Член ордена",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "title": "Идентефикатор члена ордена",
+            "minimum": 1,
+            "maximum": 9223372036854775807,
+            "readOnly": true
+          },
+          "rank": {
+            "type": "string",
+            "title": "Ранг существа в ордене",
+            "enum": [
+              "Женщина ордена",
+              "Послушник",
+              "Младший магистр",
+              "Старший магистр"
+            ]
+          },
+          "creature": {
+            "$ref": "#/components/schemas/Creature"
+          }
+        }
+      },
+      "OrdenMemberRequest": {
+        "type": "object",
+        "title": "",
+        "properties": {
+          "rank": {
+            "type": "string",
+            "title": "Ранг существа в ордене",
+            "enum": [
+              "Женщина ордена",
+              "Послушник",
+              "Младший магистр",
+              "Старший магистр"
+            ]
+          },
+          "creatureId": {
+            "$ref": "#/components/parameters/creatureId"
+          }
+        }
       }
     },
     "parameters": {
@@ -529,6 +803,18 @@
         "name": "creatureId",
         "in": "path",
         "description": "Идентефикатор существа",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "format": "int64",
+          "minimum": 1,
+          "maximum": 9223372036854775807
+        }
+      },
+      "ordenMemberId": {
+        "name": "ordenMemberId",
+        "in": "path",
+        "description": "Идентефикатор члена ордена",
         "required": true,
         "schema": {
           "type": "integer",
