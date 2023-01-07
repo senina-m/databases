@@ -27,6 +27,10 @@
     {
       "name": "Customers",
       "description": "Пользователи архива"
+    },
+    {
+      "name": "Permissions",
+      "description": "Роли пользователей архива"
     }
   ],
   "paths": {
@@ -886,6 +890,205 @@
           }
         ]
       }
+    },
+    "/api/v1/permission": {
+      "get": {
+        "tags": [
+          "Permissions"
+        ],
+        "summary": "Получение всех ролей пользователей архива",
+        "operationId": "getPermissions",
+        "responses": {
+          "200": {
+            "description": "Просмотр всех пользователей архива",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "title": "Список всех ролей пользователей",
+                  "items": {
+                    "$ref": "#/components/schemas/Permission"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Permissions"
+        ],
+        "summary": "Создание роли пользователей архива",
+        "operationId": "createPermission",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Permission"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Запись об роли пользователя успешно создана",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Permission"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "409": {
+            "$ref": "#/components/responses/ResponseConflict"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/permission/{permissionId}": {
+      "get": {
+        "tags": [
+          "Permissions"
+        ],
+        "summary": "Получение роли пользователей архива",
+        "operationId": "getPermission",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/customerId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Получение запись об роли пользователя",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Permission"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Permissions"
+        ],
+        "summary": "Изменение ролb пользователей архива",
+        "operationId": "updatePermission",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/customerId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Permission"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Запись об роли пользователя успешно изменена",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Permission"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/ResponseConflict"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Permissions"
+        ],
+        "summary": "Удаление роли пользователей архива",
+        "operationId": "deletePermission",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/customerId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ResponseDeleted"
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -1107,6 +1310,28 @@
           "permission",
           "token"
         ]
+      },
+      "Permission": {
+        "type": "object",
+        "title": "Роль пользователя",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "title": "Идентефикатор роли пользователя",
+            "minimum": 1,
+            "maximum": 32767,
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "title": "Человекочитаемое название роли пользователя"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
       }
     },
     "parameters": {
@@ -1149,13 +1374,25 @@
       "customerId": {
         "name": "customerId",
         "in": "path",
-        "description": "Идентефикатор пользователя прхива",
+        "description": "Идентефикатор пользователя архива",
         "required": true,
         "schema": {
           "type": "integer",
           "format": "int64",
           "minimum": 1,
           "maximum": 9223372036854775807
+        }
+      },
+      "permissionId": {
+        "name": "",
+        "in": "path",
+        "description": "Идентефикатор роли пользователя",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "format": "int32",
+          "minimum": 1,
+          "maximum": 32767
         }
       }
     },
