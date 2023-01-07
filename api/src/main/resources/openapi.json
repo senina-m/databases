@@ -652,7 +652,7 @@
         ]
       }
     },
-    "/api/v1/auth": {
+    "/api/v1/customers/auth": {
       "post": {
         "tags": [
           "Customers"
@@ -683,6 +683,208 @@
             "$ref": "#/components/responses/ResponseNotFound"
           }
         }
+      }
+    },
+    "/api/v1/customers": {
+      "get": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Просмотр всех пользователей архива",
+        "operationId": "getCustomers",
+        "responses": {
+          "200": {
+            "description": "Просмотр всех пользователей архива",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "title": "Список всех пользователей",
+                  "items": {
+                    "$ref": "#/components/schemas/Customer"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Создание пользователя архива",
+        "operationId": "createCustomer",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Customer"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Запись об пользователе успешно создана",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Customer"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/ResponseConflict"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/customers/{customerId}": {
+      "get": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Просмотр пользователя архива",
+        "operationId": "getCustomer",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/customerId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Запись об пользователе успешно изменена",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Customer"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Изменение пользователя архива",
+        "operationId": "updateCustomer",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/customerId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Customer"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Запись об пользователе успешно изменена",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Customer"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/ResponseConflict"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Удаление пользователя архива",
+        "operationId": "deleteCustomer",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/customerId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ResponseDeleted"
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     }
   },
@@ -936,6 +1138,18 @@
         "name": "ordenMemberId",
         "in": "path",
         "description": "Идентефикатор члена ордена",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "format": "int64",
+          "minimum": 1,
+          "maximum": 9223372036854775807
+        }
+      },
+      "customerId": {
+        "name": "customerId",
+        "in": "path",
+        "description": "Идентефикатор пользователя прхива",
         "required": true,
         "schema": {
           "type": "integer",
