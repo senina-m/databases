@@ -652,7 +652,7 @@
         ]
       }
     },
-    "/api/v1/customers/auth": {
+    "/api/v1/auth": {
       "post": {
         "tags": [
           "Customers"
