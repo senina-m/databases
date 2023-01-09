@@ -102,3 +102,6 @@ insert into Take_part values
 insert into Allowance values
     (1, 'murder', 15, 1),
     (2, 'highjaking', 30, 2);
+
+insert into Customer_creature values
+    (1, 1, 4);

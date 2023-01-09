@@ -52,13 +52,19 @@ table( Creature ) {
   column( sex ): VARCHAR NOT NULL
 }
 
+table( Customer_creature ) {
+  primary_key( id ): BIGINT 
+  foreign_key( customer_id ): BIGINT <<FK>> NOT NULL UNIQUE
+  foreign_key( creature_id ): BIGINT <<FK>> NOT NULL UNIQUE
+}
+
 table( Criminals ) {
   primary_key( id ): BIGINT 
   foreign_key( creature_id ): BIGINT <<FK>> NOT NULL
   foreign_key( crime_id ): BIGINT <<FK>> NOT NULL 
   column( punishment_id ): BIGINT
   column( is_proved ): BOOLEAN
-  UNIQUE(crime_id, creature_id, punishment_id)
+  UNIQUE(crime_id, creature_id)
 }
 
 table( Location ) {
@@ -189,4 +195,7 @@ Customer }|--|| Permissions
 
 Salary ||--|| Position
 Detective }|--|| Position
+
+Creature ||--|| Customer_creature
+Customer ||--|| Customer_creature
 @enduml

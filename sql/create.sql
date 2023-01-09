@@ -55,7 +55,7 @@ create table s312986.Criminals (
   crime_id BIGINT NOT NULL REFERENCES Crime(id),
   punishment_id BIGINT,
   is_proved BOOLEAN NOT NULL,
-  UNIQUE(crime_id, creature_id, punishment_id)
+  UNIQUE(crime_id, creature_id)
 );
 
 create index criminal_index on Criminals(creature_id);
@@ -165,6 +165,12 @@ create table s312986.Dosseir (
   create_date DATE NOT NULL,
   crime_id BIGINT NOT NULL UNIQUE REFERENCES Crime(id)
 );
+
+create table s312986.Customer_creature (
+  id BIGINT PRIMARY KEY, 
+  customer_id BIGINT NOT NULL UNIQUE REFERENCES Customer(id),
+  creature_id BIGINT NOT NULL UNIQUE REFERENCES Creature(id)
+)
 
 create or replace function count_prize(date, date, bigint) returns integer as $psql$
   begin

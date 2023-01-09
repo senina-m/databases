@@ -13,6 +13,12 @@ table( Customer ) {
   column( permissions_id )
 }
 
+table( Customer_creature ) {
+  primary_key( id )
+  foreign_key( customer_id )
+  foreign_key( creature_id )
+}
+
 table( Permissions ) {
   primary_key( id )
   column( name )
@@ -183,4 +189,7 @@ Customer }|--|| Permissions
 
 Salary ||--|| Position
 Detective }|--|| Position
+
+Creature ||--|| Customer_creature
+Customer ||--|| Customer_creature
 @enduml
