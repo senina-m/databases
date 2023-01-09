@@ -43,6 +43,10 @@
     {
       "name": "Position",
       "description": "Должность детектива"
+    },
+    {
+      "name": "Salary",
+      "description": "Ставка премии детективов"
     }
   ],
   "paths": {
@@ -1694,6 +1698,93 @@
           }
         ]
       }
+    },
+    "/api/v1/positions/{positionsId}/salary": {
+      "get": {
+        "tags": [
+          "Salary"
+        ],
+        "summary": "Получение ставки премии для должности детектива",
+        "operationId": "getSalary",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/positionId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ставка для должности детектива",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Salary"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Salary"
+        ],
+        "summary": "Обновление ставки премии для должности детектива",
+        "operationId": "updateSalary",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/positionId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Salary"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ставка для должности детектива успешно изменена",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Salary"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -2025,13 +2116,19 @@
           },
           "name": {
             "type": "string",
-            "title": "Чедовеко-понятное название должности"
+            "title": "Человеко-понятное название должности"
           }
         },
         "required": [
           "id",
           "name"
         ]
+      },
+      "Salary": {
+        "type": "integer",
+        "format": "int32",
+        "minimum": 1,
+        "title": "Величина ставки премии детектива"
       }
     },
     "parameters": {
