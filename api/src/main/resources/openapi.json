@@ -1367,7 +1367,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/parameters/creatureId"
+                "$ref": "#/components/schemas/CreatureIdComponent"
               }
             }
           }
@@ -1515,6 +1515,13 @@
           "name"
         ]
       },
+      "CreatureIdComponent": {
+        "type": "integer",
+        "format": "int64",
+        "title": "Идентефикатор существа",
+        "minimum": 1,
+        "maximum": 9223372036854775807
+      },
       "Creature": {
         "type": "object",
         "title": "Живое существо",
@@ -1605,7 +1612,7 @@
             ]
           },
           "creatureId": {
-            "$ref": "#/components/parameters/creatureId"
+            "$ref": "#/components/schemas/CreatureIdComponent"
           }
         },
         "required": [
@@ -1748,7 +1755,8 @@
           "dateEnd": {
             "type": "string",
             "format": "date",
-            "title": "Дата конца преступления (окончательного раскрытия)"
+            "title": "Дата конца преступления (окончательного раскрытия)",
+            "nullable": true
           },
           "isSolved": {
             "type": "boolean",
@@ -1756,7 +1764,8 @@
           },
           "damageDescription": {
             "type": "string",
-            "title": "Описание ущерба от преступления"
+            "title": "Описание ущерба от преступления",
+            "nullable": true
           },
           "location": {
             "type": "string",
@@ -1773,6 +1782,9 @@
           "isSolved",
           "location"
         ]
+      },
+      "Position": {
+
       }
     },
     "parameters": {
@@ -1794,10 +1806,7 @@
         "description": "Идентефикатор существа",
         "required": true,
         "schema": {
-          "type": "integer",
-          "format": "int64",
-          "minimum": 1,
-          "maximum": 9223372036854775807
+          "$ref": "#/components/schemas/CreatureIdComponent"
         }
       },
       "ordenMemberId": {
