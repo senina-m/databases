@@ -35,6 +35,10 @@
     {
       "name": "Crimes",
       "description": "Досье преступлений"
+    },
+    {
+      "name": "Victims",
+      "description": "Пострадавшие в преступлении"
     }
   ],
   "paths": {
@@ -687,6 +691,9 @@
               }
             }
           },
+          "400": {
+            "$ref": "#/components/responses/ResponseBadRequest"
+          },
           "404": {
             "$ref": "#/components/responses/ResponseNotFound"
           }
@@ -1289,6 +1296,154 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/crimeId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ResponseDeleted"
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/crimes/{crimeId}/victims": {
+      "get": {
+        "tags": [
+          "Victims"
+        ],
+        "summary": "Получение всех пострадавших в преступлении",
+        "operationId": "getVictims",
+        "responses": {
+          "200": {
+            "description": "Просмотр всех пострадавших в преступлении",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "title": "Список всех пострадавших в преступлении",
+                  "items": {
+                    "$ref": "#/components/schemas/Creature"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Victims"
+        ],
+        "summary": "Добавление пострадавшего в преступлении",
+        "operationId": "getVictims",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/parameters/creatureId"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Запись об пострадавшем успешно создана",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Creature"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/ResponseConflict"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/crimes/{crimeId}/victims/{creatureId}": {
+      "get": {
+        "tags": [
+          "Victims"
+        ],
+        "summary": "Проверка: является ли существо пострадавшим в преступлении",
+        "operationId": "getVictim",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/creatureId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/schemas/Creature"
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Victims"
+        ],
+        "summary": "Удаление пострадавшего в преступлении",
+        "operationId": "deleteVictim",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/creatureId"
           }
         ],
         "responses": {
