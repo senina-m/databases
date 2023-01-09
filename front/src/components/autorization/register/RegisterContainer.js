@@ -41,19 +41,18 @@ const RegistrContainer = ({serverPort}) => {
     };
 
     return (
-        // onSubmit={handleSubmit(onSubmit)}
-        <form className="register_box container" >
-          <h1>Зарегистрироваться</h1>
+        <form className="register_box container" onSubmit={handleSubmit(onSubmit)}>
+          <h1>Регистрация</h1>
           <input placeholder='Логин' className='form-control'
               {...register("login", {required: true, pattern: /^[A-Za-z0-9]+$/i, })} />
-          {errors?.login?.type === "pattern" && ( <p className='error'>Latin leters and numbers</p>)}
-          {errors?.login?.type === "required" && <p className='error'>This field is required</p>}
+          {errors?.login?.type === "pattern" && ( <p className='error'>Латинские буквы и цифры</p>)}
+          {errors?.login?.type === "required" && <p className='error'>Это поле обязательно</p>}
     
           <input type="password" placeholder='Пароль' className='form-control'
           {...register("password", { required: true, pattern: /^[A-Za-z0-9]+$/i, minLength: 8,})} />
-          {errors?.password?.type === "pattern" && (<p className='error'>Latin leters and numbers</p>)}
-          {errors?.password?.type === "minLength" && <p className='error'>At least 8 chars</p>}
-          {errors?.password?.type === "required" && <p className='error'>This field is required</p>}
+          {errors?.password?.type === "pattern" && (<p className='error'>Латинские буквы и цифры</p>)}
+          {errors?.password?.type === "minLength" && <p className='error'>Хотя бы 8 символов</p>}
+          {errors?.password?.type === "required" && <p className='error'>Это поле обязательно</p>}
     
     
           <input type="password" placeholder='Повторите пароль' className='form-control'
@@ -62,12 +61,12 @@ const RegistrContainer = ({serverPort}) => {
                pattern: /^[A-Za-z0-9]+$/i,
                 minLength: 8,
                 validate: value => value === password.current})} />
-          {errors?.repeatePassword?.type === "pattern" && (<p className='error'>Latin leters and numbers</p>)}
-          {errors?.repeatePassword?.type === "minLength" && <p className='error'> At least 8 chars</p>}
-          {errors?.repeatePassword?.type === "required" && <p className='error'>This field is required</p>}
-          {errors?.repeatePassword?.type === "validate" && <p className='error'>The passwords do not match</p>}
+          {errors?.repeatePassword?.type === "pattern" && (<p className='error'>Латинские буквы и цифры</p>)}
+          {errors?.repeatePassword?.type === "minLength" && <p className='error'> Хотя бы 8 символов</p>}
+          {errors?.repeatePassword?.type === "required" && <p className='error'>Это поле обязательно</p>}
+          {errors?.repeatePassword?.type === "validate" && <p className='error'>Пароли не совпадают</p>}
     
-          <input type="submit" value="Submit" className='btn-block btn' />
+          <input type="submit" value="Зарегистрироваться" className='btn-block btn' />
         </form>
     );
 };

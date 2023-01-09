@@ -3,9 +3,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import LoginContainer from './LoginContainer';
 
-const LoginPage = ({serverPort}) => {
+const LoginPage = () => {
   return <>
-  <LoginContainer serverPort={serverPort}/>
+  <LoginContainer/>
   <Link className='navigation-link' to="/register"> Ещё не регистрировались?</Link>
 </>;
 };

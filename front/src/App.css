@@ -4,7 +4,7 @@
   overflow: auto;
   min-height: 300px;
   border: 1px solid steelblue;
-  padding: 30px;
+  padding: 20px;
   border-radius: 5px;
 }
 
@@ -53,3 +53,20 @@
   width: 100%;
   text-align: center;
 }
+
+.error{
+  color:red;
+}
+
+
+.link-container-element{
+  display: block;
+  margin: 7px;
+  padding: 7px 60px;
+  font-size: 25px;
+}
+
+/* .link-container{
+  text-align: center;
+  text-align: center;
+} */
