@@ -39,6 +39,10 @@
     {
       "name": "Victims",
       "description": "Пострадавшие в преступлении"
+    },
+    {
+      "name": "Position",
+      "description": "Должность детектива"
     }
   ],
   "paths": {
@@ -223,6 +227,9 @@
         "responses": {
           "200": {
             "$ref": "#/components/responses/ResponseDeleted"
+          },
+          "400": {
+            "$ref": "#/components/responses/ResponseBadRequest"
           },
           "401": {
             "$ref": "#/components/responses/ResponseUnauthorized"
@@ -1084,6 +1091,9 @@
           "200": {
             "$ref": "#/components/responses/ResponseDeleted"
           },
+          "400": {
+            "$ref": "#/components/responses/ResponseBadRequest"
+          },
           "401": {
             "$ref": "#/components/responses/ResponseUnauthorized"
           },
@@ -1326,6 +1336,11 @@
         ],
         "summary": "Получение всех пострадавших в преступлении",
         "operationId": "getVictims",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/crimeId"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Просмотр всех пострадавших в преступлении",
@@ -1362,7 +1377,12 @@
           "Victims"
         ],
         "summary": "Добавление пострадавшего в преступлении",
-        "operationId": "getVictims",
+        "operationId": "createVictim",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/crimeId"
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -1412,6 +1432,9 @@
         "operationId": "getVictim",
         "parameters": [
           {
+            "$ref": "#/components/parameters/crimeId"
+          },
+          {
             "$ref": "#/components/parameters/creatureId"
           }
         ],
@@ -1443,12 +1466,217 @@
         "operationId": "deleteVictim",
         "parameters": [
           {
+            "$ref": "#/components/parameters/crimeId"
+          },
+          {
             "$ref": "#/components/parameters/creatureId"
           }
         ],
         "responses": {
           "200": {
             "$ref": "#/components/responses/ResponseDeleted"
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/positions": {
+      "get": {
+        "tags": [
+          "Positions"
+        ],
+        "summary": "Получение всех должностей детективов",
+        "operationId": "getPositions",
+        "responses": {
+          "200": {
+            "description": "Просмотр всех должностей детективов",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "title": "Список всех должностей детективов",
+                  "items": {
+                    "$ref": "#/components/schemas/Position"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Positions"
+        ],
+        "summary": "Создание должности детективов",
+        "operationId": "createPosition",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Position"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Должность детективов успешно создана",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Position"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "409": {
+            "$ref": "#/components/responses/ResponseConflict"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/positions/{positionId}": {
+      "get": {
+        "tags": [
+          "Positions"
+        ],
+        "summary": "Просмотр должности детективов",
+        "operationId": "getPosition",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/positionId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Должность детективов",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Position"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Positions"
+        ],
+        "summary": "Изменение должности детективов",
+        "operationId": "updatePosition",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/positionId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Position"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Должность детективов успешно изменена",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Position"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/ResponseConflict"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Positions"
+        ],
+        "summary": "Удаление пострадавшего в преступлении",
+        "operationId": "deletePosition",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/positionId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ResponseDeleted"
+          },
+          "400": {
+            "$ref": "#/components/responses/ResponseBadRequest"
           },
           "401": {
             "$ref": "#/components/responses/ResponseUnauthorized"
@@ -1784,7 +2012,26 @@
         ]
       },
       "Position": {
-
+        "type": "object",
+        "title": "Должность детектива",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "title": "Идентефикатор должности детектива",
+            "minimum": 1,
+            "maximum": 32767,
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "title": "Чедовеко-понятное название должности"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
       }
     },
     "parameters": {
@@ -1855,6 +2102,18 @@
           "format": "int64",
           "minimum": 1,
           "maximum": 9223372036854775807
+        }
+      },
+      "positionId": {
+        "name": "positionId",
+        "in": "path",
+        "description": "Идентефикатор должности детектива",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "format": "int32",
+          "minimum": 1,
+          "maximum": 32767
         }
       }
     },
