@@ -41,12 +41,16 @@
       "description": "Пострадавшие в преступлении"
     },
     {
-      "name": "Position",
+      "name": "Positions",
       "description": "Должность детектива"
     },
     {
       "name": "Salary",
       "description": "Ставка премии детективов"
+    },
+    {
+      "name": "Detectives",
+      "description": "Детективы"
     }
   ],
   "paths": {
@@ -1785,6 +1789,298 @@
           }
         ]
       }
+    },
+    "/api/v1/detectives": {
+      "get": {
+        "tags": [
+          "Detectives"
+        ],
+        "summary": "Получение списка всех детективов",
+        "operationId": "getDetectives",
+        "responses": {
+          "200": {
+            "description": "Просмотр всех детективов",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "title": "Список всех детективов",
+                  "items": {
+                    "$ref": "#/components/schemas/DetectiveResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Detectives"
+        ],
+        "summary": "Создание записи о детективе",
+        "operationId": "createDetective",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DetectiveRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Запись о детективе успешно создана",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetectiveResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/ResponseConflict"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/detectives/{detectiveId}": {
+      "get": {
+        "tags": [
+          "Detectives"
+        ],
+        "summary": "Получение записи о детективе",
+        "operationId": "getDetective",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/detectiveId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Просмотр записи о детективе",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetectiveResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Detectives"
+        ],
+        "summary": "Изменение записи о детективе",
+        "operationId": "updateDetective",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/detectiveId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DetectiveRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Запись о детективе успешно изменена",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetectiveResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/ResponseConflict"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Detectives"
+        ],
+        "summary": "Удаление записи о детективе",
+        "operationId": "deleteDetective",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/detectiveId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ResponseDeleted"
+          },
+          "400": {
+            "$ref": "#/components/responses/ResponseBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/crimes/{crimeId}/mainDetective": {
+      "get": {
+        "tags": [
+          "Crimes"
+        ],
+        "summary": "Получение ответственного за раскрытие преступления детектива",
+        "operationId": "getMainDetective",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/crimeId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Просмотр записи о детективе",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetectiveResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Crimes"
+        ],
+        "summary": "Изменение ответственного за раскрытие преступления детектива",
+        "operationId": "updateMainDetective",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/detectiveId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DetectiveIdComponent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ответственного за раскрытие преступления детектив успешно изменен",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetectiveResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -2129,6 +2425,56 @@
         "format": "int32",
         "minimum": 1,
         "title": "Величина ставки премии детектива"
+      },
+      "DetectiveRequest": {
+        "type": "object",
+        "title": "Детектив (запрос)",
+        "properties": {
+          "position": {
+            "type": "string",
+            "title": "Должность детектива"
+          },
+          "creatureId": {
+            "$ref": "#/components/schemas/CreatureIdComponent"
+          }
+        },
+        "required": [
+          "position",
+          "creatureId"
+        ]
+      },
+      "DetectiveResponse": {
+        "type": "object",
+        "title": "Детектив (ответ)",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "title": "Идентефикатор детектива",
+            "minimum": 1,
+            "maximum": 9223372036854775807,
+            "readOnly": true
+          },
+          "position": {
+            "type": "string",
+            "title": "Должность детектива"
+          },
+          "creature": {
+            "$ref": "#/components/schemas/Creature"
+          }
+        },
+        "required": [
+          "id",
+          "position",
+          "creature"
+        ]
+      },
+      "DetectiveIdComponent": {
+        "title": "Идентефикатор детектива",
+        "type": "integer",
+        "format": "int64",
+        "minimum": 1,
+        "maximum": 9223372036854775807
       }
     },
     "parameters": {
@@ -2211,6 +2557,15 @@
           "format": "int32",
           "minimum": 1,
           "maximum": 32767
+        }
+      },
+      "detectiveId": {
+        "name": "detectiveId",
+        "in": "path",
+        "description": "Идентефикатор детектива",
+        "required": true,
+        "schema": {
+          "$ref": "#/components/schemas/DetectiveIdComponent"
         }
       }
     },
