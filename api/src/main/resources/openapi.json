@@ -1448,7 +1448,14 @@
         ],
         "responses": {
           "200": {
-            "$ref": "#/components/schemas/Creature"
+            "description": "Запись об существе",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Creature"
+                }
+              }
+            }
           },
           "401": {
             "$ref": "#/components/responses/ResponseUnauthorized"
@@ -2081,6 +2088,180 @@
           }
         ]
       }
+    },
+    "/api/v1/crimes/{crimeId}/detectives": {
+      "get": {
+        "tags": [
+          "Crimes"
+        ],
+        "summary": "Получение всех участвующих в раскрытии преступления детективов",
+        "operationId": "getTakePartDetectives",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/crimeId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Просмотр всех участвующих в раскрытии преступления детективов",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "title": "Список всех участвующих в раскрытии преступления детективов",
+                  "items": {
+                    "$ref": "#/components/schemas/DetectiveResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Crimes"
+        ],
+        "summary": "Добавление участие в раскрытии преступления детектива",
+        "operationId": "createTakePartDetective",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/crimeId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DetectiveIdComponent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Участие детектива в раскрытии преступления добавлено",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetectiveResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/ResponseConflict"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/crimes/{crimeId}/detectives/{detectiveId}": {
+      "get": {
+        "tags": [
+          "Crimes"
+        ],
+        "summary": "Проверка: участвовал ли детектив в раскрытии преступления",
+        "operationId": "getTakePartDetective",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/crimeId"
+          },
+          {
+            "$ref": "#/components/parameters/detectiveId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Запись о детективе",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetectiveResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Crimes"
+        ],
+        "summary": "Удаление участия детектива в расследовании преступления",
+        "operationId": "deleteTakePartDetective",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/crimeId"
+          },
+          {
+            "$ref": "#/components/parameters/detectiveId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ResponseDeleted"
+          },
+          "400": {
+            "$ref": "#/components/responses/ResponseBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -2259,6 +2440,9 @@
           "permission": {
             "type": "string",
             "title": "Права пользователя"
+          },
+          "creatureId": {
+            "$ref": "#/components/schemas/CreatureIdComponent"
           }
         },
         "required": [
