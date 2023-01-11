@@ -51,6 +51,10 @@
     {
       "name": "Detectives",
       "description": "Детективы"
+    },
+    {
+      "name": "Locations",
+      "description": "Локации (возможные места преступлений)"
     }
   ],
   "paths": {
@@ -1679,7 +1683,7 @@
         "tags": [
           "Positions"
         ],
-        "summary": "Удаление пострадавшего в преступлении",
+        "summary": "Удаление должности детективов",
         "operationId": "deletePosition",
         "parameters": [
           {
@@ -2002,93 +2006,6 @@
         ]
       }
     },
-    "/api/v1/crimes/{crimeId}/mainDetective": {
-      "get": {
-        "tags": [
-          "Crimes"
-        ],
-        "summary": "Получение ответственного за раскрытие преступления детектива",
-        "operationId": "getMainDetective",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/crimeId"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Просмотр записи о детективе",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DetectiveResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/ResponseUnauthorized"
-          },
-          "403": {
-            "$ref": "#/components/responses/ResponsePermissionDenied"
-          },
-          "404": {
-            "$ref": "#/components/responses/ResponseNotFound"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      },
-      "put": {
-        "tags": [
-          "Crimes"
-        ],
-        "summary": "Изменение ответственного за раскрытие преступления детектива",
-        "operationId": "updateMainDetective",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/detectiveId"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DetectiveIdComponent"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Ответственного за раскрытие преступления детектив успешно изменен",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DetectiveResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/ResponseUnauthorized"
-          },
-          "403": {
-            "$ref": "#/components/responses/ResponsePermissionDenied"
-          },
-          "404": {
-            "$ref": "#/components/responses/ResponseNotFound"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
     "/api/v1/crimes/{crimeId}/detectives": {
       "get": {
         "tags": [
@@ -2237,6 +2154,208 @@
           },
           {
             "$ref": "#/components/parameters/detectiveId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ResponseDeleted"
+          },
+          "400": {
+            "$ref": "#/components/responses/ResponseBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/locations": {
+      "get": {
+        "tags": [
+          "Locations"
+        ],
+        "summary": "Получение всех локаций",
+        "operationId": "getLocations",
+        "responses": {
+          "200": {
+            "description": "Просмотр всех локаций",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "title": "Список всех локаций",
+                  "items": {
+                    "$ref": "#/components/schemas/Location"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Locations"
+        ],
+        "summary": "Создание локации",
+        "operationId": "createLocation",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Position"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Локация успешно создана",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Location"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "409": {
+            "$ref": "#/components/responses/ResponseConflict"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/locations/{locationId}": {
+      "get": {
+        "tags": [
+          "Locations"
+        ],
+        "summary": "Просмотр локации",
+        "operationId": "getLocation",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/locationId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Должность детективов",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Location"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Locations"
+        ],
+        "summary": "Изменение локации",
+        "operationId": "updateLocation",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/locationId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Location"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Локация успешно изменена",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Location"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/ResponseConflict"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Locations"
+        ],
+        "summary": "Удаление локации",
+        "operationId": "deleteLocation",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/locationId"
           }
         ],
         "responses": {
@@ -2569,6 +2688,13 @@
           "location": {
             "type": "string",
             "title": "Место происшествия преступления"
+          },
+          "mainDetectiveId": {
+            "type": "integer",
+            "format": "int64",
+            "title": "Идентефикатор ответственного за раскрытие преступления детектива",
+            "minimum": 1,
+            "maximum": 9223372036854775807
           }
         },
         "required": [
@@ -2579,7 +2705,8 @@
           "description",
           "dateBegin",
           "isSolved",
-          "location"
+          "location",
+          "mainDetectiveId"
         ]
       },
       "Position": {
@@ -2659,6 +2786,28 @@
         "format": "int64",
         "minimum": 1,
         "maximum": 9223372036854775807
+      },
+      "Location": {
+        "type": "object",
+        "title": "Локация",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "title": "Идентефикатор локации",
+            "minimum": 1,
+            "maximum": 32767,
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "title": "Название локации"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
       }
     },
     "parameters": {
@@ -2750,6 +2899,18 @@
         "required": true,
         "schema": {
           "$ref": "#/components/schemas/DetectiveIdComponent"
+        }
+      },
+      "locationId": {
+        "name": "locationId",
+        "in": "path",
+        "description": "Идентефикатор локации",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "format": "int32",
+          "minimum": 1,
+          "maximum": 32767
         }
       }
     },
