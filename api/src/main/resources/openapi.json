@@ -1150,6 +1150,22 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "mainDetectiveId",
+            "in": "query",
+            "description": "Поиск по детективу, ответственному за расследование преступления",
+            "schema": {
+              "$ref": "#/components/schemas/DetectiveIdComponent"
+            }
+          },
+          {
+            "name": "takePartDetectiveId",
+            "in": "query",
+            "description": "Поиск по принимающему участие в расследовании детективу",
+            "schema": {
+              "$ref": "#/components/schemas/DetectiveIdComponent"
+            }
           }
         ],
         "responses": {
@@ -2876,6 +2892,14 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/crimeId"
+          },
+          {
+            "name": "isProved",
+            "in": "query",
+            "description": "Фильтрация подозреваемых по доказанности их вины",
+            "schema": {
+              "type": "boolean"
+            }
           }
         ],
         "responses": {
@@ -3712,6 +3736,69 @@
           },
           "404": {
             "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/magicAmount": {
+      "get": {
+        "tags": [
+          "UsedMagics"
+        ],
+        "summary": "Получение урона сердцу мира за указанный период",
+        "operationId": "getMagicAmount",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "title": "Период, за зоторый рассчитывается урон (указанные даты в него не входят)",
+                "properties": {
+                  "dateBegin": {
+                    "type": "string",
+                    "format": "date",
+                    "title": "Дата начала периода (не включается в расчет)"
+                  },
+                  "dateEnd": {
+                    "type": "string",
+                    "format": "date",
+                    "title": "Дата конца периода (не включается в расчет)"
+                  }
+                },
+                "required": [
+                  "dateBegin",
+                  "dateEnd"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Нанесенный сердцу мира урон",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int64",
+                  "title": "Величина нанесенного сердцу мира урона"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ResponseBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
           }
         },
         "security": [
