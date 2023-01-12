@@ -63,6 +63,10 @@
     {
       "name": "Criminals",
       "description": "Подозреваемые в совершении преступления"
+    },
+    {
+      "name": "UsedMagics",
+      "description": "Совершенные подозреваемым заклинания"
     }
   ],
   "paths": {
@@ -2014,6 +2018,74 @@
         ]
       }
     },
+    "/api/v1/detectives/{detectiveId}/salary/{year}/{month}": {
+      "get": {
+        "tags": [
+          "Detectives"
+        ],
+        "summary": "Получение зарплаты детектива за указанный месяц",
+        "operationId": "getDetectiveSalary",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/detectiveId"
+          },
+          {
+            "name": "year",
+            "in": "path",
+            "description": "Год, за месяц которого надо рассчитать зарплату",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1
+            },
+            "required": true
+          },
+          {
+            "name": "month",
+            "in": "path",
+            "description": "Месяц за который надо рассчитать зарплату",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1,
+              "maximum": 12
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Зарплата детектива",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32",
+                  "title": "Зарплата детектива"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ResponseBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
     "/api/v1/crimes/{crimeId}/detectives": {
       "get": {
         "tags": [
@@ -2878,7 +2950,7 @@
             "$ref": "#/components/responses/ResponsePermissionDenied"
           },
           "404": {
-            "$ref": "#/components/responses/ResponseBadRequest"
+            "$ref": "#/components/responses/ResponseNotFound"
           },
           "409": {
             "$ref": "#/components/responses/ResponseConflict"
@@ -2975,7 +3047,7 @@
             "$ref": "#/components/responses/ResponsePermissionDenied"
           },
           "404": {
-            "$ref": "#/components/responses/ResponseBadRequest"
+            "$ref": "#/components/responses/ResponseNotFound"
           },
           "409": {
             "$ref": "#/components/responses/ResponseConflict"
@@ -3108,7 +3180,7 @@
             "$ref": "#/components/responses/ResponsePermissionDenied"
           },
           "404": {
-            "$ref": "#/components/responses/ResponseBadRequest"
+            "$ref": "#/components/responses/ResponseNotFound"
           },
           "409": {
             "$ref": "#/components/responses/ResponseConflict"
@@ -3132,6 +3204,500 @@
           },
           {
             "$ref": "#/components/parameters/criminalId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ResponseDeleted"
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/crimes/{crimeId}/criminals/{criminalId}/usedTrueMagics": {
+      "get": {
+        "tags": [
+          "UsedMagics"
+        ],
+        "summary": "Получение всех использованных подозреваемых заклинаний очевидной магии",
+        "operationId": "getUsedTrueMagics",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/crimeId"
+          },
+          {
+            "$ref": "#/components/parameters/criminalId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Просмотр всех использованных подозреваемых заклинаний истинной магии",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "title": "Список всех использованных подозреваемых заклинаний истинной магии",
+                  "items": {
+                    "$ref": "#/components/schemas/UsedTrueMagicResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "UsedMagics"
+        ],
+        "summary": "Создание записи о использовании заклинания истинной магии подозреваемым",
+        "operationId": "createUsedTrueMagic",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/crimeId"
+          },
+          {
+            "$ref": "#/components/parameters/criminalId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UsedMagicRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Запись о использовании заклинания истинной магии подозреваемым успешно создана",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsedTrueMagicResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ResponseBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/ResponseConflict"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/crimes/{crimeId}/criminals/{criminalId}/usedTrueMagics/{magicId}": {
+      "get": {
+        "tags": [
+          "UsedMagics"
+        ],
+        "summary": "Получение использованного преступником заклинания истинной магии",
+        "operationId": "getUsedTrueMagic",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/crimeId"
+          },
+          {
+            "$ref": "#/components/parameters/criminalId"
+          },
+          {
+            "$ref": "#/components/parameters/magicId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Использованное преступником заклинание истинной магии",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsedTrueMagicResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "UsedMagics"
+        ],
+        "summary": "Изменение записи о использовании заклинания истинной магии подозреваемым",
+        "operationId": "updateUsedTrueMagic",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/crimeId"
+          },
+          {
+            "$ref": "#/components/parameters/criminalId"
+          },
+          {
+            "$ref": "#/components/parameters/magicId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string",
+                "format": "date",
+                "title": "Дата использования заклинания"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Запись о использовании заклинанияуспешно изменена",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsedTrueMagicResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ResponseBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/ResponseConflict"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "UsedMagics"
+        ],
+        "summary": "Удаление записи о использовании заклинания истинной магии подозреваемым",
+        "operationId": "deleteUsedTrueMagic",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/crimeId"
+          },
+          {
+            "$ref": "#/components/parameters/criminalId"
+          },
+          {
+            "$ref": "#/components/parameters/magicId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ResponseDeleted"
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/crimes/{crimeId}/criminals/{criminalId}/usedObviousMagics": {
+      "get": {
+        "tags": [
+          "UsedMagics"
+        ],
+        "summary": "Получение всех использованных подозреваемых заклинаний очевидной магии",
+        "operationId": "getUsedObviousMagics",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/crimeId"
+          },
+          {
+            "$ref": "#/components/parameters/criminalId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Просмотр всех использованных подозреваемых заклинаний очевидной магии",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "title": "Список всех использованных подозреваемых заклинаний очевидной магии",
+                  "items": {
+                    "$ref": "#/components/schemas/UsedObviousMagicResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "UsedMagics"
+        ],
+        "summary": "Создание записи о использовании заклинания очевидной магии подозреваемым",
+        "operationId": "createUsedObviousMagic",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/crimeId"
+          },
+          {
+            "$ref": "#/components/parameters/criminalId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UsedMagicRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Запись о использовании заклинания очевидной магии подозреваемым успешно создана",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsedObviousMagicResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ResponseBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/ResponseConflict"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/crimes/{crimeId}/criminals/{criminalId}/usedObviousMagics/{magicId}": {
+      "get": {
+        "tags": [
+          "UsedMagics"
+        ],
+        "summary": "Получение использованного преступником заклинания очевидной магии",
+        "operationId": "getUsedObviousMagic",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/crimeId"
+          },
+          {
+            "$ref": "#/components/parameters/criminalId"
+          },
+          {
+            "$ref": "#/components/parameters/magicId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Использованное преступником заклинание очевидной магии",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsedObviousMagicResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "UsedMagics"
+        ],
+        "summary": "Изменение записи о использовании заклинания очевидной магии подозреваемым",
+        "operationId": "updateUsedObviousMagic",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/crimeId"
+          },
+          {
+            "$ref": "#/components/parameters/criminalId"
+          },
+          {
+            "$ref": "#/components/parameters/magicId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string",
+                "format": "date",
+                "title": "Дата использования заклинания"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Запись о использовании заклинания успешно изменена",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsedObviousMagicResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ResponseBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/ResponseConflict"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "UsedMagics"
+        ],
+        "summary": "Удаление записи о использовании заклинания очевидной магии подозреваемым",
+        "operationId": "deleteUsedObviousMagic",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/crimeId"
+          },
+          {
+            "$ref": "#/components/parameters/criminalId"
+          },
+          {
+            "$ref": "#/components/parameters/magicId"
           }
         ],
         "responses": {
@@ -3741,6 +4307,79 @@
           "dateBegin",
           "dateEnd",
           "fineAmount"
+        ]
+      },
+      "UsedMagicRequest": {
+        "type": "object",
+        "title": "Факт использования заклинания истинной или очевидной магии подозреваемым (запрос)",
+        "properties": {
+          "magicId": {
+            "$ref": "#/components/schemas/MagicIdComponent"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Дата использования заклинания"
+          }
+        },
+        "writeOnly": true,
+        "required": [
+          "magicId",
+          "date"
+        ]
+      },
+      "UsedTrueMagicResponse": {
+        "type": "object",
+        "title": "Факт использования заклинания истинной магии подозреваемым (ответ)",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "title": "Идентефикатор факта использования заклинания",
+            "minimum": 1,
+            "maximum": 32767
+          },
+          "magic": {
+            "$ref": "#/components/schemas/TrueMagic"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Дата конца заключения/изгнания"
+          }
+        },
+        "readOnly": true,
+        "required": [
+          "id",
+          "magic",
+          "date"
+        ]
+      },
+      "UsedObviousMagicResponse": {
+        "type": "object",
+        "title": "Факт использования заклинания очевидной магии подозреваемым (ответ)",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "title": "Идентефикатор факта использования заклинания",
+            "minimum": 1,
+            "maximum": 32767
+          },
+          "magic": {
+            "$ref": "#/components/schemas/ObviousMagic"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Дата использования заклинания"
+          }
+        },
+        "readOnly": true,
+        "required": [
+          "id",
+          "magic",
+          "date"
         ]
       }
     },
