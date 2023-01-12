@@ -3021,6 +3021,139 @@
           }
         ]
       }
+    },
+    "/api/v1/crimes/{crimeId}/criminals/{criminalId}/punishment": {
+      "get": {
+        "tags": [
+          "Criminals"
+        ],
+        "summary": "Получение наказания преступника",
+        "operationId": "getPunishment",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/crimeId"
+          },
+          {
+            "$ref": "#/components/parameters/criminalId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Запись о наказании",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Punishment"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Criminals"
+        ],
+        "summary": "Изменение записи о наказании преступника",
+        "operationId": "updatePunishment",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/crimeId"
+          },
+          {
+            "$ref": "#/components/parameters/criminalId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Punishment"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Запись о подозреваемом успешно изменена",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CriminalResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ResponseBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseBadRequest"
+          },
+          "409": {
+            "$ref": "#/components/responses/ResponseConflict"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Criminals"
+        ],
+        "summary": "Удаление записи о наказании преступника",
+        "operationId": "deletePunishment",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/crimeId"
+          },
+          {
+            "$ref": "#/components/parameters/criminalId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ResponseDeleted"
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
     }
   },
   "components": {
