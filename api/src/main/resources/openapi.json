@@ -59,6 +59,10 @@
     {
       "name": "Magics",
       "description": "Заклинания магии (истинной и очевидной)"
+    },
+    {
+      "name": "Criminals",
+      "description": "Подозреваемые в совершении преступления"
     }
   ],
   "paths": {
@@ -1012,7 +1016,7 @@
         "operationId": "getPermission",
         "parameters": [
           {
-            "$ref": "#/components/parameters/customerId"
+            "$ref": "#/components/parameters/permissionId"
           }
         ],
         "responses": {
@@ -1046,11 +1050,11 @@
         "tags": [
           "Permissions"
         ],
-        "summary": "Изменение ролb пользователей архива",
+        "summary": "Изменение роли пользователей архива",
         "operationId": "updatePermission",
         "parameters": [
           {
-            "$ref": "#/components/parameters/customerId"
+            "$ref": "#/components/parameters/permissionId"
           }
         ],
         "requestBody": {
@@ -1100,7 +1104,7 @@
         "operationId": "deletePermission",
         "parameters": [
           {
-            "$ref": "#/components/parameters/customerId"
+            "$ref": "#/components/parameters/permissionId"
           }
         ],
         "responses": {
@@ -2084,6 +2088,9 @@
               }
             }
           },
+          "400": {
+            "$ref": "#/components/responses/ResponseBadRequest"
+          },
           "401": {
             "$ref": "#/components/responses/ResponseUnauthorized"
           },
@@ -2163,9 +2170,6 @@
         "responses": {
           "200": {
             "$ref": "#/components/responses/ResponseDeleted"
-          },
-          "400": {
-            "$ref": "#/components/responses/ResponseBadRequest"
           },
           "401": {
             "$ref": "#/components/responses/ResponseUnauthorized"
@@ -2789,6 +2793,234 @@
           }
         ]
       }
+    },
+    "/api/v1/crimes/{crimeId}/criminals": {
+      "get": {
+        "tags": [
+          "Criminals"
+        ],
+        "summary": "Получение всех подозреваемых",
+        "operationId": "getCriminals",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/crimeId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Просмотр всех подозреваемых",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "title": "Список всех подозреваемых",
+                  "items": {
+                    "$ref": "#/components/schemas/CriminalResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseBadRequest"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Criminals"
+        ],
+        "summary": "Создание записи о подозреваемом",
+        "operationId": "createCriminal",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/crimeId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CriminalRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Запись о подозреваемом успешно создана",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CriminalResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ResponseBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseBadRequest"
+          },
+          "409": {
+            "$ref": "#/components/responses/ResponseConflict"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/crimes/{crimeId}/criminals/{criminalId}": {
+      "get": {
+        "tags": [
+          "Criminals"
+        ],
+        "summary": "Получение записи о подозреваемом",
+        "operationId": "getCriminal",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/crimeId"
+          },
+          {
+            "$ref": "#/components/parameters/criminalId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Запись о подозреваемом",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CriminalResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Criminals"
+        ],
+        "summary": "Изменение записи о подозреваемом",
+        "operationId": "updateCriminal",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/crimeId"
+          },
+          {
+            "$ref": "#/components/parameters/criminalId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "boolean",
+                "title": "Доказана ли вина"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Запись о подозреваемом успешно изменена",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CriminalResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseBadRequest"
+          },
+          "409": {
+            "$ref": "#/components/responses/ResponseConflict"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Criminals"
+        ],
+        "summary": "Удаление записи о подозреваемом",
+        "operationId": "deleteCriminal",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/crimeId"
+          },
+          {
+            "$ref": "#/components/parameters/criminalId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ResponseDeleted"
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -3292,6 +3524,91 @@
           "damage",
           "isAllowed"
         ]
+      },
+      "CriminalRequest": {
+        "type": "object",
+        "title": "Подозреваемый в совершении преступления (запрос)",
+        "properties": {
+          "creatureId": {
+            "$ref": "#/components/schemas/CreatureIdComponent"
+          },
+          "isProved": {
+            "type": "boolean",
+            "title": "Доказана ли вина"
+          }
+        },
+        "writeOnly": true,
+        "required": [
+          "creatureId",
+          "isProved"
+        ]
+      },
+      "CriminalResponse": {
+        "type": "object",
+        "title": "Подозреваемый в совершении преступления (ответ)",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "title": "Идентефикатор преступника",
+            "minimum": 1,
+            "maximum": 9223372036854775807
+          },
+          "isProved": {
+            "type": "boolean",
+            "title": "Доказана ли вина"
+          },
+          "creature": {
+            "$ref": "#/components/schemas/Creature"
+          }
+        },
+        "readOnly": true,
+        "required": [
+          "id",
+          "isProved",
+          "creature"
+        ]
+      },
+      "Punishment": {
+        "type": "object",
+        "title": "Наказание за преступление",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "title": "Идентефикатор наказания",
+            "minimum": 1,
+            "maximum": 9223372036854775807,
+            "readOnly": true
+          },
+          "type": {
+            "type": "string",
+            "title": "Тип наказания (штраф и/или заключение в одной из тюрем или изгнание)"
+          },
+          "dateBegin": {
+            "type": "string",
+            "format": "date",
+            "title": "Дата начала заключения/изгнания"
+          },
+          "dateEnd": {
+            "type": "string",
+            "format": "date",
+            "title": "Дата конца заключения/изгнания"
+          },
+          "fineAmount": {
+            "type": "integer",
+            "format": "int32",
+            "title": "Размер штрафа",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "dateBegin",
+          "dateEnd",
+          "fineAmount"
+        ]
       }
     },
     "parameters": {
@@ -3404,6 +3721,18 @@
         "required": true,
         "schema": {
           "$ref": "#/components/schemas/MagicIdComponent"
+        }
+      },
+      "criminalId": {
+        "name": "criminalId",
+        "in": "path",
+        "description": "Идентефикатор подозреваемого",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "format": "int64",
+          "minimum": 1,
+          "maximum": 9223372036854775807
         }
       }
     },
