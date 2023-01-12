@@ -55,6 +55,10 @@
     {
       "name": "Locations",
       "description": "Локации (возможные места преступлений)"
+    },
+    {
+      "name": "Magics",
+      "description": "Заклинания магии (истинной и очевидной)"
     }
   ],
   "paths": {
@@ -2225,7 +2229,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Position"
+                "$ref": "#/components/schemas/Location"
               }
             }
           }
@@ -2272,7 +2276,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Должность детективов",
+            "description": "Локация",
             "content": {
               "application/json": {
                 "schema": {
@@ -2356,6 +2360,410 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/locationId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ResponseDeleted"
+          },
+          "400": {
+            "$ref": "#/components/responses/ResponseBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/trueMagics": {
+      "get": {
+        "tags": [
+          "Magics"
+        ],
+        "summary": "Получение всех заклинаний истинной магии",
+        "operationId": "getTrueMagics",
+        "responses": {
+          "200": {
+            "description": "Просмотр всех заклинаний истинной магии",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "title": "Список всех заклинаний истинной магии",
+                  "items": {
+                    "$ref": "#/components/schemas/TrueMagic"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Magics"
+        ],
+        "summary": "Создание заклинания истинной магии",
+        "operationId": "createTrueMagic",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrueMagic"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Заклинание истинной магии успешно создано",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrueMagic"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "409": {
+            "$ref": "#/components/responses/ResponseConflict"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/trueMagics/{magicId}": {
+      "get": {
+        "tags": [
+          "Magics"
+        ],
+        "summary": "Просмотр заклинания истинной магии",
+        "operationId": "getTrueMagic",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/magicId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Просмотр заклинания истинной магии",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrueMagic"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Magics"
+        ],
+        "summary": "Изменение заклинания истинной магии",
+        "operationId": "updateTrueMagic",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/magicId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrueMagic"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Заклинание истинной магии успешно изменено",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrueMagic"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/ResponseConflict"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Magics"
+        ],
+        "summary": "Удаление заклинания истинной магии",
+        "operationId": "deleteTrueMagic",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/magicId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ResponseDeleted"
+          },
+          "400": {
+            "$ref": "#/components/responses/ResponseBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/obviousMagics": {
+      "get": {
+        "tags": [
+          "Magics"
+        ],
+        "summary": "Получение всех заклинаний очевидной магии",
+        "operationId": "getObviousMagics",
+        "responses": {
+          "200": {
+            "description": "Просмотр всех заклинаний очевидной магии",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "title": "Список всех заклинаний очевидной магии",
+                  "items": {
+                    "$ref": "#/components/schemas/ObviousMagic"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Magics"
+        ],
+        "summary": "Создание заклинания очевидной магии",
+        "operationId": "createObviousMagic",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ObviousMagic"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Заклинание очевидной магии успешно создано",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObviousMagic"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "409": {
+            "$ref": "#/components/responses/ResponseConflict"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/obviousMagics/{magicId}": {
+      "get": {
+        "tags": [
+          "Magics"
+        ],
+        "summary": "Просмотр заклинания очевидной магии",
+        "operationId": "getObviousMagic",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/magicId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Просмотр заклинания очевидной магии",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObviousMagic"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Magics"
+        ],
+        "summary": "Изменение заклинания очевидной магии",
+        "operationId": "updateObviousMagic",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/magicId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ObviousMagic"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Заклинание очевидной магии успешно изменено",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObviousMagic"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/ResponseUnauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ResponsePermissionDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/ResponseNotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/ResponseConflict"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Magics"
+        ],
+        "summary": "Удаление заклинания очевидной магии",
+        "operationId": "deleteObviousMagic",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/magicId"
           }
         ],
         "responses": {
@@ -2808,6 +3216,82 @@
           "id",
           "name"
         ]
+      },
+      "MagicIdComponent": {
+        "type": "integer",
+        "format": "int32",
+        "title": "Идентефикатор заклинания магии",
+        "minimum": 1,
+        "maximum": 32767
+      },
+      "TrueMagic": {
+        "type": "object",
+        "title": "Заклинание истинной магии",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "title": "Идентефикатор заклинания истинной магии",
+            "minimum": 1,
+            "maximum": 32767,
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "title": "Название заклинания истинной магии"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "ObviousMagic": {
+        "type": "object",
+        "title": "Заклинание очевидной магии",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "title": "Идентефикатор заклинания очевидной магии",
+            "minimum": 1,
+            "maximum": 32767,
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "title": "Название заклинания очевидной магии"
+          },
+          "color": {
+            "type": "string",
+            "enum": ["Белая", "Черная"],
+            "title": "Цвет очевидной магии"
+          },
+          "level": {
+            "type": "integer",
+            "format": "int32",
+            "title": "Уровень заклинания очевидной магии",
+            "minimum": 1
+          },
+          "damage": {
+            "type": "integer",
+            "format": "int32",
+            "title": "Урон, приносимый заклинанием очевидной магии",
+            "minimum": 0
+          },
+          "isAllowed": {
+            "type": "boolean",
+            "title": "Разрешено ли это заклинание по кодексу Хрембера"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "color",
+          "level",
+          "damage",
+          "isAllowed"
+        ]
       }
     },
     "parameters": {
@@ -2911,6 +3395,15 @@
           "format": "int32",
           "minimum": 1,
           "maximum": 32767
+        }
+      },
+      "magicId": {
+        "name": "magicId",
+        "in": "path",
+        "description": "Идентефикатор заклинания магии",
+        "required": true,
+        "schema": {
+          "$ref": "#/components/schemas/MagicIdComponent"
         }
       }
     },
