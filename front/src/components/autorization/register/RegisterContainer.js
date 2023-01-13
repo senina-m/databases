@@ -1,9 +1,9 @@
 import React, {useRef} from 'react';
 import { useForm } from "react-hook-form";
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
-const RegistrContainer = ({serverPort}) => {
-    const navigate = useNavigate();
+const RegistrContainer = () => {
+    // const navigate = useNavigate();
 
     const {
         register,
@@ -17,27 +17,6 @@ const RegistrContainer = ({serverPort}) => {
   
     const onSubmit = (data) => {
   
-      console.log("Attempt entered by user:");
-      console.log(data);
-  
-      tryToSendAddAttemptRequest(serverPort, {login:data.login, password:data.password}).then(
-      (registrationResult) => {
-          console.log("Got this attempt from server:" + registrationResult);
-          if(registrationResult === "User added successfully"){
-            sendLoginRequest(serverPort, data.login, data.password).then(() => {
-                navigate('/main', {replace: true});
-              }
-              ).catch(() => {
-                console.log("Fail to request token, maybe login or password are incorrect!");
-                //todo: login or password is incorrect
-              });
-          }
-        }
-        ).catch(() => {
-        //todo: maybe token is expired - need to go to login page
-        console.log("Adding attempt finished with error!");
-        }
-      );
     };
 
     return (
@@ -72,31 +51,3 @@ const RegistrContainer = ({serverPort}) => {
 };
 
 export default RegistrContainer;
-
-let tryToSendAddAttemptRequest = async (port, data) => {
-    console.log(port);
-    let url = "http://localhost:"+ port +"/auth/register";
-    console.log("Sending POST request to url: " + url + ". With body: " + JSON.stringify(data));
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      mode: 'cors',
-      body: JSON.stringify(data),
-    });
-    return response.text(); //todo: think if it will be better to return json as response or use just request status?
-}
-
-let sendLoginRequest = async (port, login, password) => {
-    let url = "http://localhost:"+ port +"/auth/login?" + new URLSearchParams({"login":login, "password":password});
-    console.log("Sending GET request to url: " + url);
-    const response = await fetch(url, {
-      method: 'GET',
-      mode: 'cors',
-    });
-  
-    let json = await response.json();
-    console.log(json);
-    return json.token;
-  }

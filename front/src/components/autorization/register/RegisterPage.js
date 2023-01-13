@@ -2,9 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import RegisterContainer from './RegisterContainer'
 
-const RegisterPage = ({serverPort}) => {
+const RegisterPage = () => {
   return <>
-  <RegisterContainer serverPort={serverPort}/>
+  <RegisterContainer/>
   <Link className='navigation-link' to="/">Уже есть аккаунт?</Link>
   </>;
 };

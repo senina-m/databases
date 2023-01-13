@@ -16,17 +16,17 @@ const LoginContainer = () => {
   const navigate = useNavigate();
 
   let loginAction = (data) => {
-    post("/auth", {"name": data.login, "password": data.password}).then(
-    (json) => {
-      if(json.status === 200){
-        ReactSession.set("name", json.name);
-        ReactSession.set("permission", json.permission);
-        ReactSession.set("token", json.token);
+    post("/auth", {"name": data.login, "password": data.password}, '').then(
+    (response) => {
+      if(response.status === 200){
+        ReactSession.set("name", response.name);
+        ReactSession.set("permission", response.permission);
+        ReactSession.set("token", response.token);
         navigate('/main', {replace: true});
-      }else if(json.status === 400){
+      }else if(response.status === 400){
         //todo: login or password is incorrect
       }
-    }).catch((json) => {
+    }).catch((response) => {
       console.log("Fail to request token, maybe login or password are incorrect!");
       //todo: ????
     });

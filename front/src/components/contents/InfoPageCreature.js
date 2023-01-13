@@ -1,6 +1,6 @@
 import React from 'react'
 
-const InfoPage = () => {
+const InfoPageCreature = () => {
   return (
     <div>
       
@@ -8,4 +8,4 @@ const InfoPage = () => {
   )
 }
 
-export default InfoPage
+export default InfoPageCreature

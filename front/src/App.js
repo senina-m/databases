@@ -6,10 +6,11 @@ import LoginPage from './components/autorization/login/LoginPage';
 import RegisterPage from './components/autorization/register/RegisterPage';
 import MainPage from './components/MainPage';
 import PageNotFound from './components/PageNotFound';
-import CreaturesPage from './components/CreaturesPage';
-import CrimesPage from './components/CrimesPage';
-import InfoPage from './components/InfoPage';
-import CreatePage from './components/CreatePage';
+import CreaturesPage from './components/creatures/CreaturesPage';
+import CrimesPage from './components/contents/CrimesPage';
+import InfoPageCreature from './components/contents/InfoPageCreature';
+import CreatePage from './components/contents/create/CreatePage';
+import Forbidden from './components/contents/Forbidden';
 import { ReactSession } from 'react-client-session';
 
 
@@ -25,8 +26,9 @@ function App() {
         <Route path="/main" element={<MainPage/>}/>
         <Route path="/creatures" element={<CreaturesPage/>}/>
         <Route path="/crimes" element={<CrimesPage/>}/>
-        <Route path="/info" element={<InfoPage/>}/>
+        <Route path="/info" element={<InfoPageCreature/>}/>
         <Route path="/create" element={<CreatePage/>}/>
+        <Route path='/forbidden' element={<Forbidden/>}/>
         <Route path="*" element={<PageNotFound/>} status={404}/>
       </Routes>
       <Footer/>
