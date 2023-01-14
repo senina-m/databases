@@ -12,6 +12,7 @@ import InfoPageCreature from './components/contents/InfoPageCreature';
 import CreatePage from './components/contents/create/CreatePage';
 import Forbidden from './components/contents/Forbidden';
 import { ReactSession } from 'react-client-session';
+import CreatureEditForm from './components/creatures/CreatureEditForm';
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
         <Route path="/crimes" element={<CrimesPage/>}/>
         <Route path="/info" element={<InfoPageCreature/>}/>
         <Route path="/create" element={<CreatePage/>}/>
+        <Route path="/edit/creature" element={<CreatureEditForm/>}/>
         <Route path='/forbidden' element={<Forbidden/>}/>
         <Route path="*" element={<PageNotFound/>} status={404}/>
       </Routes>
