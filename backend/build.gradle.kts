@@ -64,3 +64,7 @@ openApiGenerate {
 tasks.compileKotlin {
     dependsOn(tasks.openApiGenerate)
 }
+
+sourceSets["main"].kotlin {
+    srcDir("${buildDir}/api/generated/src/main/kotlin")
+}

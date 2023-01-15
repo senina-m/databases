@@ -1,0 +1,16 @@
+server:
+  port: ${SERVER_PORT:32221}
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: ${DB_USERNAME::postgres}
+    password: ${DB_PASSWORD::password}
+  jpa:
+    database: postgresql
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    generate-ddl: false
+    open-in-view: false
