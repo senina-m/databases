@@ -7,7 +7,7 @@ const CreatePage = ({crime}) => {
     <div>
       <h1>Create Page</h1>
 
-      {crime? "true" : "false"}
+      {/* {crime? "true" : "false"} */}
       {crime && <CreateCrimeContainer/>}
       {!crime && <CreateCreatureContainer/>}
     </div>

@@ -13,6 +13,7 @@ import CreatePage from './components/contents/create/CreatePage';
 import Forbidden from './components/contents/Forbidden';
 import { ReactSession } from 'react-client-session';
 import CreatureEditForm from './components/creatures/CreatureEditForm';
+import Relogin from './components/Relogin';
 
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
         <Route path="/create" element={<CreatePage/>}/>
         <Route path="/edit/creature" element={<CreatureEditForm/>}/>
         <Route path='/forbidden' element={<Forbidden/>}/>
+        <Route path='/relogin' element={<Relogin/>}/>
         <Route path="*" element={<PageNotFound/>} status={404}/>
       </Routes>
       <Footer/>

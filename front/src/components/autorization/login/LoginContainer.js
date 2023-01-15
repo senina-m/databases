@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { useForm } from "react-hook-form";
 import { useNavigate } from 'react-router-dom';
 import post from '../../../api/Post';
@@ -10,12 +10,14 @@ const LoginContainer = () => {
     register,
     handleSubmit,
     // watch,
-    formState: { errors }
+    formState: { errors,},
   } = useForm();
 
   const navigate = useNavigate();
+  const [incorrectLogin, setIncorrectLogin] = useState(false);
 
   let loginAction = (data) => {
+    setIncorrectLogin(false);
     post("/auth", {"name": data.login, "password": data.password}, '').then(
     (response) => {
       if(response.status === 200){
@@ -24,7 +26,7 @@ const LoginContainer = () => {
         ReactSession.set("token", response.token);
         navigate('/main', {replace: true});
       }else if(response.status === 400){
-        //todo: login or password is incorrect
+        setIncorrectLogin(true);
       }
     }).catch((response) => {
       console.log("Fail to request token, maybe login or password are incorrect!");
@@ -36,14 +38,15 @@ const LoginContainer = () => {
     <h1>Войти</h1>
     <input placeholder='Логин' className='form-control'
     {...register("login", {required: true, pattern: /^[A-Za-z0-9]+$/i, })} />
-    {errors?.login?.type === "pattern" && ( <p className='error'>Латинские буквы и цифры</p>)}
+    {errors?.login?.type === "pattern" && ( <p className='error'>Русские буквы и цифры</p>)}
     {errors?.login?.type === "required" && <p className='error'>Это поле обязательно</p>}
 
     <input type="password" placeholder='Пароль' className='form-control'
     {...register("password", { required: true, pattern: /^[A-Za-z0-9]+$/i, minLength: 8,})} />
-    {errors?.password?.type === "pattern" && (<p className='error'>Латинские буквы и цифры</p>)}
+    {errors?.password?.type === "pattern" && (<p className='error'>Русские буквы и цифры</p>)}
     {errors?.password?.type === "minLength" && <p className='error'>Хотя бы 8 символов</p>}
     {errors?.password?.type === "required" && <p className='error'>Это поле обязательно</p>}
+    {incorrectLogin && <p className='error'>Неправильный логин или пароль</p>}
     
     <input type="submit" value='Вход' className='btn btn-block'/>
   </form>;

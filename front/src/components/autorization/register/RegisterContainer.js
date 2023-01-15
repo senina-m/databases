@@ -24,12 +24,12 @@ const RegistrContainer = () => {
           <h1>Регистрация</h1>
           <input placeholder='Логин' className='form-control'
               {...register("login", {required: true, pattern: /^[A-Za-z0-9]+$/i, })} />
-          {errors?.login?.type === "pattern" && ( <p className='error'>Латинские буквы и цифры</p>)}
+          {errors?.login?.type === "pattern" && ( <p className='error'>Русские буквы и цифры</p>)}
           {errors?.login?.type === "required" && <p className='error'>Это поле обязательно</p>}
     
           <input type="password" placeholder='Пароль' className='form-control'
           {...register("password", { required: true, pattern: /^[A-Za-z0-9]+$/i, minLength: 8,})} />
-          {errors?.password?.type === "pattern" && (<p className='error'>Латинские буквы и цифры</p>)}
+          {errors?.password?.type === "pattern" && (<p className='error'>Русские буквы и цифры</p>)}
           {errors?.password?.type === "minLength" && <p className='error'>Хотя бы 8 символов</p>}
           {errors?.password?.type === "required" && <p className='error'>Это поле обязательно</p>}
     
@@ -40,7 +40,7 @@ const RegistrContainer = () => {
                pattern: /^[A-Za-z0-9]+$/i,
                 minLength: 8,
                 validate: value => value === password.current})} />
-          {errors?.repeatePassword?.type === "pattern" && (<p className='error'>Латинские буквы и цифры</p>)}
+          {errors?.repeatePassword?.type === "pattern" && (<p className='error'>Русские буквы и цифры</p>)}
           {errors?.repeatePassword?.type === "minLength" && <p className='error'> Хотя бы 8 символов</p>}
           {errors?.repeatePassword?.type === "required" && <p className='error'>Это поле обязательно</p>}
           {errors?.repeatePassword?.type === "validate" && <p className='error'>Пароли не совпадают</p>}

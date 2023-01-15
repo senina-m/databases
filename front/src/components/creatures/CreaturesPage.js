@@ -4,6 +4,7 @@ import get from '../../api/Get'
 import {ReactSession} from 'react-client-session'
 import { useNavigate } from 'react-router-dom';
 import Table from "../contents/table/Table";
+import { Link } from 'react-router-dom';
  
 
 const CreaturesPage = () => {
@@ -26,7 +27,9 @@ const CreaturesPage = () => {
           delete json.status;
           console.log("here", json);
           setData(json);
-        } else if (json.status === 401 || json.status === 403) {
+        }else if (json.status === 401){
+          navigate("/relogin", { replace: true });
+        }else if (json.status === 403) {
           navigate("/forbidden", { replace: true });
         }
       }).catch((e)=>{
@@ -70,7 +73,8 @@ const CreaturesPage = () => {
           accessor: 'action',
           Cell: props => <button className="btn" onClick={() => {
             console.log(props?.row?.original);
-            navigate("/edit/creature", { replace: true, creature: props?.row?.original});
+            let creature =  props?.row?.original
+            navigate("/edit/creature", { replace: true, state: {creature: creature}});
           }}>Изменить</button>
         });
       }
@@ -82,6 +86,7 @@ const CreaturesPage = () => {
   }
   
   return (<>
+    <Link to="/main" className='back-to-main-link'>Вернуться на главную</Link>
     {isError ? <h3>Не удалось получить данные с сервера...</h3> : 
       (isLoading ? <h3>Загружаем таблицу с существами...</h3> : 
         (role === "writer" ?
