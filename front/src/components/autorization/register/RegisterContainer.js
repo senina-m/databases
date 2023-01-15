@@ -20,7 +20,7 @@ const RegistrContainer = () => {
     };
 
     return (
-        <form className="register_box container" onSubmit={handleSubmit(onSubmit)}>
+        <form className="container" onSubmit={handleSubmit(onSubmit)}>
           <h1>Регистрация</h1>
           <input placeholder='Логин' className='form-control'
               {...register("login", {required: true, pattern: /^[A-Za-z0-9]+$/i, })} />

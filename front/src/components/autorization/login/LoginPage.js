@@ -7,6 +7,7 @@ const LoginPage = () => {
   return <>
   <LoginContainer/>
   <Link className='navigation-link' to="/register"> Ещё не регистрировались?</Link>
+  <br/>
 </>;
 };
 

@@ -1,7 +1,7 @@
 import React, {useRef, useState} from 'react';
 import { useLocation } from 'react-router-dom';
-import put from './../../api/Put';
-import { useForm } from "react-hook-form";
+import put from '../../../api/Put';
+import { set, useForm } from "react-hook-form";
 import { ReactSession } from 'react-client-session';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
@@ -42,34 +42,37 @@ const CreatureEditForm = () => {
     setNoSuch(false);
     setNothingUpdate(false);
     setSucsess(false);
-    someError(false);
+    setSomeError(false);
+
+    setShowForm(false);
+    setNothingUpdate(true);
 
     let token = ReactSession.get("token");
     //todo: check that func works properly
-      put("/creatures/"+ creature.id, prepareDate(data), token).then((json) => {
-        // put("/creatures/"+ 123456789, prepareDate(data), token).then((json) => {
-        if (json.status === 200) {
-          showForm(false);
-          setSucsess(true);
-        }else if (json.status === 400){
-          setSomeError(true);
-          setError(json.message);
-        }else if (json.status === 401){
-          navigate("/relogin", { replace: true });
-        }else if (json.status === 403) {
-          navigate("/forbidden", { replace: true });
-        }else if (json.status === 404) {
-          setShowForm(false);
-          setNoSuch(true);
-        }else if (json.status === 409) {
-          setShowForm(false);
-          setNothingUpdate(true);
-        }
-      }).catch((e)=>{
-        console.log("ERROR:", e);
-        //todo: what to do if we are anable to load data from server?
-        //or wrong json came
-      });
+      // put("/creatures/"+ creature.id, prepareDate(data), token).then((json) => {
+      //   // put("/creatures/"+ 123456789, prepareDate(data), token).then((json) => {
+      //   if (json.status === 200) {
+      //     showForm(false);
+      //     setSucsess(true);
+      //   }else if (json.status === 400){
+      //     setSomeError(true);
+      //     setError(json.message);
+      //   }else if (json.status === 401){
+      //     navigate("/relogin", { replace: true });
+      //   }else if (json.status === 403) {
+      //     navigate("/forbidden", { replace: true });
+      //   }else if (json.status === 404) {
+      //     setShowForm(false);
+      //     setNoSuch(true);
+      //   }else if (json.status === 409) {
+      //     setShowForm(false);
+      //     setNothingUpdate(true);
+      //   }
+      // }).catch((e)=>{
+      //   console.log("ERROR:", e);
+      //   //todo: what to do if we are anable to load data from server?
+      //   //or wrong json came
+      // });
   }
 
   const onCreateCreatureClick = () =>{

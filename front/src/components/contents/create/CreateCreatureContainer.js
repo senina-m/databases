@@ -3,7 +3,7 @@ import post from './../../../api/Post';
 import { useForm } from "react-hook-form";
 import { ReactSession } from 'react-client-session';
 import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+
 
 const CreateCreatureContainer = () => {
   const {
@@ -119,7 +119,6 @@ const CreateCreatureContainer = () => {
 
   return (
     <>
-      <Link to="/main" className='back-to-main-link'>Вернуться на главную</Link>
       {someError && <h2 className='center error'>{error}</h2>}
       {sucsess && <>
                     <h2 className='center'>Существо успешно создано!</h2>

@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom';
 import RegisterContainer from './RegisterContainer'
 
 const RegisterPage = () => {
-  return <>
-  <RegisterContainer/>
-  <Link className='navigation-link' to="/">Уже есть аккаунт?</Link>
-  </>;
+  return <div>
+    <RegisterContainer/>
+    <Link className='navigation-link' to="/">Уже есть аккаунт?</Link>
+    <br/>
+  </div>;
 };
 
 export default RegisterPage;

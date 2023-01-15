@@ -1,9 +1,9 @@
 // import CreatureTable from './CreatureTable'
 import React, { useEffect, useState } from 'react';
-import get from '../../api/Get'
+import get from '../../../api/Get'
 import {ReactSession} from 'react-client-session'
 import { useNavigate } from 'react-router-dom';
-import Table from "../contents/table/Table";
+import Table from "../table/Table";
 import { Link } from 'react-router-dom';
  
 

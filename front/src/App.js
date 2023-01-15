@@ -6,13 +6,14 @@ import LoginPage from './components/autorization/login/LoginPage';
 import RegisterPage from './components/autorization/register/RegisterPage';
 import MainPage from './components/MainPage';
 import PageNotFound from './components/PageNotFound';
-import CreaturesPage from './components/creatures/CreaturesPage';
-import CrimesPage from './components/contents/CrimesPage';
-import InfoPageCreature from './components/contents/InfoPageCreature';
+import CreaturesPage from './components/contents/creatures/CreaturesPage';
+import CrimesPage from './components/contents/crimes/CrimesPage';
+import InfoPageCrime from './components/contents/crimes/InfoPageCrime';
 import CreatePage from './components/contents/create/CreatePage';
 import Forbidden from './components/contents/Forbidden';
 import { ReactSession } from 'react-client-session';
-import CreatureEditForm from './components/creatures/CreatureEditForm';
+import CreatureEditForm from './components/contents/creatures/CreatureEditForm';
+import CrimeEditForm from './components/contents/crimes/CrimeEditForm';
 import Relogin from './components/Relogin';
 
 
@@ -28,11 +29,13 @@ function App() {
         <Route path="/main" element={<MainPage/>}/>
         <Route path="/creatures" element={<CreaturesPage/>}/>
         <Route path="/crimes" element={<CrimesPage/>}/>
-        <Route path="/info" element={<InfoPageCreature/>}/>
+        <Route path="/crime" element={<InfoPageCrime/>}/>
         <Route path="/create" element={<CreatePage/>}/>
         <Route path="/edit/creature" element={<CreatureEditForm/>}/>
+        <Route path="/edit/crime" element={<CrimeEditForm/>}/>
         <Route path='/forbidden' element={<Forbidden/>}/>
         <Route path='/relogin' element={<Relogin/>}/>
+        /edit/crime
         <Route path="*" element={<PageNotFound/>} status={404}/>
       </Routes>
       <Footer/>
