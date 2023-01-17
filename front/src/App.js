@@ -10,7 +10,7 @@ import CreaturesPage from './components/contents/creatures/CreaturesPage';
 import CrimesPage from './components/contents/crimes/CrimesPage';
 import InfoPageCrime from './components/contents/crimes/InfoPageCrime';
 import CreatePage from './components/contents/create/CreatePage';
-import Forbidden from './components/contents/Forbidden';
+import Forbidden from './components/Forbidden';
 import { ReactSession } from 'react-client-session';
 import CreatureEditForm from './components/contents/creatures/CreatureEditForm';
 import CrimeEditForm from './components/contents/crimes/CrimeEditForm';
