@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.http.converter.HttpMessageNotWritableException
+import org.springframework.orm.jpa.JpaSystemException
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.validation.BindException
 import org.springframework.web.HttpMediaTypeNotAcceptableException
@@ -47,6 +48,13 @@ class SpringGlobalExceptionHandler {
    fun handleServerException(ex: RuntimeException): ErrorDto {
       logger.error("Exception in occurred", ex)
       return ErrorDto(HttpStatus.INTERNAL_SERVER_ERROR.name, ex.message!!)
+   }
+
+   @ExceptionHandler(JpaSystemException::class)
+   @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+   fun handlePSQLException(ex: JpaSystemException): ErrorDto {
+      val message = ex.rootCause?.message // TODO обрезка по паттерну "Ошибка: .*\n Где: функция PL/pgSQL"
+      return ErrorDto(HttpStatus.BAD_REQUEST.name, "Поля не прошли валидацию: $message")
    }
    @ExceptionHandler(AlreadyExistException::class)
    @ResponseStatus(code = HttpStatus.CONFLICT)
