@@ -2,6 +2,7 @@ package ru.sennik.backend.domain.customers.service
 
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import ru.sennik.backend.domain.customers.enums.PermissionType
 import ru.sennik.backend.domain.customers.model.Permission
 import ru.sennik.backend.domain.customers.repository.PermissionRepository
 import ru.sennik.backend.generated.controller.NotFoundException
@@ -18,6 +19,6 @@ class PermissionService(
    fun getPermissionById(id: Int) = repository.findByIdOrNull(id)
       ?: throw NotFoundException("Роль пользователя с id=$id не найдена")
 
-   fun getPermissionByName(name: String) = repository.findByName(name)
+   fun getPermissionByName(name: PermissionType) = repository.findByName(name)
       ?: throw NotFoundException("Роль с именем $name не найдена")
 }

@@ -25,6 +25,6 @@ class PermissionController(
 
     private fun Permission.toDto() = PermissionDto(
         id = id,
-        name = name
+        name = name.value
     )
 }

@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
     id("org.springframework.boot") version "2.7.3"
     id("io.spring.dependency-management") version "1.0.13.RELEASE"
@@ -26,18 +24,20 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("org.liquibase:liquibase-core")
+    implementation("org.slf4j:slf4j-simple:2.0.5")
+    implementation("io.github.microutils:kotlin-logging-jvm:3.0.4")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
 }
 
-tasks.withType<KotlinCompile> {
+tasks.compileKotlin {
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict")
         jvmTarget = "14"
     }
+    dependsOn(tasks.openApiGenerate)
 }
 
 tasks.withType<Test> {
@@ -57,12 +57,11 @@ openApiGenerate {
         "interfaceOnly" to "true",
         "openApiNullable" to "false",
         "library" to "spring-boot",
-        "useTags" to "true"
+        "useTags" to "true",
+        "gradleBuildFile" to "false",
+        "documentationProvider" to "none",
+        "enumPropertyNaming" to "UPPERCASE"
     ))
-}
-
-tasks.compileKotlin {
-    dependsOn(tasks.openApiGenerate)
 }
 
 sourceSets["main"].kotlin {

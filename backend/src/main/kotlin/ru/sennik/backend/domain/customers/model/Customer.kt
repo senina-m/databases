@@ -15,7 +15,7 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "customer")
-class Customer: UserDetails {
+class Customer : UserDetails {
     constructor(name: String, password: String, permission: Permission) {
         this.name = name
         this.password = password
@@ -29,6 +29,8 @@ class Customer: UserDetails {
 
     @Column(name = "name", nullable = false)
     var name: String
+
+    @get:JvmName("getPasswordDefault")
     @Column(name = "password", nullable = false)
     var password: String
 
