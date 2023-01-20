@@ -30,7 +30,7 @@ class CustomerController(
 
     override fun createCustomer(customerDto: CustomerDto): ResponseEntity<CustomerDto> {
         logger.info { "request received: createCustomer: dto=$customerDto" }
-        return ResponseEntity.ok(customerService.createCustomer(toEntity(customerDto)).toDto())
+        return ResponseEntity.created(customerService.createCustomer(toEntity(customerDto)).toDto())
     }
 
     override fun updateCustomer(customerId: Long, customerDto: CustomerDto): ResponseEntity<CustomerDto> {
