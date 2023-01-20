@@ -42,12 +42,32 @@ class CustomerService(
       return customerCreatureRepository.save(customerCreature.apply { customer = customerRepository.save(customer) })
    }
 
+   @Transactional
    fun updateCustomer(customerId: Long, new: CustomerCreature): CustomerCreature =
       getCustomerWithCreatureId(customerId).apply {
          if (customer.name != new.customer.name) {
             checkExistsByName(new)
+            customer.name = new.customer.name
          }
+         if (creatureId != new.creatureId) {
+            checkExistsByCreatureId(new.creatureId)
+            creatureService.getCreatureById(new.creatureId)
+            creatureId = new.creatureId
+         }
+         if (customer.permission.name != new.customer.permission.name) {
+            customer.permission =
+               permissionService.getPermissionByName(new.customer.permission.name)
+         }
+         customer.password = new.customer.password
       }
+
+   @Transactional
+   fun deleteCustomer(customerId: Long) {
+      getCustomerWithCreatureId(customerId).apply {
+         customerCreatureRepository.delete(this)
+         customerRepository.delete(customer)
+      }
+   }
 
    private fun checkExistsByName(customerCreature: CustomerCreature) {
       customerCreature.customer.name.let { name ->

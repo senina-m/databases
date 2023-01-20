@@ -4,9 +4,10 @@ server:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: ${DB_USERNAME::postgres}
-    password: ${DB_PASSWORD::password}
+    url: jdbc:postgresql://localhost:5432/secret_archive
+    username: postgres
+    password: password
+    defaultAutoCommit: false
   jpa:
     database: postgresql
     hibernate:

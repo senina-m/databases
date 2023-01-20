@@ -1,33 +1,33 @@
-create table s312986.Permissions (
-  id SMALLINT PRIMARY KEY,
+create table Permissions (
+  id SMALLSERIAL PRIMARY KEY,
   name VARCHAR NOT NULL UNIQUE
 );
 
-create table s312986.Location (
-  id SMALLINT PRIMARY KEY,
+create table Location (
+  id SMALLSERIAL PRIMARY KEY,
   name VARCHAR NOT NULL UNIQUE
 );
 
-create table s312986.Customer (
-  id BIGINT PRIMARY KEY,
+create table Customer (
+  id BIGSERIAL PRIMARY KEY,
   name VARCHAR NOT NULL UNIQUE,
   password VARCHAR NOT NULL,
   permissions_id SMALLINT NOT NULL REFERENCES Permissions(id)
 );
 
-create table s312986.Position (
-  id SMALLINT PRIMARY KEY,
+create table Position (
+  id SMALLSERIAL PRIMARY KEY,
   name VARCHAR NOT NULL UNIQUE
 );
 
-create table s312986.Detective (
-  id BIGINT PRIMARY KEY,
+create table Detective (
+  id BIGSERIAL PRIMARY KEY,
   creature_id INTEGER NOT NULL UNIQUE,
   position_id SMALLINT NOT NULL REFERENCES Position(id)
 );
 
-create table s312986.Crime (
-  id BIGINT PRIMARY KEY,
+create table Crime (
+  id BIGSERIAL PRIMARY KEY,
   title VARCHAR NOT NULL UNIQUE,
   description VARCHAR NOT NULL,
   date_begin DATE NOT NULL,
@@ -40,8 +40,8 @@ create table s312986.Crime (
 
 create index crime_index on Crime(main_detective_id, date_end);
 
-create table s312986.Creature (
-  id BIGINT PRIMARY KEY,
+create table Creature (
+  id BIGSERIAL PRIMARY KEY,
   name VARCHAR NOT NULL,
   birthday DATE NOT NULL,
   race VARCHAR NOT NULL,
@@ -49,8 +49,8 @@ create table s312986.Creature (
   sex VARCHAR NOT NULL
 );
 
-create table s312986.Criminals (
-  id BIGINT PRIMARY KEY,
+create table Criminals (
+  id BIGSERIAL PRIMARY KEY,
   creature_id BIGINT NOT NULL REFERENCES Creature(id),
   crime_id BIGINT NOT NULL REFERENCES Crime(id),
   punishment_id BIGINT,
@@ -60,7 +60,7 @@ create table s312986.Criminals (
 
 create index criminal_index on Criminals(creature_id);
 
-create table s312986.Victims(
+create table Victims(
   creature_id BIGINT NOT NULL REFERENCES Creature(id),
   crime_id BIGINT NOT NULL REFERENCES Crime(id),
   UNIQUE(creature_id, crime_id),
@@ -68,13 +68,13 @@ create table s312986.Victims(
 );
 
 
-create table s312986.Magic (
-  id SMALLINT PRIMARY KEY,
+create table Magic (
+  id SMALLSERIAL PRIMARY KEY,
   name VARCHAR NOT NULL UNIQUE
 );
 
-create table s312986.Used_magic (
-  id BIGINT PRIMARY KEY,
+create table Used_magic (
+  id BIGSERIAL PRIMARY KEY,
   date DATE NOT NULL,
   criminals_id BIGINT NOT NULL REFERENCES Criminals(id),
   magic_id SMALLINT NOT NULL REFERENCES Magic(id),
@@ -83,52 +83,52 @@ create table s312986.Used_magic (
 
 create index used_magic_index on Used_magic(criminals_id);
 
-create table s312986.True_magic (
-  id SMALLINT PRIMARY KEY,
+create table True_magic (
+  id SMALLSERIAL PRIMARY KEY,
   magic_id SMALLINT NOT NULL UNIQUE REFERENCES Magic(id)
 );
 
--- create table s312986.Color (
---   id SMALLINT PRIMARY KEY,
+-- create table Color (
+--   id SMALLSERIAL PRIMARY KEY,
 --   value VARCHAR NOT NULL UNIQUE
 -- );
 
-create type s312986.Color as enum ('black', 'white');
+create type Color as enum ('black', 'white');
 
-create table s312986.Obvious_magic (
-  id SMALLINT PRIMARY KEY,
+create table Obvious_magic (
+  id SMALLSERIAL PRIMARY KEY,
   magic_id INTEGER NOT NULL UNIQUE REFERENCES Magic(id),
-  color_id s312986.Color NOT NULL,
+  color_id Color NOT NULL,
   level INTEGER NOT NULL,
   damage INTEGER NOT NULL,
   is_allowed BOOLEAN NOT NULL
 );
 
-create table s312986.Orden (
-  id SMALLINT PRIMARY KEY,
+create table Orden (
+  id SMALLSERIAL PRIMARY KEY,
   name VARCHAR NOT NULL UNIQUE,
   description VARCHAR
 );
 
--- create table s312986.Orden_rank (
---   id SMALLINT PRIMARY KEY,
+-- create table Orden_rank (
+--   id SMALLSERIAL PRIMARY KEY,
 --   name VARCHAR NOT NULL UNIQUE
 -- );
 
-create type s312986.Orden_rank as enum ('orden_woman', 'novice', 'junior_master', 'chief_master');
+create type Orden_rank as enum ('orden_woman', 'novice', 'junior_master', 'chief_master');
 
-create table s312986.Orden_member (
-  id BIGINT PRIMARY KEY,
+create table Orden_member (
+  id BIGSERIAL PRIMARY KEY,
   creature_id BIGINT NOT NULL,
   orden_id SMALLINT NOT NULL REFERENCES Orden(id),
-  orden_rank s312986.Orden_rank NOT NULL,
+  orden_rank Orden_rank NOT NULL,
   UNIQUE(creature_id, orden_id, orden_rank)
 );
 
 create index orden_member_index on Orden_member(orden_id);
 
-create table s312986.Punishment (
-  id BIGINT PRIMARY KEY,
+create table Punishment (
+  id BIGSERIAL PRIMARY KEY,
   type VARCHAR NOT NULL,
   date_begin DATE NOT NULL,
   date_end DATE NOT NULL,
@@ -137,40 +137,40 @@ create table s312986.Punishment (
 );
 
 
-create table s312986.Take_part (
-  id BIGINT PRIMARY KEY,
+create table Take_part (
+  id BIGSERIAL PRIMARY KEY,
   detective_id INTEGER NOT NULL REFERENCES Detective(id),
   crime_id INTEGER NOT NULL REFERENCES Crime(id),
   UNIQUE(detective_id, crime_id)
 );
 
-create table s312986.Salary (
-  id SMALLINT PRIMARY KEY,
+create table Salary (
+  id SMALLSERIAL PRIMARY KEY,
   value INTEGER NOT NULL,
   position_id SMALLINT NOT NULL UNIQUE
 );
 
 create index salary_index on Salary(position_id);
 
-create table s312986.Allowance (
-  id SMALLINT PRIMARY KEY,
+create table Allowance (
+  id SMALLSERIAL PRIMARY KEY,
   name VARCHAR NOT NULL UNIQUE,
   value INTEGER NOT NULL,
   min_crimes INTEGER NOT NULL UNIQUE
 );
 
-create table s312986.Dosseir (
-  id BIGINT PRIMARY KEY,
+create table Dosseir (
+  id BIGSERIAL PRIMARY KEY,
   author_id BIGINT NOT NULL REFERENCES Customer(id),
   create_date DATE NOT NULL,
   crime_id BIGINT NOT NULL UNIQUE REFERENCES Crime(id)
 );
 
-create table s312986.Customer_creature (
-  id BIGINT PRIMARY KEY, 
+create table Customer_creature (
+  id BIGSERIAL PRIMARY KEY, 
   customer_id BIGINT NOT NULL UNIQUE REFERENCES Customer(id),
   creature_id BIGINT NOT NULL UNIQUE REFERENCES Creature(id)
-)
+);
 
 create or replace function count_prize(date, date, bigint) returns integer as $psql$
   begin
@@ -183,7 +183,7 @@ create or replace function count_prize(date, date, bigint) returns integer as $p
 $psql$ language plpgsql;
 
 -- - расчет зарплаты для детектива (дата начала, дата конца, должность_ид, детектив_ид)
-create or replace function count_salary(date, date, smallint, bigint) returns integer as $psql$
+create or replace function count_salary(date, date, SMALLINT, bigint) returns integer as $psql$
   begin
     return (select value from Salary s where s.position_id = $3) 
     * abs(extract(day from $1::timestamp - $2::timestamp))
