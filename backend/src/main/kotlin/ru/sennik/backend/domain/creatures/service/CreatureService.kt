@@ -23,7 +23,7 @@ class CreatureService(
 
    @Transactional
    fun updateCreature(id: Long, creature: Creature): Creature =
-      creature.apply { this.id = getCreatureById(id).id }
+      repository.save(creature.apply { this.id = getCreatureById(id).id })
 
    @Transactional
    fun deleteCreature(id: Long) {

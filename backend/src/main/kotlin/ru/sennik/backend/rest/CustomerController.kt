@@ -10,6 +10,7 @@ import ru.sennik.backend.domain.customers.model.Permission
 import ru.sennik.backend.domain.customers.service.CustomerService
 import ru.sennik.backend.generated.controller.CustomersApi
 import ru.sennik.backend.generated.dto.CustomerDto
+import ru.sennik.backend.utils.createdResponseEntity
 
 /**
  * @author Natalia Nikonova
@@ -30,7 +31,7 @@ class CustomerController(
 
     override fun createCustomer(customerDto: CustomerDto): ResponseEntity<CustomerDto> {
         logger.info { "request received: createCustomer: dto=$customerDto" }
-        return ResponseEntity.created(customerService.createCustomer(toEntity(customerDto)).toDto())
+        return createdResponseEntity(customerService.createCustomer(toEntity(customerDto)).toDto())
     }
 
     override fun updateCustomer(customerId: Long, customerDto: CustomerDto): ResponseEntity<CustomerDto> {

@@ -7,6 +7,7 @@ import ru.sennik.backend.domain.creatures.model.Creature
 import ru.sennik.backend.domain.creatures.service.CreatureService
 import ru.sennik.backend.generated.controller.CreaturesApi
 import ru.sennik.backend.generated.dto.CreatureDto
+import ru.sennik.backend.utils.createdResponseEntity
 
 /**
  * @author Natalia Nikonova
@@ -28,7 +29,7 @@ class CreatureController(
 
    override fun createCreature(creatureDto: CreatureDto): ResponseEntity<CreatureDto> {
       logger.info { "request received: createCreature: dto=$creatureDto" }
-      return ResponseEntity.created(creatureService.createCreature(toEntity(creatureDto)).toDto())
+      return createdResponseEntity(creatureService.createCreature(toEntity(creatureDto)).toDto())
    }
 
    override fun updateCreature(creatureId: Long, creatureDto: CreatureDto): ResponseEntity<CreatureDto> {
