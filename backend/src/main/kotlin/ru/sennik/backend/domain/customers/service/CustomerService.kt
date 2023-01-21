@@ -64,7 +64,6 @@ class CustomerService(
    @Transactional
    fun deleteCustomer(customerId: Long) {
       getCustomerWithCreatureId(customerId).apply {
-         customerCreatureRepository.delete(this)
          customerRepository.delete(customer)
       }
    }

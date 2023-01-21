@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: liquibase/2023-01-19-clear.sql
+  - include:
+      file: liquibase/2023-01-20-create.sql
+  - include:
+      file: liquibase/2023-01-21-insert.sql
