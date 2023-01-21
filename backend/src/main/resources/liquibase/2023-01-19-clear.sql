@@ -1,0 +1,24 @@
+drop table if exists Customer cascade;
+drop table if exists Permissions cascade;
+drop table if exists Dosseir cascade;
+drop table if exists Crime cascade;
+drop table if exists Take_part cascade;
+drop table if exists Creature cascade;
+drop table if exists Criminals cascade;
+drop table if exists Location cascade;
+drop table if exists Victims cascade;
+drop table if exists Used_magic cascade;
+drop table if exists Magic cascade;
+drop table if exists True_magic cascade;
+drop table if exists Obvious_magic cascade;
+drop table if exists Orden cascade;
+drop table if exists Orden_member cascade;
+drop table if exists Punishment cascade;
+drop table if exists Detective cascade;
+drop table if exists Position cascade;
+drop table if exists Salary cascade;
+drop table if exists Allowance cascade;
+drop table if exists Customer_creature cascade;
+
+drop type if exists Color cascade;
+drop type if exists Orden_rank cascade;

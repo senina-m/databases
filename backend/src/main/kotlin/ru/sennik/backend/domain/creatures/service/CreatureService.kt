@@ -4,6 +4,8 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import ru.sennik.backend.domain.creatures.model.Creature
 import ru.sennik.backend.domain.creatures.repository.CreatureRepository
+import ru.sennik.backend.domain.customers.repository.CustomerCreatureRepository
+import ru.sennik.backend.domain.customers.repository.CustomerRepository
 import ru.sennik.backend.generated.controller.NotFoundException
 import javax.transaction.Transactional
 
@@ -12,7 +14,9 @@ import javax.transaction.Transactional
  */
 @Service
 class CreatureService(
-   private val repository: CreatureRepository
+   private val repository: CreatureRepository,
+   private val customerCreatureRepository: CustomerCreatureRepository,
+   private val customerRepository: CustomerRepository,
 ) {
    fun getCreatures(): List<Creature> = repository.findAll()
 
@@ -27,6 +31,9 @@ class CreatureService(
 
    @Transactional
    fun deleteCreature(id: Long) {
-      getCreatureById(id).also { repository.delete(it) }
+      getCreatureById(id).also {
+         customerCreatureRepository.findByCreatureId(id)?.run { customerRepository.delete(customer) }
+         repository.delete(it)
+      }
    }
 }
