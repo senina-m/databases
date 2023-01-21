@@ -35,6 +35,7 @@ import ru.sennik.backend.rest.exception.AlreadyExistException
 import ru.sennik.backend.rest.exception.WrongTypeException
 import java.lang.Exception
 import java.util.*
+import java.util.regex.Pattern
 
 /**
  * @author Natalia Nikonova
@@ -53,8 +54,11 @@ class SpringGlobalExceptionHandler {
    @ExceptionHandler(JpaSystemException::class)
    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
    fun handlePSQLException(ex: JpaSystemException): ErrorDto {
-      val message = ex.rootCause?.message // TODO обрезка по паттерну "Ошибка: .*\n Где: функция PL/pgSQL"
-      return ErrorDto(HttpStatus.BAD_REQUEST.name, "Поля не прошли валидацию: $message")
+      val pattern = Pattern.compile("ОШИБКА: (.+)\\n  Где: функция PL")
+      val errorMessage = ex.rootCause?.message ?: ""
+      val matcher = pattern.matcher(errorMessage)
+      val message = if (matcher.find()) "Поля не прошли валидацию: ${matcher.group(1)}" else errorMessage
+      return ErrorDto(HttpStatus.BAD_REQUEST.name, message)
    }
    @ExceptionHandler(AlreadyExistException::class)
    @ResponseStatus(code = HttpStatus.CONFLICT)
