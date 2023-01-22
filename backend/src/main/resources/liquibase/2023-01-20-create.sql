@@ -33,7 +33,7 @@ create table Position (
 
 create table Detective (
                            id BIGSERIAL PRIMARY KEY,
-                           creature_id INTEGER NOT NULL UNIQUE REFERENCES Creature(id) ON DELETE CASCADE,
+                           creature_id BIGINT NOT NULL UNIQUE REFERENCES Creature(id) ON DELETE CASCADE,
                            position_id SMALLINT NOT NULL REFERENCES Position(id)
 );
 
