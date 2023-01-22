@@ -29,8 +29,13 @@ dependencies {
     implementation("org.liquibase:liquibase-core")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("org.postgresql:postgresql")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
+
+    implementation("io.jsonwebtoken:jjwt-api:0.11.2")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.2")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.2")
 }
 
 tasks.compileKotlin {
@@ -61,7 +66,8 @@ openApiGenerate {
         "useTags" to "true",
         "gradleBuildFile" to "false",
         "documentationProvider" to "none",
-        "enumPropertyNaming" to "UPPERCASE"
+        "enumPropertyNaming" to "UPPERCASE",
+        "serializationLibrary" to "jackson"
     ))
 }
 

@@ -1,5 +1,6 @@
 package ru.sennik.backend.domain.customers.service
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Service
@@ -22,8 +23,11 @@ class CustomerService(
    private val customerCreatureRepository: CustomerCreatureRepository,
    private val permissionService: PermissionService,
    private val creatureService: CreatureService,
-   private val detectiveService: DetectiveService,
 ) : UserDetailsService {
+   @org.springframework.context.annotation.Lazy
+   @Autowired
+   private lateinit var detectiveService: DetectiveService
+
    override fun loadUserByUsername(username: String?): UserDetails {
       return username?.let { customerRepository.findByName(username) }
          ?: throw NotFoundException("Пользователь с именем $username не найден")
