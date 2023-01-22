@@ -15,6 +15,8 @@ import { ReactSession } from 'react-client-session';
 import CreatureEditForm from './components/contents/creatures/CreatureEditForm';
 import CrimeEditForm from './components/contents/crimes/CrimeEditForm';
 import Relogin from './components/Relogin';
+import CreatureInfoPage from './components/contents/creatures/CreatureInfoPage';
+import UserInfoPage from './components/contents/UserInfoPage';
 
 
 function App() {
@@ -35,7 +37,8 @@ function App() {
         <Route path="/edit/crime" element={<CrimeEditForm/>}/>
         <Route path='/forbidden' element={<Forbidden/>}/>
         <Route path='/relogin' element={<Relogin/>}/>
-        /edit/crime
+        <Route path='/info/creature' element={<CreatureInfoPage/>}/>
+        <Route path='/info' element={<UserInfoPage/>}/>
         <Route path="*" element={<PageNotFound/>} status={404}/>
       </Routes>
       <Footer/>

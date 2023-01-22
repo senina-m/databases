@@ -3,15 +3,14 @@ import get from '../../../api/Get'
 import {ReactSession} from 'react-client-session'
 import { useNavigate } from 'react-router-dom';
 import Table from "../table/Table";
-import { Link } from 'react-router-dom';
 
 const CrimesPage = () => {
 
   const navigate = useNavigate();
   // const role = ReactSession.get("permission");
   //todo: uncomment upper code
-  const role = "writer";
-  // const role = "detective";
+  // const role = "writer";
+  const role = "detective";
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setError] = useState(false);
@@ -83,7 +82,7 @@ const CrimesPage = () => {
         accessor: 'dateBegin'
       },
       {
-        Header: 'Дата начала',
+        Header: 'Дата конца',
         accessor: 'dateEnd'
       },
       {
@@ -120,7 +119,6 @@ const onCreateCrimeClick = () =>{
 }
 
 return (<div className='block'>
-  <Link to="/main" className='back-to-main-link'>Вернуться на главную</Link>
   {isError ? <h3>Не удалось получить данные с сервера...</h3> : 
     (isLoading ? <h3>Загружаем таблицу с существами...</h3> : 
       (role === "writer" ?

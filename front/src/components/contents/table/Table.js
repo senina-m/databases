@@ -2,7 +2,7 @@ import {useTable, useFilters, useSortBy} from 'react-table';
 import DefaultColumnFilter from './DefaultColumnFilter';
 import React from 'react';
 
-const Table = ({ columns, data}) => {
+const Table = ({ columns, data, onRowClick}) => {
 
     const defaultColumn = React.useMemo(
       () => ({
@@ -74,7 +74,7 @@ const Table = ({ columns, data}) => {
               return (
                 <tr {...row.getRowProps()}>
                   {row.cells.map((cell) => {
-                    return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
+                    return <td {...cell.getCellProps({onClick: (e)=>onRowClick(e,row)})}>{cell.render("Cell")}</td>;
                   })}
                 </tr>
               );

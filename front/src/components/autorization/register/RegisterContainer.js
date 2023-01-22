@@ -1,9 +1,13 @@
 import React, {useRef} from 'react';
 import { useForm } from "react-hook-form";
+import { useLocation } from 'react-router-dom';
 // import { useNavigate } from 'react-router-dom';
 
 const RegistrContainer = () => {
     // const navigate = useNavigate();
+
+    const {state} = useLocation();
+    const {creature} = state;
 
     const {
         register,
