@@ -20,6 +20,7 @@ class DetectiveService(
    private val positionService: PositionService,
    private val creatureService: CreatureService,
 ) {
+   @org.springframework.context.annotation.Lazy
    @Autowired
    private lateinit var customerService: CustomerService
 
