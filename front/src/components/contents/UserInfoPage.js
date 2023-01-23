@@ -1,7 +1,7 @@
 import React from 'react'
 import { ReactSession } from 'react-client-session';
 import CountDamageToWorldHeart from './CountDamageToWorldHeart';
-import CountSelaryContainer from '../../CountSelaryContainer';
+import CountSelaryContainer from './CountSelaryContainer';
 
 const UserInfoPage = () => {
     // const role = ReactSession.get("permission");

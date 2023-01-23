@@ -1,10 +1,17 @@
 import React, {useRef, useState} from 'react'
 import { useForm } from "react-hook-form";
+import { useNavigate } from 'react-router-dom';
+import get from "../../api/Get";
+import {ReactSession} from 'react-client-session';
 
 
 const CountDamageToWorldHeart = () => {
+    const navigate = useNavigate();
+
     const [damage, setDamage] = useState(-1);
     const [isResived, setIsResived] = useState(false);
+    const [isError, setIsError] = useState(false);
+    const [error, setError] = useState("");
 
     const {
         register,
@@ -17,9 +24,30 @@ const CountDamageToWorldHeart = () => {
     begin.current = watch("begin", "");
 
     const countDamage = (data) => {
+        let token = ReactSession.get("token");
+        get("/magicAmount", {"dateBegin": get_ddmmyyyy(data.begin), "dateEnd": get_ddmmyyyy(data.end)}, token).then((json) => {
+            if (json.status === 200) {
+                delete json.status;
+                console.log("here", json);
+                //todo проверить что правильно достаю данные
+                setDamage(json);
+                setIsResived(true);
+        }else if (json.status === 400){
+            setError(json.message);
+            setIsError(true);
+        }else if (json.status === 401){
+            navigate("/relogin", { replace: true });
+        }else if (json.status === 403) {
+            navigate("/forbidden", { replace: true });
+        }else if (json.status === 404) {
+            navigate("*", { replace: true });
+        }
+        }).catch((e)=>{
+          console.log("ERROR:", e);
+          //todo: what to do if we are anable to load data from server?
+          //or wrong json came
+        });
         //todo: request damage for given period
-        setDamage(100);
-        setIsResived(true);
         console.log(data);
     }
     
@@ -27,6 +55,7 @@ const CountDamageToWorldHeart = () => {
         <>
             <form className="form cont" onSubmit={handleSubmit(countDamage)} >
                 <h1>Урон Сердцу Мира</h1>
+                {isError && <p className='error'>{error}</p>}
                 <label className='form-label'>Начало (мм/дд/гггг)</label>
                 <input  type="date" placeholder='Начало' className='form-control'
                 {...register("begin", {required: true, valueAsDate: true,
@@ -54,5 +83,14 @@ const CountDamageToWorldHeart = () => {
         </>
     );
 }
+
+const get_ddmmyyyy = (str_date) =>{
+    const date = new Date(str_date);
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2,'0');
+    const dd = String(date.getDate()).padStart(2,'0');
+  
+    return `${dd}-${mm}-${yyyy}`
+  }
 
 export default CountDamageToWorldHeart

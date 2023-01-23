@@ -1,6 +1,6 @@
 import React, {useRef, useState} from 'react'
 import { useForm } from "react-hook-form";
-import get from "./api/Get"
+import get from "../../api/Get"
 import { useNavigate } from 'react-router-dom';
 import {ReactSession} from 'react-client-session'
 
@@ -8,6 +8,8 @@ const CountSelaryContainer = () => {
     const navigate = useNavigate();
     const [selary, setSelary] = useState(-1);
     const [isResived, setIsResived] = useState(false);
+    const [isError, setIsError] = useState(false);
+    const [error, setError] = useState("");
 
     const {
         register,
@@ -19,19 +21,19 @@ const CountSelaryContainer = () => {
     const begin = useRef({});
     begin.current = watch("begin", "");
 
-    const getPositionId = () =>{
+    const getDetectiveId = () =>{
         let token = ReactSession.get("token");
         let creature_id = ReactSession.get("creature_id");
         get("/detectives", {"creatureId":creature_id}, token).then((json) => {
           if (json.status === 200) {
             delete json.status;
             console.log("here", json);
-            if (json === undefined || json.length == 0) {
-                navigate("/forbidden", { replace: true });
+            if (json === undefined || json.length === 0) {
+              navigate("/forbidden", { replace: true });
             }else{
-                //todo проверить что правильно достаю данные
-                setSelary(json[0]);
-                setIsResived(true);
+              //todo проверить что правильно достаю данные
+              setSelary(json[0]);
+              setIsResived(true);
             }
           }else if (json.status === 401){
             navigate("/relogin", { replace: true });
@@ -48,17 +50,22 @@ const CountSelaryContainer = () => {
     const countDamage = (data) => {
         setIsResived(false);
         setSelary(-1);
+        setIsError(false);
+        setError("");
 
         let token = ReactSession.get("token");
-        let position_id = getPositionId();
+        let detective_id = getDetectiveId();
         //todo: wait for api url!!!!
-        get("/positions/" + position_id + "/salary", {}, token).then((json) => {
+        get("/detectives/" + detective_id +"/salary/" + get_year(data) + "/" + get_month(data), {}, token).then((json) => {
           if (json.status === 200) {
             delete json.status;
             console.log("here", json);
             //todo проверить что правильно достаю данные
             setSelary(json);
             setIsResived(true);
+          }else if (json.status === 400){
+            setError(json.message);
+            setIsError(true);
           }else if (json.status === 401){
             navigate("/relogin", { replace: true });
           }else if (json.status === 403) {
@@ -76,6 +83,7 @@ const CountSelaryContainer = () => {
     return (
         <form className="form cont" onSubmit={handleSubmit(countDamage)} >
             <h1>Зарплата</h1>
+            {isError && <p className='error'>{error}</p>}
             <label className='form-label'>Начало (мм/дд/гггг)</label>
             <input  type="month" placeholder='Начало' className='form-control'
             {...register("begin", {required: true, valueAsDate: true,
@@ -102,14 +110,17 @@ const CountSelaryContainer = () => {
     );
 }
 
-const get_mmyyyy = (str_date) =>{
+const get_year = (str_date) =>{
 
-    const date = new Date(str_date);
-    const yyyy = date.getFullYear();
-    const mm = String(date.getMonth() + 1).padStart(2,'0');
-    // const dd = String(date.getDate()).padStart(2,'0');
-  
-    return `${mm}-${yyyy}`
-  }
+  const date = new Date(str_date);
+  const yyyy = date.getFullYear();  
+  return `${yyyy}`
+}
+
+const get_month = (str_date) =>{
+  const date = new Date(str_date);
+  const mm = String(date.getMonth() + 1).padStart(2,'0');
+  return `${mm}`
+}
 
 export default CountSelaryContainer
