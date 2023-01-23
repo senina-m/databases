@@ -9,7 +9,10 @@ import ru.sennik.backend.domain.customers.model.CustomerCreature
 import ru.sennik.backend.domain.customers.model.Permission
 import ru.sennik.backend.domain.customers.service.CustomerService
 import ru.sennik.backend.generated.controller.CustomersApi
+import ru.sennik.backend.generated.dto.AuthRequestDto
+import ru.sennik.backend.generated.dto.AuthResponseDto
 import ru.sennik.backend.generated.dto.CustomerDto
+import ru.sennik.backend.security.AuthorizationService
 import ru.sennik.backend.utils.createdResponseEntity
 
 /**
@@ -17,8 +20,14 @@ import ru.sennik.backend.utils.createdResponseEntity
  */
 @RestController
 class CustomerController(
-    private val customerService: CustomerService
+    private val customerService: CustomerService,
+    private val authService: AuthorizationService,
 ) : CustomersApi {
+
+    override fun authorization(authRequestDto: AuthRequestDto): ResponseEntity<AuthResponseDto> {
+        logger.info { "request received: authorization: login=${authRequestDto.name}" }
+        return ResponseEntity.ok(authService.login(authRequestDto))
+    }
     override fun getCustomers(): ResponseEntity<List<CustomerDto>> {
         logger.info { "request received: getCustomers" }
         return ResponseEntity.ok(customerService.getCustomersWithCreaturesId().map { it.toDto() })
