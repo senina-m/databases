@@ -1,17 +1,28 @@
 package ru.sennik.backend.domain.customers.service
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.repository.findByIdOrNull
+import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.BadCredentialsException
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import ru.sennik.backend.domain.creatures.service.CreatureService
 import ru.sennik.backend.domain.customers.enums.PermissionType
+import ru.sennik.backend.domain.customers.model.Customer
 import ru.sennik.backend.domain.customers.model.CustomerCreature
 import ru.sennik.backend.domain.customers.repository.CustomerCreatureRepository
 import ru.sennik.backend.domain.customers.repository.CustomerRepository
 import ru.sennik.backend.domain.detectivies.service.DetectiveService
 import ru.sennik.backend.generated.controller.NotFoundException
+import ru.sennik.backend.generated.dto.AuthRequestDto
+import ru.sennik.backend.generated.dto.AuthResponseDto
 import ru.sennik.backend.rest.exception.AlreadyExistException
+import ru.sennik.backend.rest.exception.WrongPasswordException
+import ru.sennik.backend.security.JwtTokenService
 import javax.transaction.Transactional
 
 /**
@@ -28,10 +39,11 @@ class CustomerService(
    @Autowired
    private lateinit var detectiveService: DetectiveService
 
-   override fun loadUserByUsername(username: String?): UserDetails {
-      return username?.let { customerRepository.findByName(username) }
-         ?: throw NotFoundException("Пользователь с именем $username не найден")
-   }
+   @org.springframework.context.annotation.Lazy
+   @Autowired
+   private lateinit var passwordEncoder: PasswordEncoder
+
+   override fun loadUserByUsername(username: String?): UserDetails = getCustomerByName(username)
 
    fun getCustomersWithCreaturesId(): List<CustomerCreature> = customerCreatureRepository.findAll()
 
@@ -39,14 +51,25 @@ class CustomerService(
       customerCreatureRepository.findByCustomerId(customerId)
          ?: throw NotFoundException("Пользователь с id=$customerId не найден")
 
+   fun getCustomer(customerId: Long): Customer =
+      customerRepository.findByIdOrNull(customerId)
+         ?: throw NotFoundException("Пользователь с id=$customerId не найден")
+
+   fun getCustomerByName(name: String?): Customer {
+      return name?.let { customerRepository.findByName(name) }
+         ?: throw NotFoundException("Пользователь с именем $name не найден")
+   }
+
    @Transactional
    fun createCustomer(customerCreature: CustomerCreature): CustomerCreature {
+      creatureService.getCreatureById(customerCreature.creatureId)
       checkExistsByName(customerCreature)
       checkExistsByCreatureId(customerCreature.creatureId)
-      customerCreature.customer.permission =
-         permissionService.getPermissionByName(customerCreature.customer.permission.name)
+      customerCreature.customer.apply {
+         permission = permissionService.getPermissionByName(permission.name)
+         password = passwordEncoder.encode(password)
+      }
       checkDetective(customerCreature)
-      creatureService.getCreatureById(customerCreature.creatureId) // todo шифрование пароля
       return customerCreatureRepository.save(customerCreature.apply { customer = customerRepository.save(customer) })
    }
 

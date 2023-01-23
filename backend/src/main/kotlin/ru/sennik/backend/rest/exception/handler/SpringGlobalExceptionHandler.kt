@@ -32,6 +32,8 @@ import org.springframework.web.servlet.NoHandlerFoundException
 import ru.sennik.backend.generated.controller.NotFoundException
 import ru.sennik.backend.generated.dto.ErrorDto
 import ru.sennik.backend.rest.exception.AlreadyExistException
+import ru.sennik.backend.rest.exception.WrongPasswordException
+import ru.sennik.backend.rest.exception.WrongTokenException
 import ru.sennik.backend.rest.exception.WrongTypeException
 import java.lang.Exception
 import java.util.*
@@ -190,6 +192,18 @@ class SpringGlobalExceptionHandler {
    fun handleExceptionInternal(ex: Exception): ErrorDto {
       logger.error("Exception in occurred", ex)
       return ErrorDto("TYPE_MISMATCH", "${ex.message}")
+   }
+
+   @ExceptionHandler(WrongTokenException::class)
+   @ResponseStatus(HttpStatus.UNAUTHORIZED)
+   fun handleWrongTokenException(ex: WrongTokenException): ErrorDto {
+      return ErrorDto("WRONG_TOKEN_ERROR", ex.message!!)
+   }
+
+   @ExceptionHandler(WrongPasswordException::class)
+   @ResponseStatus(HttpStatus.BAD_REQUEST)
+   fun handleWrongPasswordException(ex: WrongPasswordException): ErrorDto {
+      return ErrorDto("BAD_REQUEST", ex.message!!)
    }
 
    companion object : KLogging() {
