@@ -3812,16 +3812,28 @@
         ],
         "summary": "Получение урона сердцу мира за указанный период",
         "operationId": "getMagicAmount",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Period"
-              }
+        "parameters": [
+          {
+            "name": "dateBegin",
+            "in": "query",
+            "description": "Дата начала периода (не включается в расчет)",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "dateEnd",
+            "in": "query",
+            "description": "Дата конца периода (не включается в расчет)",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "Нанесенный сердцу мира урон",
@@ -4522,26 +4534,6 @@
           "id",
           "magic",
           "date"
-        ]
-      },
-      "Period": {
-        "type": "object",
-        "title": "Период, за зоторый рассчитывается урон (указанные даты в него не входят)",
-        "properties": {
-          "dateBegin": {
-            "type": "string",
-            "format": "date",
-            "title": "Дата начала периода (не включается в расчет)"
-          },
-          "dateEnd": {
-            "type": "string",
-            "format": "date",
-            "title": "Дата конца периода (не включается в расчет)"
-          }
-        },
-        "required": [
-          "dateBegin",
-          "dateEnd"
         ]
       }
     },
