@@ -8,7 +8,11 @@
   "servers": [
     {
       "url": "http://localhost:8080/",
-      "description": "default server"
+      "description": "fakeit server"
+    },
+    {
+      "url": "http://localhost:32221/",
+      "description": "spring server"
     }
   ],
   "tags": [
@@ -77,6 +81,11 @@
         ],
         "summary": "Просмотр всех орденов",
         "operationId": "getOrdens",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/queryCreatureId"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Просмотр данных всех орденов",
@@ -745,6 +754,11 @@
         ],
         "summary": "Просмотр всех пользователей архива",
         "operationId": "getCustomers",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/queryCreatureId"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Просмотр всех пользователей архива",
@@ -1176,6 +1190,14 @@
             "description": "Поиск по принимающему участие в расследовании детективу",
             "schema": {
               "$ref": "#/components/schemas/DetectiveIdComponent"
+            }
+          },
+          {
+            "name": "creatureId",
+            "in": "query",
+            "description": "Поиск по id существа дел, в которых оно фигурирует как преступник",
+            "schema": {
+              "$ref": "#/components/schemas/CreatureIdComponent"
             }
           }
         ],
@@ -1853,6 +1875,11 @@
         ],
         "summary": "Получение списка всех детективов",
         "operationId": "getDetectives",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/queryCreatureId"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Просмотр всех детективов",
@@ -1983,7 +2010,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/DetectiveRequest"
+                "$ref": "#/components/schemas/PositionName"
               }
             }
           }
@@ -3912,7 +3939,9 @@
           },
           "sex": {
             "type": "string",
-            "title": "Пол существа"
+            "title": "Пол существа",
+            "enum":  ["Мужчина", "Женщина"],
+            "x-enum-varnames": ["man", "woman"]
           }
         },
         "required": [
@@ -3943,7 +3972,8 @@
               "Послушник",
               "Младший магистр",
               "Старший магистр"
-            ]
+            ],
+            "x-enum-varnames": ["orden_woman", "novice", "junior_master", "chief_master"]
           },
           "creature": {
             "$ref": "#/components/schemas/Creature"
@@ -3967,7 +3997,8 @@
               "Послушник",
               "Младший магистр",
               "Старший магистр"
-            ]
+            ],
+            "x-enum-varnames": ["orden_woman", "novice", "junior_master", "chief_master"]
           },
           "creatureId": {
             "$ref": "#/components/schemas/CreatureIdComponent"
@@ -3997,7 +4028,8 @@
           "password": {
             "type": "string",
             "format": "password",
-            "title": "Пароль пользователя"
+            "title": "Пароль пользователя",
+            "writeOnly": true
           },
           "permission": {
             "type": "string",
@@ -4011,7 +4043,8 @@
           "id",
           "name",
           "password",
-          "permission"
+          "permission",
+          "creatureId"
         ]
       },
       "AuthRequest": {
@@ -4048,6 +4081,9 @@
           "token": {
             "type": "string",
             "title": "Json Web Token"
+          },
+          "creatureId": {
+            "$ref": "#/components/schemas/CreatureIdComponent"
           }
         },
         "required": [
@@ -4152,6 +4188,10 @@
           "mainDetectiveId"
         ]
       },
+      "PositionName": {
+        "type": "string",
+        "title": "Человеко-понятное название должности детектива"
+      },
       "Position": {
         "type": "object",
         "title": "Должность детектива",
@@ -4165,8 +4205,7 @@
             "readOnly": true
           },
           "name": {
-            "type": "string",
-            "title": "Человеко-понятное название должности"
+            "$ref": "#/components/schemas/PositionName"
           }
         },
         "required": [
@@ -4185,8 +4224,7 @@
         "title": "Детектив (запрос)",
         "properties": {
           "position": {
-            "type": "string",
-            "title": "Должность детектива"
+            "$ref": "#/components/schemas/PositionName"
           },
           "creatureId": {
             "$ref": "#/components/schemas/CreatureIdComponent"
@@ -4210,8 +4248,7 @@
             "readOnly": true
           },
           "position": {
-            "type": "string",
-            "title": "Должность детектива"
+            "$ref": "#/components/schemas/PositionName"
           },
           "creature": {
             "$ref": "#/components/schemas/Creature"
@@ -4300,6 +4337,7 @@
           "color": {
             "type": "string",
             "enum": ["Белая", "Черная"],
+            "x-enum-varnames": ["white", "black"],
             "title": "Цвет очевидной магии"
           },
           "level": {
@@ -4525,6 +4563,14 @@
         "in": "path",
         "description": "Идентефикатор существа",
         "required": true,
+        "schema": {
+          "$ref": "#/components/schemas/CreatureIdComponent"
+        }
+      },
+      "queryCreatureId": {
+        "name": "creatureId",
+        "in": "query",
+        "description": "Поиск по id существа",
         "schema": {
           "$ref": "#/components/schemas/CreatureIdComponent"
         }
