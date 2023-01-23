@@ -19,12 +19,40 @@ const CountSelaryContainer = () => {
     const begin = useRef({});
     begin.current = watch("begin", "");
 
+    const getPositionId = () =>{
+        let token = ReactSession.get("token");
+        let creature_id = ReactSession.get("creature_id");
+        get("/detectives", {"creatureId":creature_id}, token).then((json) => {
+          if (json.status === 200) {
+            delete json.status;
+            console.log("here", json);
+            if (json === undefined || json.length == 0) {
+                navigate("/forbidden", { replace: true });
+            }else{
+                //todo проверить что правильно достаю данные
+                setSelary(json[0]);
+                setIsResived(true);
+            }
+          }else if (json.status === 401){
+            navigate("/relogin", { replace: true });
+          }else if (json.status === 403) {
+            navigate("/forbidden", { replace: true });
+          }
+        }).catch((e)=>{
+          console.log("ERROR:", e);
+          //todo: what to do if we are anable to load data from server?
+          //or wrong json came
+        });
+    }
+
     const countDamage = (data) => {
         setIsResived(false);
         setSelary(-1);
 
         let token = ReactSession.get("token");
-        get("", {}, token).then((json) => {
+        let position_id = getPositionId();
+        //todo: wait for api url!!!!
+        get("/positions/" + position_id + "/salary", {}, token).then((json) => {
           if (json.status === 200) {
             delete json.status;
             console.log("here", json);
@@ -35,6 +63,8 @@ const CountSelaryContainer = () => {
             navigate("/relogin", { replace: true });
           }else if (json.status === 403) {
             navigate("/forbidden", { replace: true });
+          }else if (json.status === 404) {
+            navigate("*", { replace: true });
           }
         }).catch((e)=>{
           console.log("ERROR:", e);

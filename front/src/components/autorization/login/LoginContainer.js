@@ -24,6 +24,7 @@ const LoginContainer = () => {
         ReactSession.set("name", response.name);
         ReactSession.set("permission", response.permission);
         ReactSession.set("token", response.token);
+        ReactSession.set("creature_id", response.creatureId);
         navigate('/main', {replace: true});
       }else if(response.status === 400){
         setIncorrectLogin(true);
