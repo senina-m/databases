@@ -28,6 +28,6 @@ create or replace function get_customer_id(customer_name varchar) returns bigint
     end;
 $$ LANGUAGE plpgsql;
 
-insert into Creature (name, birthday, race, sex) values ('Луукфи Пенц', '01.01.2000', 'человек', 'man');
-insert into Customer (name, password, permissions_id) values ('luukfi_pentz', 'admin', get_permission_id('ROLE_WRITER'));
+insert into Creature (name, birthday, race, sex) values ('Луукфи Пенц', '01.01.2000', 'Человек', 'man');
+insert into Customer (name, password, permissions_id) values ('luukfi_pentz', '$2a$10$tiFFr8TNFQUmR5ol6Fup.ey.8uPsDSAtFGpSYprNMTUSc4/DBG2hG', get_permission_id('ROLE_WRITER'));
 insert into Customer_creature (customer_id, creature_id) values (get_customer_id('luukfi_pentz'), get_creature_id('Луукфи Пенц'));

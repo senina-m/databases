@@ -1,5 +1,8 @@
 package ru.sennik.backend.config
 
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType
+import io.swagger.v3.oas.annotations.security.SecurityScheme
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -24,6 +27,13 @@ import ru.sennik.backend.security.JwtTokenService
  */
 @Configuration
 @EnableWebSecurity
+@SecurityScheme(
+    name = "Authorization",
+    type = SecuritySchemeType.HTTP,
+    scheme = "bearer",
+    bearerFormat = "JWT",
+    `in` = SecuritySchemeIn.HEADER
+)
 class SecurityConfig(
     private val userDetailsService: CustomerService,
     private val jwtTokenService: JwtTokenService,
@@ -45,15 +55,14 @@ class SecurityConfig(
             http
                 .authorizeRequests()
                 .antMatchers("/swagger-ui/**").permitAll()
-                .antMatchers("/api/v1/customers/**").permitAll() // удалить после теста
                 .antMatchers("/api/v1/auth").not().fullyAuthenticated()
                 .antMatchers(HttpMethod.POST, "/api/v1/**").hasRole(PermissionType.ROLE_WRITER.role)
                 .antMatchers(HttpMethod.PUT, "/api/v1/**").hasRole(PermissionType.ROLE_WRITER.role)
                 .antMatchers(HttpMethod.DELETE, "/api/v1/**").hasRole(PermissionType.ROLE_WRITER.role)
                 .antMatchers(HttpMethod.GET, "/api/v1/detectives/{detectiveId:\\d+}/salary/**").hasRole(PermissionType.ROLE_DETECTIVE.role)
                 .antMatchers(HttpMethod.GET, "/api/v1/magicAmount").hasRole(PermissionType.ROLE_DETECTIVE.role)
-                //.antMatchers(HttpMethod.GET, "/api/v1/customers").hasRole(PermissionType.ROLE_WRITER.role)
-                //.antMatchers(HttpMethod.GET, "/api/v1/customers/**").hasRole(PermissionType.ROLE_WRITER.role)
+                .antMatchers(HttpMethod.GET, "/api/v1/customers").hasRole(PermissionType.ROLE_WRITER.role)
+                .antMatchers(HttpMethod.GET, "/api/v1/customers/**").hasRole(PermissionType.ROLE_WRITER.role)
                 .anyRequest().authenticated()
             http.apply(JwtFilterConfig(jwtTokenService, resolver))
         }

@@ -26,6 +26,7 @@ class JwtFilter(
             token?.let {
                SecurityContextHolder.getContext().authentication = jwtTokenService.getAuthentication(it)
             } ?: throw WrongTokenException("Истекший или несуществующий JWT токен")
+            filterChain.doFilter(request, response)
          }
       } catch (ex : Exception) {
          resolver.resolveException(request, response, null, ex)
