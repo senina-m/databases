@@ -167,7 +167,7 @@ begin
 return
         2*(select count(*) from Crime c
            where c.main_detective_id = $3
-             and $1 < c.date_end
+             and $1 <= c.date_end
              and c.date_end < $2);
 end;
 $psql$ language plpgsql;
@@ -195,7 +195,7 @@ return
     (select sum(om.damage) from Used_magic um
                                     inner join Obvious_magic om
                                                on om.magic_id = um.magic_id
-     where $1 < um.date and um.date < $2);
+     where $1 <= um.date and um.date < $2);
 end;
 $psql$ language plpgsql;
 
