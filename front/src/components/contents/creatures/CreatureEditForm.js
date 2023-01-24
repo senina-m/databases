@@ -72,7 +72,7 @@ const CreatureEditForm = () => {
   }
 
   const onCreateCreatureClick = () =>{
-    navigate("/create", { replace: true, state: {crime: false}});
+    navigate("/create/creature", { replace: true});
   }
 
   const renderForm = ()=>{

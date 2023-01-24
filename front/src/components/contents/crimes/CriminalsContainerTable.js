@@ -44,18 +44,6 @@ const CriminalsContainerTable = ({crime}) => {
     getData()
     }, [navigate, crime]);
 
-
-    // "id": 4803247625584882000,
-    // "isProved": true,
-    // "creature": {
-    //   "id": 6285732497533835000,
-    //   "name": "Arms and the Man",
-    //   "birthday": "2023-01-09",
-    //   "race": "To Say Nothing of the Dog",
-    //   "deathDate": "2022-10-21",
-    //   "sex": "Мужчина"
-    // }
-
     const formatIsSolved = (cell) => {
         return cell ? 
         <div className='green'>да</div> : 

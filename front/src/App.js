@@ -9,7 +9,6 @@ import PageNotFound from './components/PageNotFound';
 import CreaturesPage from './components/contents/creatures/CreaturesPage';
 import CrimesPage from './components/contents/crimes/CrimesPage';
 import InfoPageCrime from './components/contents/crimes/CrimeInfoPage';
-import CreatePage from './components/contents/create/CreatePage';
 import Forbidden from './components/Forbidden';
 import { ReactSession } from 'react-client-session';
 import CreatureEditForm from './components/contents/creatures/CreatureEditForm';
@@ -20,6 +19,8 @@ import UserInfoPage from './components/contents/info/UserInfoPage';
 import CrimeInfoPage from './components/contents/crimes/CrimeInfoPage';
 import DetectiveInfoPage from './components/contents/detective/DetectiveInfoPage';
 import CriminalInfoPage from './components/contents/crimminals/CriminalInfoPage';
+import CreateCreatureContainer from './components/contents/creatures/CreateCreatureContainer';
+import CreateCrimeConteiner from './components/contents/crimes/CreateCrimeContainer';
 
 
 function App() {
@@ -35,7 +36,8 @@ function App() {
         <Route path="/creatures" element={<CreaturesPage/>}/>
         <Route path="/crimes" element={<CrimesPage/>}/>
         <Route path="/crime" element={<InfoPageCrime/>}/>
-        <Route path="/create" element={<CreatePage/>}/>
+        <Route path="/create/creature" element={<CreateCreatureContainer/>}/>
+        <Route path="/create/crime" element={<CreateCrimeConteiner/>}/>
         <Route path="/edit/creature" element={<CreatureEditForm/>}/>
         <Route path="/edit/crime" element={<CrimeEditForm/>}/>
         <Route path='/forbidden' element={<Forbidden/>}/>

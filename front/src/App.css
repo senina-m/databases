@@ -43,6 +43,22 @@
   max-width: 500px;
 }
 
+.textarea{
+  min-height: 100px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  /* min-width: 100px; */
+}
+
+.crime{
+  max-width: none;
+}
+
+.form-crime{
+  width: 70%;
+}
+
 .radio{
   margin-right: 10px;
 }

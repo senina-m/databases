@@ -1,11 +1,10 @@
 import React, {useRef, useState} from 'react';
-import { useLocation } from 'react-router-dom';
-import put from '../../../api/Put';
+import post from '../../../api/Post';
 import { useForm } from "react-hook-form";
 import { ReactSession } from 'react-client-session';
 import { useNavigate } from 'react-router-dom';
 
-const CrimeEditForm = () => {
+const CreateCrimeConteiner = () => {
   const {
     register,
     handleSubmit,
@@ -25,12 +24,8 @@ const CrimeEditForm = () => {
   const dateBegin = useRef({});
   dateBegin.current = watch("dateBegin", "");
 
-  const {state} = useLocation();
-  const { crime } = state;
-
   const prepareDate = (data)=>{
     return {
-      "id": crime.id,
       "title": data.title,
       "description": data.description,
       "dateBegin": get_ddmmyyyy(data.dateBegin),
@@ -51,7 +46,7 @@ const CrimeEditForm = () => {
 
     let token = ReactSession.get("token");
     //todo: check that func works properly
-      put("/crimes/"+ crime.id, prepareDate(data), token).then((json) => {
+      post("/crimes", prepareDate(data), token).then((json) => {
         // put("/creatures/"+ 123456789, prepareDate(data), token).then((json) => {
         if (json.status === 200) {
           showForm(false);
@@ -85,19 +80,19 @@ const CrimeEditForm = () => {
     return <form className="form cont form-crime" onSubmit={handleSubmit(sendCrimeData)} >
     <h1>Редактирование досье</h1>
     <label className='form-label'>Заголовок</label>
-    <input placeholder='заголовок' className='form-control  crime' defaultValue={crime.title}
+    <input placeholder='заголовок' className='form-control  crime'
     {...register("title", {required: true, pattern: /^[А-Яа-я ]+$/i, })} />
     {errors?.title?.type === "pattern" && ( <p className='error'>Русские буквы</p>)}
     {errors?.title?.type === "required" && <p className='error'>Это поле обязательно</p>}
 
     <label className='form-label'>Описание</label>
-    <textarea type='text' placeholder='описание' className='form-control  crime textarea' defaultValue={crime.description}
+    <textarea type='text' placeholder='описание' className='form-control  crime textarea'
     {...register("description", {required: true, pattern: /^[А-Яа-я 0-9]+$/i, })} />
     {errors?.description?.type === "pattern" && ( <p className='error'>Русские буквы</p>)}
     {errors?.description?.type === "required" && <p className='error'>Это поле обязательно</p>}
 
     <label className='form-label'>Дата Начала (мм/дд/гггг)</label>
-    <input  type="date" placeholder='дата начала' className='form-control  crime' defaultValue={crime.dateBegin}
+    <input  type="date" placeholder='дата начала' className='form-control  crime'
     {...register("dateBegin", {required: true, valueAsDate: true,
     validate: date => {
       let bd = Date.parse(date);
@@ -107,7 +102,7 @@ const CrimeEditForm = () => {
     {errors?.dateBegin?.type === "validate" && <p className='error'>Дата должна быть не больше настоящей</p>}
 
     <label className='form-label'>Дата конца(мм/дд/гггг)</label>
-    <input type="date" placeholder='дата конца' className='form-control  crime' defaultValue={crime.dateEnd}
+    <input type="date" placeholder='дата конца' className='form-control  crime'
     {...register("dateEnd", { required: true, valueAsDate: true, 
     validate: dateEnd => {
       let death = Date.parse(dateEnd);
@@ -119,23 +114,23 @@ const CrimeEditForm = () => {
 
     <label className='form-label'>Раскрыто ли</label>
     {/* <input type="checkbox"  onChange={this.handleChangeChk} /> */}
-    <input type="checkbox" placeholder='раскрыто ли' className='form-control crime' defaultChecked={crime.isSolved}
+    <input type="checkbox" placeholder='раскрыто ли' className='form-control crime'
     {...register("isSolved")} />
 
     <label className='form-label'>Описание урона</label>
-    <textarea placeholder='описание урона' className='form-control textarea crime' defaultValue={crime.damageDescription}
+    <textarea placeholder='описание урона' className='form-control textarea crime'
     {...register("damageDescription", {required: true, pattern: /^[А-Яа-я 0-9]+$/i, })} />
     {errors?.damageDescription?.type === "pattern" && ( <p className='error'>Русские буквы</p>)}
     {errors?.damageDescription?.type === "required" && <p className='error'>Это поле обязательно</p>}          
 
     <label className='form-label'>Локация</label>
-    <input placeholder='локация' className='form-control  crime' defaultValue={crime.location}
+    <input placeholder='локация' className='form-control  crime'
     {...register("location", {required: true, pattern: /^[А-Яа-я 0-9]+$/i, })} />
     {errors?.location?.type === "pattern" && ( <p className='error'>Русские буквы</p>)}
     {errors?.location?.type === "required" && <p className='error'>Это поле обязательно</p>}
 
     <label className='form-label'>id Главного детектива</label>
-    <input placeholder='id Главного детектива' className='form-control  crime' defaultValue={crime.mainDetectiveId}
+    <input placeholder='id Главного детектива' className='form-control  crime'
     {...register("mainDetectiveId", {required: true, pattern: /^[0-9]+$/i, })} />
     {errors?.mainDetectiveId?.type === "pattern" && ( <p className='error'>Русские буквы</p>)}
     {errors?.mainDetectiveId?.type === "required" && <p className='error'>Это поле обязательно</p>}
@@ -166,7 +161,7 @@ const CrimeEditForm = () => {
   )
 }
 
-export default CrimeEditForm
+export default CreateCrimeConteiner
 
 const get_ddmmyyyy = (str_date) =>{
 
@@ -177,3 +172,4 @@ const get_ddmmyyyy = (str_date) =>{
 
   return `${dd}-${mm}-${yyyy}`
 }
+

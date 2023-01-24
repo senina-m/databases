@@ -1,5 +1,5 @@
 import React, {useRef, useState} from 'react';
-import post from './../../../api/Post';
+import post from '../../../api/Post';
 import { useForm } from "react-hook-form";
 import { ReactSession } from 'react-client-session';
 import { useNavigate } from 'react-router-dom';

@@ -102,7 +102,7 @@ const CrimesPage = () => {
 };
 
 const onCreateCrimeClick = () =>{
-  navigate("/create", { replace: true, state: {crime: true}});
+  navigate("/create/crime", { replace: true});
 }
 
 const onRowClick = (e, row) =>{

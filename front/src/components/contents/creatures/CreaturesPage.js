@@ -71,7 +71,7 @@ const CreaturesPage = () => {
   };
 
   const onCreateCreatureClick = () =>{
-    navigate("/create", { replace: true, state: {crime: false}});
+    navigate("/create/creature", { replace: true});
   }
 
   const onRowClick = (e, row) =>{
