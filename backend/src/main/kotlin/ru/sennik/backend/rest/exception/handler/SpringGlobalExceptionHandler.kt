@@ -32,6 +32,7 @@ import org.springframework.web.servlet.NoHandlerFoundException
 import ru.sennik.backend.generated.controller.NotFoundException
 import ru.sennik.backend.generated.dto.ErrorDto
 import ru.sennik.backend.rest.exception.AlreadyExistException
+import ru.sennik.backend.rest.exception.ClientException
 import ru.sennik.backend.rest.exception.WrongPasswordException
 import ru.sennik.backend.rest.exception.WrongTokenException
 import ru.sennik.backend.rest.exception.WrongTypeException
@@ -203,6 +204,12 @@ class SpringGlobalExceptionHandler {
    @ExceptionHandler(WrongPasswordException::class)
    @ResponseStatus(HttpStatus.BAD_REQUEST)
    fun handleWrongPasswordException(ex: WrongPasswordException): ErrorDto {
+      return ErrorDto("BAD_REQUEST", ex.message!!)
+   }
+
+   @ExceptionHandler(ClientException::class)
+   @ResponseStatus(HttpStatus.BAD_REQUEST)
+   fun handleClientException(ex: ClientException): ErrorDto {
       return ErrorDto("BAD_REQUEST", ex.message!!)
    }
 

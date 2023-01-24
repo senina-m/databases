@@ -2,10 +2,6 @@ package ru.sennik.backend.domain.customers.service
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
-import org.springframework.security.authentication.AuthenticationManager
-import org.springframework.security.authentication.BadCredentialsException
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -18,11 +14,7 @@ import ru.sennik.backend.domain.customers.repository.CustomerCreatureRepository
 import ru.sennik.backend.domain.customers.repository.CustomerRepository
 import ru.sennik.backend.domain.detectivies.service.DetectiveService
 import ru.sennik.backend.generated.controller.NotFoundException
-import ru.sennik.backend.generated.dto.AuthRequestDto
-import ru.sennik.backend.generated.dto.AuthResponseDto
 import ru.sennik.backend.rest.exception.AlreadyExistException
-import ru.sennik.backend.rest.exception.WrongPasswordException
-import ru.sennik.backend.security.JwtTokenService
 import javax.transaction.Transactional
 
 /**
@@ -47,6 +39,10 @@ class CustomerService(
 
    fun getCustomersWithCreaturesId(): List<CustomerCreature> = customerCreatureRepository.findAll()
 
+   fun getCustomersByCreatureId(creatureId: Long): List<CustomerCreature> =
+      customerCreatureRepository.findByCreatureId(creatureId)?.let { listOf(it) }
+         ?: emptyList()
+
    fun getCustomerWithCreatureId(customerId: Long): CustomerCreature =
       customerCreatureRepository.findByCustomerId(customerId)
          ?: throw NotFoundException("Пользователь с id=$customerId не найден")
@@ -55,10 +51,13 @@ class CustomerService(
       customerRepository.findByIdOrNull(customerId)
          ?: throw NotFoundException("Пользователь с id=$customerId не найден")
 
-   fun getCustomerByName(name: String?): Customer {
-      return name?.let { customerRepository.findByName(name) }
+   fun getCustomerByName(name: String?): Customer =
+      name
+         ?.let { customerRepository.findByName(name) }
          ?: throw NotFoundException("Пользователь с именем $name не найден")
-   }
+
+   fun getCustomerCreatureByName(name: String): CustomerCreature =
+      getCustomerWithCreatureId(getCustomerByName(name).id!!)
 
    @Transactional
    fun createCustomer(customerCreature: CustomerCreature): CustomerCreature {

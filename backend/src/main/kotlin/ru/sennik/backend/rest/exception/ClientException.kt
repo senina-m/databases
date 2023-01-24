@@ -1,7 +1,5 @@
 package ru.sennik.backend.rest.exception
 
-import com.fasterxml.jackson.databind.RuntimeJsonMappingException
-
 /**
  * @author Natalia Nikonova
  */
@@ -13,3 +11,5 @@ class WrongTypeException(field: String, value: String) :
 class WrongTokenException(message: String) : RuntimeException(message)
 
 class WrongPasswordException(username: String) : RuntimeException("Неверный пароль для пользователя $username")
+
+class ClientException(message: String) : RuntimeException(message)

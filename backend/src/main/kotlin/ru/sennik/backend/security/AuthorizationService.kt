@@ -5,7 +5,6 @@ import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.InternalAuthenticationServiceException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import ru.sennik.backend.domain.customers.service.CustomerService
 import ru.sennik.backend.generated.dto.AuthRequestDto
@@ -25,9 +24,14 @@ class AuthorizationService(
         try {
             val authentication = authenticationManager.authenticate(UsernamePasswordAuthenticationToken(dto.name, dto.password))
             SecurityContextHolder.getContext().authentication = authentication
-            val customer = customerService.getCustomerByName(dto.name)
-            val token = jwtTokenService.createToken(customer.id!!, dto.name)
-            return AuthResponseDto(name = dto.name, permission = customer.permission.name.value, token = token)
+            val customerCreature = customerService.getCustomerCreatureByName(dto.name)
+            val token = jwtTokenService.createToken(customerCreature.customer.id!!, dto.name)
+            return AuthResponseDto(
+                name = dto.name,
+                permission = customerCreature.customer.permission.name.value,
+                token = token,
+                creatureId = customerCreature.creatureId
+            )
         } catch (ex: BadCredentialsException) {
             throw WrongPasswordException(dto.name)
         } catch (ex: InternalAuthenticationServiceException) {

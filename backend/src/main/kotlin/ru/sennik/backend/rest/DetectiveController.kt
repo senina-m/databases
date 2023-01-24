@@ -1,5 +1,6 @@
 package ru.sennik.backend.rest
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import mu.KLogging
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RestController
@@ -9,18 +10,23 @@ import ru.sennik.backend.generated.controller.DetectivesApi
 import ru.sennik.backend.generated.dto.CreatureDto
 import ru.sennik.backend.generated.dto.DetectiveRequestDto
 import ru.sennik.backend.generated.dto.DetectiveResponseDto
+import ru.sennik.backend.generated.dto.NumberResponseDto
 
 /**
  * @author Natalia Nikonova
  */
+@SecurityRequirement(name="Authorization")
 @RestController
 class DetectiveController(
     private val detectiveService: DetectiveService
 ) : DetectivesApi {
 
-    override fun getDetectives(): ResponseEntity<List<DetectiveResponseDto>> {
+    override fun getDetectives(creatureId: Long?): ResponseEntity<List<DetectiveResponseDto>> {
         logger.info { "request received: getDetectives" }
-        return ResponseEntity.ok(detectiveService.getDetectives().map { it.toDto() })
+        return ResponseEntity.ok(
+            (creatureId?.let { detectiveService.getDetectivesByCreatureId(it) }
+                ?: detectiveService.getDetectives()).map { it.toDto() }
+        )
     }
 
     override fun getDetective(detectiveId: Long): ResponseEntity<DetectiveResponseDto> {
@@ -44,6 +50,11 @@ class DetectiveController(
         logger.info { "request received: deleteDetective: id=$detectiveId" }
         detectiveService.deleteDetective(detectiveId)
         return ResponseEntity.ok(true)
+    }
+
+    override fun getDetectiveSalary(detectiveId: Long, year: Int, month: Int): ResponseEntity<NumberResponseDto> {
+        logger.info { "request received: deleteDetective: id=$detectiveId" }
+        return ResponseEntity.ok(NumberResponseDto(detectiveService.calculateSalary(month, year, detectiveId)))
     }
 
     private fun Detective.toDto() = DetectiveResponseDto(
