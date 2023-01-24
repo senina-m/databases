@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.RestController
 import ru.sennik.backend.domain.detectivies.model.Position
 import ru.sennik.backend.domain.detectivies.service.PositionService
 import ru.sennik.backend.generated.controller.PositionsApi
+import ru.sennik.backend.generated.dto.BooleanResponseDto
 import ru.sennik.backend.generated.dto.PositionDto
 import ru.sennik.backend.utils.createdResponseEntity
+import ru.sennik.backend.utils.successDeleteDto
 
 /**
  * @author Natalia Nikonova
@@ -38,10 +40,10 @@ class PositionController(
       return ResponseEntity.ok(positionService.updatePosition(positionId, toEntity(positionDto)).toDto())
    }
 
-   override fun deletePosition(positionId: Int): ResponseEntity<Boolean> {
+   override fun deletePosition(positionId: Int): ResponseEntity<BooleanResponseDto> {
       logger.info { "request received: deletePosition: id=$positionId" }
       positionService.deletePosition(positionId)
-      return ResponseEntity.ok(true)
+      return successDeleteDto()
    }
 
    private fun toEntity(dto: PositionDto) = Position(

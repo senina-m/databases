@@ -12,9 +12,11 @@ import ru.sennik.backend.domain.customers.service.CustomerService
 import ru.sennik.backend.generated.controller.CustomersApi
 import ru.sennik.backend.generated.dto.AuthRequestDto
 import ru.sennik.backend.generated.dto.AuthResponseDto
+import ru.sennik.backend.generated.dto.BooleanResponseDto
 import ru.sennik.backend.generated.dto.CustomerDto
 import ru.sennik.backend.security.AuthorizationService
 import ru.sennik.backend.utils.createdResponseEntity
+import ru.sennik.backend.utils.successDeleteDto
 
 /**
  * @author Natalia Nikonova
@@ -55,10 +57,10 @@ class CustomerController(
         return ResponseEntity.ok(customerService.updateCustomer(customerId, toEntity(customerDto)).toDto())
     }
 
-    override fun deleteCustomer(customerId: Long): ResponseEntity<Boolean> {
+    override fun deleteCustomer(customerId: Long): ResponseEntity<BooleanResponseDto> {
         logger.info { "request received: deleteCustomer: customerId=$customerId" }
         customerService.deleteCustomer(customerId)
-        return ResponseEntity.ok(true)
+        return successDeleteDto()
     }
 
     private fun CustomerCreature.toDto() = CustomerDto(

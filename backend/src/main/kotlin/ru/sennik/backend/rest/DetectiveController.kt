@@ -7,10 +7,12 @@ import org.springframework.web.bind.annotation.RestController
 import ru.sennik.backend.domain.detectivies.model.Detective
 import ru.sennik.backend.domain.detectivies.service.DetectiveService
 import ru.sennik.backend.generated.controller.DetectivesApi
+import ru.sennik.backend.generated.dto.BooleanResponseDto
 import ru.sennik.backend.generated.dto.CreatureDto
 import ru.sennik.backend.generated.dto.DetectiveRequestDto
 import ru.sennik.backend.generated.dto.DetectiveResponseDto
 import ru.sennik.backend.generated.dto.NumberResponseDto
+import ru.sennik.backend.utils.successDeleteDto
 
 /**
  * @author Natalia Nikonova
@@ -46,10 +48,10 @@ class DetectiveController(
         return ResponseEntity.ok(detectiveService.updateDetective(detectiveId, body).toDto())
     }
 
-    override fun deleteDetective(detectiveId: Long): ResponseEntity<Boolean> {
+    override fun deleteDetective(detectiveId: Long): ResponseEntity<BooleanResponseDto> {
         logger.info { "request received: deleteDetective: id=$detectiveId" }
         detectiveService.deleteDetective(detectiveId)
-        return ResponseEntity.ok(true)
+        return successDeleteDto()
     }
 
     override fun getDetectiveSalary(detectiveId: Long, year: Int, month: Int): ResponseEntity<NumberResponseDto> {
