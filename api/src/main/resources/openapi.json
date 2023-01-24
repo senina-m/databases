@@ -2205,16 +2205,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "title": "Идентификатор детектива",
-                "properties": {
-                  "detectiveId": {
-                    "$ref": "#/components/schemas/DetectiveIdComponent"
-                  }
-                },
-                "required": [
-                  "detectiveId"
-                ]
+                "$ref": "#/components/schemas/DetectiveIdObject"
               }
             }
           }
@@ -3109,17 +3100,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "title": "Доказана ли вина",
-                "properties": {
-                  "isProved": {
-                    "title": "Доказана ли вина",
-                    "type": "boolean"
-                  }
-                },
-                "required": [
-                  "isProved"
-                ]
+                "$ref": "#/components/schemas/IsProvedObject"
               }
             }
           }
@@ -4295,6 +4276,18 @@
         "minimum": 1,
         "maximum": 9223372036854775807
       },
+      "DetectiveIdObject": {
+        "type": "object",
+        "title": "Идентификатор детектива",
+        "properties": {
+          "detectiveId": {
+            "$ref": "#/components/schemas/DetectiveIdComponent"
+          }
+        },
+        "required": [
+          "detectiveId"
+        ]
+      },
       "Location": {
         "type": "object",
         "title": "Локация",
@@ -4578,6 +4571,19 @@
         },
         "required": [
           "value"
+        ]
+      },
+      "IsProvedObject": {
+        "type": "object",
+        "title": "Доказана ли вина",
+        "properties": {
+          "isProved": {
+            "title": "Доказана ли вина",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "isProved"
         ]
       }
     },

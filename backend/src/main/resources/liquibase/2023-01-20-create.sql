@@ -131,7 +131,7 @@ create table Take_part (
                            id BIGSERIAL PRIMARY KEY,
                            detective_id INTEGER NOT NULL REFERENCES Detective(id) ON DELETE CASCADE,
                            crime_id INTEGER NOT NULL REFERENCES Crime(id) ON DELETE CASCADE,
-                           UNIQUE(detective_id, crime_id)
+                           UNIQUE(crime_id, detective_id)
 );
 
 create table Salary (
