@@ -1,5 +1,6 @@
 package ru.sennik.backend.rest
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import mu.KLogging
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RestController
@@ -12,6 +13,7 @@ import ru.sennik.backend.utils.createdResponseEntity
 /**
  * @author Natalia Nikonova
  */
+@SecurityRequirement(name="Authorization")
 @RestController
 class PositionController(
    private val positionService: PositionService

@@ -1,5 +1,6 @@
 package ru.sennik.backend.rest
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import mu.KLogging
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RestController
@@ -18,6 +19,7 @@ import ru.sennik.backend.utils.createdResponseEntity
 /**
  * @author Natalia Nikonova
  */
+@SecurityRequirement(name="Authorization")
 @RestController
 class CustomerController(
     private val customerService: CustomerService,
@@ -28,9 +30,14 @@ class CustomerController(
         logger.info { "request received: authorization: login=${authRequestDto.name}" }
         return ResponseEntity.ok(authService.login(authRequestDto))
     }
-    override fun getCustomers(): ResponseEntity<List<CustomerDto>> {
-        logger.info { "request received: getCustomers" }
-        return ResponseEntity.ok(customerService.getCustomersWithCreaturesId().map { it.toDto() })
+
+    override fun getCustomers(creatureId: Long?): ResponseEntity<List<CustomerDto>> {
+        logger.info { "request received: getCustomers: creatureId=$creatureId" }
+        return ResponseEntity.ok(
+            (creatureId?.let { customerService.getCustomersByCreatureId(it) }
+                ?: customerService.getCustomersWithCreaturesId())
+                .map { it.toDto() }
+        )
     }
 
     override fun getCustomer(customerId: Long): ResponseEntity<CustomerDto> {

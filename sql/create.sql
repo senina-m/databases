@@ -183,12 +183,19 @@ create or replace function count_prize(date, date, bigint) returns integer as $p
 $psql$ language plpgsql;
 
 -- - расчет зарплаты для детектива (дата начала, дата конца, должность_ид, детектив_ид)
-create or replace function count_salary(date, date, SMALLINT, bigint) returns integer as $psql$
-  begin
-    return (select value from Salary s where s.position_id = $3) 
-    * abs(extract(day from $1::timestamp - $2::timestamp))
-    + count_prize($1, $2, $4);
-  end;
+create or replace function count_salary(date, date, bigint) returns integer as $psql$
+    declare
+        salary_value int;
+    begin
+        select value into salary_value from Salary s where s.position_id =
+            (select position_id from Detective where id = $3);
+        if (salary_value is null)
+		    then salary_value = 0;
+        end if;
+        return salary_value
+            * abs(extract(day from $1::timestamp - $2::timestamp))
+            + count_prize($1, $2, $3);
+    end;
 $psql$ language plpgsql;
 
 -- - расчет урона сердцу мира за указанный месяц
