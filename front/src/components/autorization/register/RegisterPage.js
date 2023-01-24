@@ -4,7 +4,7 @@ import RegisterContainer from './RegisterContainer'
 
 const RegisterPage = () => {
   return <div>
-    <RegisterContainer/>
+    <RegisterContainer />
     <Link className='navigation-link' to="/">Уже есть аккаунт?</Link>
     <br/>
   </div>;

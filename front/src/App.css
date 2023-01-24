@@ -43,6 +43,10 @@
   max-width: 500px;
 }
 
+.radio{
+  margin-right: 10px;
+}
+
 .btn {
   display: inline-block;
   background: #000;

@@ -33,6 +33,7 @@ const get = async (api, args, token) => {
         mode: 'cors',
         headers: {'Authorization' : "Bearer " + token},
       });
+
       let json = await response.json();
       json.status = response.status;
       console.log("Got json:", json);

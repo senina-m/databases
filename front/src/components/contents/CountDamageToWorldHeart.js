@@ -30,7 +30,7 @@ const CountDamageToWorldHeart = () => {
                 delete json.status;
                 console.log("here", json);
                 //todo проверить что правильно достаю данные
-                setDamage(json);
+                setDamage(json.value);
                 setIsResived(true);
         }else if (json.status === 400){
             setError(json.message);
@@ -65,7 +65,8 @@ const CountDamageToWorldHeart = () => {
                 }})} />
                 {errors?.begin?.type === "required" && <p className='error'>Это поле обязательно</p>}
                 {errors?.begin?.type === "validate" && <p className='error'>Дата должна быть не больше настоящей</p>}
-
+                
+                <label className='form-label'>Конец (мм/дд/гггг)</label>
                 <input  type="date" placeholder='Конец' className='form-control'
                 {...register("end", {required: true, valueAsDate: true,
                 validate: end => {

@@ -88,7 +88,7 @@ const CreatureInfoPage = () => {
     
 
     const createAccount = () => {
-        navigate("/register", { replace: true, state: {id: creature}});
+        navigate("/register", { replace: true, state: {id: creature.id}});
     }
 
 
@@ -103,6 +103,8 @@ const CreatureInfoPage = () => {
           <button className='btn center' onClick={deleteCreature}>Удалить</button>
           <br/>
           {!hasAccount && <button className='btn center' onClick={createAccount}>Создать аккаунт</button>}
+          {/* todo: delete next line */}
+          <button className='btn center' onClick={createAccount}>Создать аккаунт</button>
         </>)}
         <Link  className='center' to="/creatures" >Вернуться к таблице</Link>
     </>

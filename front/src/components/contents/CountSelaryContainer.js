@@ -21,88 +21,88 @@ const CountSelaryContainer = () => {
     const begin = useRef({});
     begin.current = watch("begin", "");
 
-    const getDetectiveId = () =>{
+    const getDetectiveId = async () =>{
         let token = ReactSession.get("token");
         let creature_id = ReactSession.get("creature_id");
-        get("/detectives", {"creatureId":creature_id}, token).then((json) => {
+        return await get("/detectives", {"creatureId":creature_id}, token).then((json) => {
           if (json.status === 200) {
             delete json.status;
             console.log("here", json);
             if (json === undefined || json.length === 0) {
               navigate("/forbidden", { replace: true });
             }else{
-              //todo проверить что правильно достаю данные
-              setSelary(json[0]);
-              setIsResived(true);
+              console.log( json[0].id);
+              return json[0].id;
             }
           }else if (json.status === 401){
             navigate("/relogin", { replace: true });
           }else if (json.status === 403) {
             navigate("/forbidden", { replace: true });
           }
+          return -1;
         }).catch((e)=>{
           console.log("ERROR:", e);
+          return -1;
           //todo: what to do if we are anable to load data from server?
           //or wrong json came
-        });
+      });
     }
 
-    const countDamage = (data) => {
-        setIsResived(false);
-        setSelary(-1);
-        setIsError(false);
-        setError("");
+    //todo: fix, when api will add json instead of plain text number
+    const requestSelary = (detective_id, data) => {
+      console.log("requestSelary", detective_id);
+      if(detective_id < 0){
+        return;
+      }
 
-        let token = ReactSession.get("token");
-        let detective_id = getDetectiveId();
-        //todo: wait for api url!!!!
-        get("/detectives/" + detective_id +"/salary/" + get_year(data) + "/" + get_month(data), {}, token).then((json) => {
-          if (json.status === 200) {
-            delete json.status;
-            console.log("here", json);
-            //todo проверить что правильно достаю данные
-            setSelary(json);
-            setIsResived(true);
-          }else if (json.status === 400){
-            setError(json.message);
-            setIsError(true);
-          }else if (json.status === 401){
-            navigate("/relogin", { replace: true });
-          }else if (json.status === 403) {
-            navigate("/forbidden", { replace: true });
-          }else if (json.status === 404) {
-            navigate("*", { replace: true });
-          }
-        }).catch((e)=>{
-          console.log("ERROR:", e);
-          //todo: what to do if we are anable to load data from server?
-          //or wrong json came
-        });
+      ReactSession.set("detective_id", detective_id);
+      setIsResived(false);
+      setSelary(-1);
+      setIsError(false);
+      setError("");
+
+      let token = ReactSession.get("token");
+      get("/detectives/" + detective_id +"/salary/" + get_year(data.month) + "/" + get_month(data.month), {}, token).then((json) => {
+        if (json.status === 200) {
+          delete json.status;
+          console.log("here", json);
+          //todo проверить что правильно достаю данные
+          setSelary(json.value);
+          setIsResived(true);
+        }else if (json.status === 400){
+          setError(json.message);
+          setIsError(true);
+        }else if (json.status === 401){
+          navigate("/relogin", { replace: true });
+        }else if (json.status === 403) {
+          navigate("/forbidden", { replace: true });
+        }else if (json.status === 404) {
+          navigate("*", { replace: true });
+        }
+      }).catch((e)=>{
+        console.log("ERROR:", e);
+        //todo: what to do if we are anable to load data from server?
+        //or wrong json came
+      });
+    }
+
+    const countSalary = (data) => {
+      getDetectiveId().then((detective_id) => requestSelary(detective_id, data));
     }
     
     return (
-        <form className="form cont" onSubmit={handleSubmit(countDamage)} >
+        <form className="form cont" onSubmit={handleSubmit(countSalary)} >
             <h1>Зарплата</h1>
             {isError && <p className='error'>{error}</p>}
-            <label className='form-label'>Начало (мм/дд/гггг)</label>
+            <label className='form-label'>Месяц</label>
             <input  type="month" placeholder='Начало' className='form-control'
-            {...register("begin", {required: true, valueAsDate: true,
+            {...register("month", {required: true, valueAsDate: true,
             validate: date => {
-            let bd = Date.parse(date);
-            return bd <= new Date();
+              let bd = Date.parse(date);
+              return bd <= new Date();
             }})} />
-            {errors?.begin?.type === "required" && <p className='error'>Это поле обязательно</p>}
-            {errors?.begin?.type === "validate" && <p className='error'>Дата должна быть не больше настоящей</p>}
-
-            <input  type="month" placeholder='Конец' className='form-control'
-            {...register("end", {required: true, valueAsDate: true,
-            validate: end => {
-                let end_date = Date.parse(end);
-                let begin_date = Date.parse(begin.current);
-                return end_date > begin_date;
-            }})} />
-            {errors?.end?.type === "required" && <p className='error'>Это поле обязательно</p>}
-            {errors?.end?.type === "validate" && <p className='error'>Дата конца должна быть больше даты начала</p>}
+            {errors?.month?.type === "required" && <p className='error'>Это поле обязательно</p>}
+            {errors?.month?.type === "validate" && <p className='error'>Дата должна быть не больше настоящей</p>}
             
             <input type="submit" value='Рассчитать зарплату за период' className='btn btn-block'/>
             {isResived && <h2 className='green'>Ваша зарплата: {selary} у.е.</h2>}
@@ -111,16 +111,16 @@ const CountSelaryContainer = () => {
 }
 
 const get_year = (str_date) =>{
-
+  console.log(str_date)
   const date = new Date(str_date);
-  const yyyy = date.getFullYear();  
-  return `${yyyy}`
+  const yyyy = date.getFullYear();
+  return yyyy;
 }
 
 const get_month = (str_date) =>{
   const date = new Date(str_date);
   const mm = String(date.getMonth() + 1).padStart(2,'0');
-  return `${mm}`
+  return mm;
 }
 
 export default CountSelaryContainer
