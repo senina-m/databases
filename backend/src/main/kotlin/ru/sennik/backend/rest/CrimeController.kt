@@ -77,7 +77,7 @@ class CrimeController(
         detectiveIdObjectDto: DetectiveIdObjectDto
     ): ResponseEntity<DetectiveResponseDto> {
         logger.info { "request received: createTakePartDetective: crimeId=$crimeId detectiveId=$detectiveIdObjectDto" }
-        return ResponseEntity.ok(takePartService.createTakePart(crimeId, detectiveIdObjectDto.detectiveId).toDto())
+        return createdResponseEntity(takePartService.createTakePart(crimeId, detectiveIdObjectDto.detectiveId).toDto())
     }
 
     override fun deleteTakePartDetective(crimeId: Long, detectiveId: Long): ResponseEntity<BooleanResponseDto> {
