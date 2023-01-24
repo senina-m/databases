@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.RestController
 import ru.sennik.backend.domain.creatures.model.Creature
 import ru.sennik.backend.domain.creatures.service.CreatureService
 import ru.sennik.backend.generated.controller.CreaturesApi
+import ru.sennik.backend.generated.dto.BooleanResponseDto
 import ru.sennik.backend.generated.dto.CreatureDto
 import ru.sennik.backend.utils.createdResponseEntity
+import ru.sennik.backend.utils.successDeleteDto
 
 /**
  * @author Natalia Nikonova
@@ -39,10 +41,10 @@ class CreatureController(
       return ResponseEntity.ok(creatureService.updateCreature(creatureId, toEntity(creatureDto)).toDto())
    }
 
-   override fun deleteCreature(creatureId: Long): ResponseEntity<Boolean> {
+   override fun deleteCreature(creatureId: Long): ResponseEntity<BooleanResponseDto> {
       logger.info { "request received: deleteCreature: id=$creatureId" }
       creatureService.deleteCreature(creatureId)
-      return ResponseEntity.ok(true)
+      return successDeleteDto()
    }
 
    private fun toEntity(dto: CreatureDto) = Creature(
