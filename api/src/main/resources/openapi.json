@@ -3814,7 +3814,7 @@
           {
             "name": "dateBegin",
             "in": "query",
-            "description": "Дата начала периода (не включается в расчет)",
+            "description": "Дата начала периода (включается в расчет)",
             "required": true,
             "schema": {
               "type": "string",
@@ -4137,7 +4137,8 @@
           },
           "author": {
             "type": "string",
-            "title": "Автор досье"
+            "title": "Автор досье",
+            "readOnly": true
           },
           "createDate": {
             "type": "string",
