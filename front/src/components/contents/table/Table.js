@@ -89,8 +89,8 @@ const Table = ({ columns, data, onRowClick}) => {
               </tr>
             ))}
           </tfoot> */}
+          <p className='center'>Нажмите shift для множественной сортирвки</p>
         </table>
-        <p className='center'>Нажмите shift для множественной сортирвки</p>
       </>
     );
   }

@@ -36,7 +36,6 @@ const CreatureContainer = ({creature}) => {
     //     get("/ordens/", {}, token).then((json) => {
     //       if (json.status === 200) {
     //         delete json.status;
-    //         console.log("here", json);
     //         setOrdenData(json);
     //       }else if (json.status === 401){
     //         navigate("/relogin", { replace: true });

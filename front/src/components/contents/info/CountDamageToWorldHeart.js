@@ -1,7 +1,7 @@
 import React, {useRef, useState} from 'react'
 import { useForm } from "react-hook-form";
 import { useNavigate } from 'react-router-dom';
-import get from "../../api/Get";
+import get from "../../../api/Get";
 import {ReactSession} from 'react-client-session';
 
 
@@ -28,7 +28,6 @@ const CountDamageToWorldHeart = () => {
         get("/magicAmount", {"dateBegin": get_ddmmyyyy(data.begin), "dateEnd": get_ddmmyyyy(data.end)}, token).then((json) => {
             if (json.status === 200) {
                 delete json.status;
-                console.log("here", json);
                 //todo проверить что правильно достаю данные
                 setDamage(json.value);
                 setIsResived(true);

@@ -1,6 +1,6 @@
 import React, {useRef, useState} from 'react'
 import { useForm } from "react-hook-form";
-import get from "../../api/Get"
+import get from "../../../api/Get"
 import { useNavigate } from 'react-router-dom';
 import {ReactSession} from 'react-client-session'
 
@@ -27,7 +27,6 @@ const CountSelaryContainer = () => {
         return await get("/detectives", {"creatureId":creature_id}, token).then((json) => {
           if (json.status === 200) {
             delete json.status;
-            console.log("here", json);
             if (json === undefined || json.length === 0) {
               navigate("/forbidden", { replace: true });
             }else{
@@ -65,7 +64,6 @@ const CountSelaryContainer = () => {
       get("/detectives/" + detective_id +"/salary/" + get_year(data.month) + "/" + get_month(data.month), {}, token).then((json) => {
         if (json.status === 200) {
           delete json.status;
-          console.log("here", json);
           //todo проверить что правильно достаю данные
           setSelary(json.value);
           setIsResived(true);

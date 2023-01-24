@@ -61,6 +61,10 @@
   font-family: inherit;
 }
 
+/* .long{
+  min-width: 100px;
+} */
+
 .footer {
   margin-top: 30px;
   text-align: center;
@@ -116,9 +120,9 @@
   font-size: 25px;
 }
 
-/* .block{
-  display: block;
-} */
+.blocks{
+  width: 33%;
+}
 
 .table {
   display: block;

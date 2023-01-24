@@ -33,7 +33,6 @@ const CreatureInfoPage = () => {
           get("/customers", {"creatureId":id}, token).then((json) => {
             if (json.status === 200) {
               delete json.status;
-              console.log("here", json);
               if (!Array.isArray(json) || !json.length) {
                 setHasAccount(false);
               }else{
@@ -61,7 +60,6 @@ const CreatureInfoPage = () => {
         del("/creatures", creature.id , token).then((json) => {
           if (json.status === 200) {
             delete json.status;
-            console.log("here", json);
             setDeleteStatus(true);
           }else if (json.status === 400){
             setDeleteStatus(false);

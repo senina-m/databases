@@ -9,8 +9,8 @@ const CrimesPage = () => {
   const navigate = useNavigate();
   // const role = ReactSession.get("permission");
   //todo: uncomment upper code
-  // const role = "writer";
-  const role = "detective";
+  const role = "writer";
+  // const role = "detective";
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setError] = useState(false);
@@ -23,7 +23,6 @@ const CrimesPage = () => {
       get("/crimes", {}, token).then((json) => {
         if (json.status === 200) {
           delete json.status;
-          console.log("here", json);
           setData(json);
         }else if (json.status === 401){
           navigate("/relogin", { replace: true });
@@ -99,18 +98,6 @@ const CrimesPage = () => {
         accessor: 'location',
       },
     ];
-
-    if(role === "writer"){
-      columns.push({
-        disableFilters:true,
-        accessor: 'action',
-        Cell: props => <button className="btn" onClick={() => {
-          console.log(props?.row?.original);
-          let crime =  props?.row?.original
-          navigate("/edit/crime", { replace: true, state: {crime: crime}});
-        }}>Изменить</button>
-      });
-    }
     return columns;
 };
 
@@ -118,16 +105,23 @@ const onCreateCrimeClick = () =>{
   navigate("/create", { replace: true, state: {crime: true}});
 }
 
+const onRowClick = (e, row) =>{
+  if(role === "writer"){
+    console.log(row.original);
+    navigate("/info/crime", { replace: true, state: {crime: row.original}});
+  }
+}
+
 return (<div className='block'>
   {isError ? <h3>Не удалось получить данные с сервера...</h3> : 
     (isLoading ? <h3>Загружаем таблицу с существами...</h3> : 
       (role === "writer" ?
       (<>
-        <Table columns={columns()} data={data}/> 
+        <Table columns={columns()} data={data} onRowClick={onRowClick}/> 
         <br/>
         <button className='btn center' onClick={onCreateCrimeClick}>Создать новое досье</button> 
       </>) :
-        <Table columns={columns()} data={data}/>
+        <Table columns={columns()} data={data} onRowClick={onRowClick}/>
       )
     )
   }

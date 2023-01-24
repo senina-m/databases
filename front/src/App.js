@@ -8,7 +8,7 @@ import MainPage from './components/MainPage';
 import PageNotFound from './components/PageNotFound';
 import CreaturesPage from './components/contents/creatures/CreaturesPage';
 import CrimesPage from './components/contents/crimes/CrimesPage';
-import InfoPageCrime from './components/contents/crimes/InfoPageCrime';
+import InfoPageCrime from './components/contents/crimes/CrimeInfoPage';
 import CreatePage from './components/contents/create/CreatePage';
 import Forbidden from './components/Forbidden';
 import { ReactSession } from 'react-client-session';
@@ -16,7 +16,10 @@ import CreatureEditForm from './components/contents/creatures/CreatureEditForm';
 import CrimeEditForm from './components/contents/crimes/CrimeEditForm';
 import Relogin from './components/Relogin';
 import CreatureInfoPage from './components/contents/creatures/CreatureInfoPage';
-import UserInfoPage from './components/contents/UserInfoPage';
+import UserInfoPage from './components/contents/info/UserInfoPage';
+import CrimeInfoPage from './components/contents/crimes/CrimeInfoPage';
+import DetectiveInfoPage from './components/contents/detective/DetectiveInfoPage';
+import CriminalInfoPage from './components/contents/crimminals/CriminalInfoPage';
 
 
 function App() {
@@ -38,7 +41,10 @@ function App() {
         <Route path='/forbidden' element={<Forbidden/>}/>
         <Route path='/relogin' element={<Relogin/>}/>
         <Route path='/info/creature' element={<CreatureInfoPage/>}/>
+        <Route path='/info/crime' element={<CrimeInfoPage/>}/>
         <Route path='/info' element={<UserInfoPage/>}/>
+        <Route path='/info/detective' element={<DetectiveInfoPage/>}/>
+        <Route path='/info/criminal' element={<CriminalInfoPage/>}/>
         <Route path="*" element={<PageNotFound/>} status={404}/>
       </Routes>
       <Footer/>

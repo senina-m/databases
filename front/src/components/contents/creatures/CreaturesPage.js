@@ -26,7 +26,6 @@ const CreaturesPage = () => {
       get("/creatures", {}, token).then((json) => {
         if (json.status === 200) {
           delete json.status;
-          console.log("here", json);
           setData(json);
         }else if (json.status === 401){
           navigate("/relogin", { replace: true });
@@ -76,8 +75,10 @@ const CreaturesPage = () => {
   }
 
   const onRowClick = (e, row) =>{
-    console.log(row.original);
-    navigate("/info/creature", { replace: true, state: {creature: row.original}});
+    if(role === "writer"){
+      console.log(row.original);
+      navigate("/info/creature", { replace: true, state: {creature: row.original}});
+    }
   }
   
   return (<>
