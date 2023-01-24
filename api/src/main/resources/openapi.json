@@ -2205,7 +2205,16 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/DetectiveIdComponent"
+                "type": "object",
+                "title": "Идентификатор детектива",
+                "properties": {
+                  "detectiveId": {
+                    "$ref": "#/components/schemas/DetectiveIdComponent"
+                  }
+                },
+                "required": [
+                  "detectiveId"
+                ]
               }
             }
           }
@@ -3100,8 +3109,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "boolean",
-                "title": "Доказана ли вина"
+                "type": "object",
+                "title": "Доказана ли вина",
+                "properties": {
+                  "isProved": {
+                    "title": "Доказана ли вина",
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "isProved"
+                ]
               }
             }
           }
