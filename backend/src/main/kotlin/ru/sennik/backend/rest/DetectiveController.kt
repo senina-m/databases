@@ -12,6 +12,7 @@ import ru.sennik.backend.generated.dto.CreatureDto
 import ru.sennik.backend.generated.dto.DetectiveRequestDto
 import ru.sennik.backend.generated.dto.DetectiveResponseDto
 import ru.sennik.backend.generated.dto.NumberResponseDto
+import ru.sennik.backend.utils.createdResponseEntity
 import ru.sennik.backend.utils.successDeleteDto
 
 /**
@@ -38,7 +39,7 @@ class DetectiveController(
 
     override fun createDetective(detectiveRequestDto: DetectiveRequestDto): ResponseEntity<DetectiveResponseDto> {
         logger.info { "request received: createDetective: dto=$detectiveRequestDto" }
-        return ResponseEntity.ok(
+        return createdResponseEntity(
             detectiveService.createDetective(detectiveRequestDto.creatureId, detectiveRequestDto.position).toDto()
         )
     }
