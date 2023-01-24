@@ -2121,9 +2121,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "integer",
-                  "format": "int32",
-                  "title": "Зарплата детектива"
+                  "$ref": "#/components/schemas/NumberResponse"
                 }
               }
             }
@@ -3840,9 +3838,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "integer",
-                  "format": "int64",
-                  "title": "Величина нанесенного сердцу мира урона"
+                  "$ref": "#/components/schemas/NumberResponse"
                 }
               }
             }
@@ -4534,6 +4530,21 @@
           "id",
           "magic",
           "date"
+        ]
+      },
+      "NumberResponse":  {
+        "type": "object",
+        "title": "Ответ - целое число",
+        "properties": {
+          "value": {
+            "type": "integer",
+            "format": "int64",
+            "title": "Значение",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "value"
         ]
       }
     },
