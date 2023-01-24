@@ -4097,7 +4097,8 @@
         "required": [
           "name",
           "permission",
-          "token"
+          "token",
+          "creatureId"
         ]
       },
       "Permission": {
@@ -4546,6 +4547,19 @@
         "required": [
           "value"
         ]
+      },
+      "BooleanResponse": {
+        "type": "object",
+        "title": "Ответ - булевский тип",
+        "properties": {
+          "value": {
+            "type": "boolean",
+            "title": "Значение"
+          }
+        },
+        "required": [
+          "value"
+        ]
       }
     },
     "parameters": {
@@ -4687,8 +4701,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "type": "boolean",
-              "title": "Признак успешности операции (всегда true)"
+              "$ref": "#/components/schemas/BooleanResponse"
             }
           }
         }
