@@ -42,10 +42,10 @@ create table Crime (
                        title VARCHAR NOT NULL UNIQUE,
                        description VARCHAR NOT NULL,
                        date_begin DATE NOT NULL,
-                       date_end DATE NOT NULL,
+                       date_end DATE,
                        main_detective_id BIGINT NOT NULL REFERENCES Detective(id),
                        is_solved BOOLEAN NOT NULL,
-                       damage_description VARCHAR ,
+                       damage_description VARCHAR,
                        location_id SMALLINT NOT NULL REFERENCES Location(id)
 );
 
