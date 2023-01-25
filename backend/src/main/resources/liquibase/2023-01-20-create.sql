@@ -1,4 +1,4 @@
-set lc_messages to 'ru_RU.UTF-8';
+set lc_messages to 'en_US.utf-8';
 
 create table Creature (
                           id BIGSERIAL PRIMARY KEY,
@@ -202,12 +202,12 @@ $psql$ language plpgsql;
 -- - в очевидной магии нельзя чтобы is_allowed было true у черной магии больше 22 ступени и у белой больше 10
 create or replace function true_magic_level_check() returns trigger as $psql$
 begin
-    if new.level > 22 and new.is_allowed = true and new.color_id = 'black' then
+    if new.level > 22 and new.is_allowed = true and new.color = 'black' then
       RAISE EXCEPTION 'уровень = % > 22, и не может быть разрешен для черной очевидной магии', new.level;
 return null;
 end if;
 
-    if new.level > 10 and new.is_allowed = true and new.color_id = 'white' then
+    if new.level > 10 and new.is_allowed = true and new.color = 'white' then
       RAISE EXCEPTION 'уровень = % > 10, и не может быть разрешен для белой очевидной магии', new.level;
 return null;
 end if;

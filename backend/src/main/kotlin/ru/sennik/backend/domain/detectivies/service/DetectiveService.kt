@@ -5,6 +5,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import ru.sennik.backend.domain.creatures.service.CreatureService
+import ru.sennik.backend.domain.crime.service.CrimeService
 import ru.sennik.backend.domain.customers.service.CustomerService
 import ru.sennik.backend.domain.detectivies.model.Detective
 import ru.sennik.backend.domain.detectivies.repository.DetectiveRepository
@@ -26,6 +27,10 @@ class DetectiveService(
    @org.springframework.context.annotation.Lazy
    @Autowired
    private lateinit var customerService: CustomerService
+
+   @org.springframework.context.annotation.Lazy
+   @Autowired
+   private lateinit var crimeService: CrimeService
 
    fun getDetectives(): List<Detective> = repository.findAll()
 
@@ -57,9 +62,16 @@ class DetectiveService(
 
    @Transactional
    fun deleteDetective(id: Long) {
-      getDetectiveById(id).also {
-         customerService.deleteCustomerByCreatureIdIfExists(it.creature.id!!)
-         repository.delete(it)
+      getDetectiveById(id).also { detective ->
+         crimeService.getCrimesByMainDetectiveId(id)
+            .takeIf { it.isNotEmpty() }
+            ?.let {
+               throw ClientException(
+                  "Нельзя удалить детектива ${detective.creature.name} так как является ответственным за преступления"
+               )
+            }
+         customerService.deleteCustomerByCreatureIdIfExists(detective.creature.id!!)
+         repository.delete(detective)
       }
    }
 

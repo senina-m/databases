@@ -2010,7 +2010,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/PositionName"
+                "$ref": "#/components/schemas/PositionNameObject"
               }
             }
           }
@@ -4200,6 +4200,18 @@
       "PositionName": {
         "type": "string",
         "title": "Человеко-понятное название должности детектива"
+      },
+      "PositionNameObject": {
+        "type": "object",
+        "title": "Человеко-понятное название должности детектива в объекте",
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/PositionName"
+          }
+        },
+        "required": [
+          "value"
+        ]
       },
       "Position": {
         "type": "object",

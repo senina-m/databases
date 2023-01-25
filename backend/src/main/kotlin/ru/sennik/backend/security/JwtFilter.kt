@@ -28,7 +28,7 @@ class JwtFilter(
             } ?: throw WrongTokenException("Истекший или несуществующий JWT токен")
             filterChain.doFilter(request, response)
          }
-      } catch (ex : Exception) {
+      } catch (ex: Exception) {
          resolver.resolveException(request, response, null, ex)
       }
    }
