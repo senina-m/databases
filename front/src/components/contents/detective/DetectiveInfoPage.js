@@ -9,10 +9,7 @@ import checkAuth from '../../../api/CheckAuth';
 
 
 const DetectiveInfoPage = () => {
-    // const role = ReactSession.get("permission");
-    //todo: uncomment upper code
-    const role = "writer";
-    // const role = "detective";
+    const role = ReactSession.get("permission");
 
     const {state} = useLocation();
     const {detective} = state;

@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import get_yyyymmdd from "../../ConvertData";
 import checkAuth from '../../../api/CheckAuth';
+import checkWriter from '../../../api/CheckRole';
 
 
 const CreateCreaturePage = () => {
@@ -18,6 +19,8 @@ const CreateCreaturePage = () => {
   const navigate = useNavigate();
 
   useEffect( () => {if(checkAuth()) navigate("/forbidden", { replace: true });});
+  useEffect( () => {if(checkWriter()) navigate("/forbidden", { replace: true });});
+
 
   const [nothingUpdate, setNothingUpdate] = useState(false);
   const [sucsess, setSucsess] = useState(false);

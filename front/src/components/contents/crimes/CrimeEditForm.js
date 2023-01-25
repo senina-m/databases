@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import get_yyyymmdd from "../../ConvertData";
 import checkAuth from '../../../api/CheckAuth';
+import checkWriter from '../../../api/CheckRole';
 
 
 const CrimeEditForm = () => {
@@ -17,6 +18,7 @@ const CrimeEditForm = () => {
   } = useForm();
 
   const navigate = useNavigate();
+  useEffect( () => {if(checkWriter()) navigate("/forbidden", { replace: true });});
   useEffect( () => {if(checkAuth()) navigate("/forbidden", { replace: true });});
 
   const [noSuch, setNoSuch] = useState(false);

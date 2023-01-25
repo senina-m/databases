@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import get_yyyymmdd from "../../ConvertData";
 import checkAuth from '../../../api/CheckAuth';
+import checkWriter from '../../../api/CheckRole';
 
 
 const CreateCrimePage = () => {
@@ -17,6 +18,7 @@ const CreateCrimePage = () => {
 
   const navigate = useNavigate();
 
+  useEffect( () => {if(checkWriter()) navigate("/forbidden", { replace: true });});
   useEffect( () => {if(checkAuth()) navigate("/forbidden", { replace: true });});
 
 

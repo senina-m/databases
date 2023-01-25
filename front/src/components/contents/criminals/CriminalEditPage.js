@@ -6,12 +6,14 @@ import { ReactSession } from 'react-client-session';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import checkAuth from '../../../api/CheckAuth';
+import checkWriter from '../../../api/CheckRole';
 
 
 const CriminalEditPage = () => {
   const navigate = useNavigate();
 
   useEffect( () => {if(checkAuth()) navigate("/forbidden", { replace: true });});
+  useEffect( () => {if(checkWriter()) navigate("/forbidden", { replace: true });});
 
   const {state} = useLocation();
   const {criminal} = state;

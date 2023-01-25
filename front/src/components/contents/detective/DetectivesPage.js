@@ -11,10 +11,7 @@ const DetectivesPage = () => {
 
   useEffect( () => {if(checkAuth()) navigate("/forbidden", { replace: true });});
 
-  // const role = ReactSession.get("permission");
-  //todo: uncomment upper code
-  const role = "writer";
-  // const role = "detective";
+  const role = ReactSession.get("permission");
 
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -98,10 +95,8 @@ const DetectivesPage = () => {
   }
 
   const onRowClick = (e, row) =>{
-    if(role === "writer"){
-      console.log(row.original);
-      navigate("/info/detective", {state: {detective: row.original}});
-    }
+    console.log(row.original);
+    navigate("/info/detective", {state: {detective: row.original}});
   }
   
   return (<>

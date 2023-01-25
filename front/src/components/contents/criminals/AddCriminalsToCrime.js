@@ -7,16 +7,14 @@ import Table from "../table/Table";
 import { useLocation } from 'react-router-dom';
 import CriminalForm from './CriminalForm';
 import checkAuth from '../../../api/CheckAuth';
+import checkWriter from '../../../api/CheckRole';
  
 
 const AddCriminalsToCrime = () => {
   const navigate = useNavigate();
   useEffect( () => {if(checkAuth()) navigate("/forbidden", { replace: true });});
+  useEffect( () => {if(checkWriter()) navigate("/forbidden", { replace: true });});
 
-    // const role = ReactSession.get("permission");
-    //todo: uncomment upper code
-    // const role = "writer";
-    // const role = "detective";
 
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);

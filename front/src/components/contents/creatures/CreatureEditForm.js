@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import get_yyyymmdd from "../../ConvertData";
 import checkAuth from '../../../api/CheckAuth';
+import checkWriter from '../../../api/CheckRole';
 
 
 const CreatureEditForm = () => {
@@ -18,6 +19,8 @@ const CreatureEditForm = () => {
 
   const navigate = useNavigate();
   useEffect( () => {if(checkAuth()) navigate("/forbidden", { replace: true });});
+  useEffect( () => {if(checkWriter()) navigate("/forbidden", { replace: true });});
+
 
   const [noSuch, setNoSuch] = useState(false);
   const [nothingUpdate, setNothingUpdate] = useState(false);

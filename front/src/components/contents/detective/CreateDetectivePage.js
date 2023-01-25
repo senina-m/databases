@@ -6,16 +6,13 @@ import { useNavigate } from 'react-router-dom';
 import Table from "../table/Table";
 import DetectiveForm from './DetectiveForm';
 import checkAuth from '../../../api/CheckAuth';
+import checkWriter from '../../../api/CheckRole';
  
 
 const CreateDetectivePage = () => {
   const navigate = useNavigate();
   useEffect( () => {if(checkAuth()) navigate("/forbidden", { replace: true });});
-
-    // const role = ReactSession.get("permission");
-    //todo: uncomment upper code
-    // const role = "writer";
-    // const role = "detective";
+  useEffect( () => {if(checkWriter()) navigate("/forbidden", { replace: true });});
 
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
