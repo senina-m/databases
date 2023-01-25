@@ -5,6 +5,7 @@ import {ReactSession} from 'react-client-session'
 import { useNavigate } from 'react-router-dom';
 import Table from "../table/Table";
 import { useLocation } from 'react-router-dom';
+import CriminalForm from './CriminalForm';
  
 
 const AddCriminalsToCrime = () => {
@@ -21,6 +22,9 @@ const AddCriminalsToCrime = () => {
   const [sucsess, setSucsess] = useState(false);
   const [sucsessName, setSucsessName] = useState("");
   const [addingErrorMessage, setAddingErrorMessage] = useState("");
+  const [showTable, setShowTable] = useState(true);
+  const [showCriminal, setShowCriminal] = useState(false);
+  const [criminal, setCriminal] = useState({});
 
   const {state} = useLocation();
   const {crime} = state;
@@ -30,22 +34,10 @@ const AddCriminalsToCrime = () => {
       setIsLoading(true);
       setError(false);
       let token = ReactSession.get("token");
-      get("/crimes/" + crime.id + "/criminals", {}, token).then((json) => {
+      get("/creatures", {}, token).then((json) => {
         if (json.status === 200) {
           delete json.status;
-          let table_data = [];
-          json.forEach((e, i) => {
-              table_data[i] = {"id" : e.id,
-                            "name": e.creature.name,
-                            "isProved": e.isProved,
-                            "birthday": e.creature.birthday,
-                            "deathDate": e.creature.deathDate,
-                            "race": e.creature.race,
-                            "sex": e.creature.sex,
-                            "creature_id": e.creature.id}
-            });
-          setData(table_data);
-          console.log(table_data);
+          setData(json);
         }else if (json.status === 401){
           navigate("/relogin", { replace: true });
         }else if (json.status === 403) {
@@ -64,22 +56,17 @@ const AddCriminalsToCrime = () => {
     getData()
   }, [navigate, crime]);
 
-  const formatIsSolved = (cell) => {
-    return cell ? 
-    <div className='green'>да</div> : 
-    <div className='error'>нет</div>;
-  }
+  // const formatIsSolved = (cell) => {
+  //   return cell ? 
+  //   <div className='green'>да</div> : 
+  //   <div className='error'>нет</div>;
+  // }
 
   const columns = () => {
       let columns = [
         {
           Header: 'Имя',
           accessor: 'name'
-        },
-        {
-          Header: 'Доказано ли',
-          accessor: 'isProved',
-          Cell: props => formatIsSolved(props.value)
         },
         {
           Header: 'День Рождения',
@@ -102,17 +89,22 @@ const AddCriminalsToCrime = () => {
   };
 
   const onRowClick = (e, row) =>{
+    setShowTable(false);
+    setShowCriminal(true);
+    setCriminal(row.original);
+  }
+
+  const sendRequestToAddCriminal = (isProved) => {
     setAddingError(false);
     setAddingErrorMessage("");
     setSucsess(false);
-    console.log(row.original);
-    let criminal = row.original;
     let token = ReactSession.get("token");
-      post("/crimes/" + crime.id + "/criminals", {"creatureId": criminal.creature_id, "isProved":criminal.isProved}, token).then((json) => {
+      post("/crimes/" + crime.id + "/criminals", {"creatureId": criminal.id, "isProved": isProved}, token).then((json) => {
         if (json.status === 201) {
             delete json.status;
             setSucsess(true);
-            setSucsessName(json.creature.name)
+            setSucsessName(json.creature.name);
+            setShowCriminal(false);
         }else if (json.status === 400){
             navigate("/forbidden", { replace: true });
         }else if (json.status === 401){
@@ -136,15 +128,30 @@ const AddCriminalsToCrime = () => {
   const backToCrimeInfo = () => {
     navigate("/info/crime", {state: {crime: crime}});
   }
+
+  const addMore = () => {
+    setShowTable(true);
+    setSucsess(false);
+    setAddingError(false)
+    setAddingErrorMessage("");
+  }
   
   return (
   <>
-    {sucsess && <h2 className='center green'>Преступник {sucsessName} успешно добавлен в досье.</h2>}
+    {sucsess && 
+    <>
+      <h2 className='center green'>Преступник {sucsessName} успешно добавлен в досье.</h2>
+      <br/>
+      <button className='btn center' onClick={addMore}>Добавить ещё</button>
+    </>}
+
     {addingError && <h2 className='center error'>{addingErrorMessage}</h2>}
-    {isError ? <h3 className='center'>Не удалось получить данные с сервера...</h3> : 
-      (isLoading ? <h3 className='center'>Загружаем таблицу с существами...</h3> : 
-        <Table columns={columns()} data={data} onRowClick={onRowClick}/>)
+    {showTable && (isError ? <h3 className='center'>Не удалось получить данные с сервера...</h3> : 
+                    (isLoading ? <h3 className='center'>Загружаем таблицу с существами...</h3> : 
+                      <Table columns={columns()} data={data} onRowClick={onRowClick}/>))
     }
+    {showCriminal && <CriminalForm criminal={criminal} onSubmit={sendRequestToAddCriminal}/>}
+    <br/>
     <button className='btn center' onClick={backToCrimeInfo}>Назад к приступлению</button>
   </>);
 }

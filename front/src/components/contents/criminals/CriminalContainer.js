@@ -16,7 +16,7 @@ const CriminalContainer = ({criminal}) => {
         return (
         <div className='blocks'>
         <h3 className="center">О преступнике</h3>
-            <table className="table center">
+        <table className="table center">
             <tbody>
                 {/* todo */}
                 <tr><th><p>Доказана ли виновность</p></th><th><p>{getFormatedIsProved(criminal.isProved)}</p></th></tr>

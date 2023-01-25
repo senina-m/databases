@@ -40,7 +40,7 @@ const CriminalsInfoPage = () => {
     }
 
     const editCriminal = () => {
-        navigate("/edit/criminal", {state: {criminal: criminal}});
+        navigate("/edit/criminal", {state: {criminal: criminal, crime: crime}});
     }
 
   return (

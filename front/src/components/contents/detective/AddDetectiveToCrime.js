@@ -19,7 +19,7 @@ const AddDetectiveToCrime = () => {
   const [isError, setError] = useState(false);
   const [addingError, setAddingError] = useState(false);
   const [sucsess, setSucsess] = useState(false);
-  const [sucsessId, setSucsessId] = useState(-1);
+  const [sucsessName, setSucsessName] = useState("");
   const [addingErrorMessage, setAddingErrorMessage] = useState("");
 
   const {state} = useLocation();
@@ -107,7 +107,7 @@ const AddDetectiveToCrime = () => {
         if (json.status === 201) {
             delete json.status;
             setSucsess(true);
-            setSucsessId(json.id)
+            setSucsessName(json.creature.name)
         }else if (json.status === 400){
             navigate("/forbidden", { replace: true });
         }else if (json.status === 401){
@@ -134,7 +134,7 @@ const AddDetectiveToCrime = () => {
   
   return (
   <>
-    {sucsess && <h2 className='center green'>Детектив с табельным номером:{sucsessId} успешно добавлен в досье.</h2>}
+    {sucsess && <h2 className='center green'>Детектив {sucsessName} успешно добавлен в досье.</h2>}
     {addingError && <h2 className='center error'>{addingErrorMessage}</h2>}
     {isError ? <h3 className='center'>Не удалось получить данные с сервера...</h3> : 
       (isLoading ? <h3 className='center'>Загружаем таблицу с существами...</h3> : 
