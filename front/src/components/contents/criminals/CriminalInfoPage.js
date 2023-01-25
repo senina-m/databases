@@ -21,7 +21,7 @@ const CriminalsInfoPage = () => {
     const deleteCriminal = () =>{
         setDeleteStatus(false);
         let token = ReactSession.get("token");
-        del("/crimes/" + crime.id + "/criminals/" + criminal.id, {}, token).then((json) => {
+        del("/crimes/" + crime.id + "/criminals", criminal.id, token).then((json) => {
           if (json.status === 200) {
             delete json.status;
             setDeleteStatus(true);
@@ -45,7 +45,7 @@ const CriminalsInfoPage = () => {
 
   return (
     <>
-        {deleteStatus ? <h2 className='center green'> Преступник успешно удалён!" </h2> :
+        {deleteStatus ? <h2 className='center green'> Преступник успешно удалён!</h2> :
           <>
             <CriminalContainer criminal={criminal}/>
             {role === "writer" && (<>

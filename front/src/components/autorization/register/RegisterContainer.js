@@ -20,7 +20,6 @@ const RegistrContainer = () => {
     const {state} = useLocation();
     // console.log(Object.hasOwn(state, 'creature'));
     const {id} = state;
-    console.log(id);
 
 
     const {
@@ -79,12 +78,14 @@ const RegistrContainer = () => {
         <form className="container" onSubmit={handleSubmit(onSubmit)}>
           <h1>Регистрация</h1>
           <input placeholder='Логин' className='form-control'
-              {...register("login", {required: true, pattern: /^[A-Za-z0-9]+$/i, })} />
+          // pattern: /^[A-Za-z0-9]+$/i
+              {...register("login", {required: true, })} />
           {errors?.login?.type === "pattern" && ( <p className='error'>Русские буквы и цифры</p>)}
           {errors?.login?.type === "required" && <p className='error'>Это поле обязательно</p>}
     
+          {/* pattern: /^[A-Za-z0-9]+$/i, */}
           <input type="password" placeholder='Пароль' className='form-control'
-          {...register("password", { required: true, pattern: /^[A-Za-z0-9]+$/i, minLength: 8,})} />
+          {...register("password", { required: true, minLength: 8,})} />
           {errors?.password?.type === "pattern" && (<p className='error'>Русские буквы и цифры</p>)}
           {errors?.password?.type === "minLength" && <p className='error'>Хотя бы 8 символов</p>}
           {errors?.password?.type === "required" && <p className='error'>Это поле обязательно</p>}
@@ -92,7 +93,7 @@ const RegistrContainer = () => {
           <input type="password" placeholder='Повторите пароль' className='form-control'
           {...register("repeatePassword", {
                required: true,
-               pattern: /^[A-Za-z0-9]+$/i,
+              //  pattern: /^[A-Za-z0-9]+$/i,
                 minLength: 8,
                 validate: value => value === password.current})} />
           {errors?.repeatePassword?.type === "pattern" && (<p className='error'>Русские буквы и цифры</p>)}

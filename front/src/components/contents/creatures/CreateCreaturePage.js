@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { ReactSession } from 'react-client-session';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import get_yyyymmdd from "../../ConvertData"
 
 
 const CreateCreaturePage = () => {
@@ -30,9 +31,9 @@ const CreateCreaturePage = () => {
 
   const prepareDate = (data)=>{
     return {"name": data.name,
-    "birthday": get_ddmmyyyy(data.birthday),
+    "birthday": get_yyyymmdd(data.birthday),
     "race": data.race,
-    "deathDate": get_ddmmyyyy(data.deathDate),
+    "deathDate": get_yyyymmdd(data.deathDate),
     "sex": (isMale ? "Мужчина" : "Женщина")
   }
   }
@@ -129,7 +130,7 @@ const CreateCreaturePage = () => {
     <>
       {someError && <h2 className='center error'>{error}</h2>}
       {sucsess && <>
-                    <h2 className='center'>Существо успешно создано!</h2>
+                    <h2 className='center green'>Существо успешно создано!</h2>
                     <br/>
                     <button className='btn center' onClick={showFormOnClick}>Создать ещё одно</button>
                   </>}
@@ -145,14 +146,3 @@ const CreateCreaturePage = () => {
 }
 
 export default CreateCreaturePage
-
-const get_ddmmyyyy = (str_date) =>{
-
-  const date = new Date(str_date);
-
-  const yyyy = date.getFullYear();
-  const mm = String(date.getMonth() + 1).padStart(2,'0');
-  const dd = String(date.getDate()).padStart(2,'0');
-
-  return `${dd}-${mm}-${yyyy}`
-}

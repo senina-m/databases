@@ -5,6 +5,8 @@ import { useForm } from "react-hook-form";
 import { ReactSession } from 'react-client-session';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import get_yyyymmdd from "../../ConvertData"
+
 
 const CrimeEditForm = () => {
   const {
@@ -34,8 +36,8 @@ const CrimeEditForm = () => {
       "id": crime.id,
       "title": data.title,
       "description": data.description,
-      "dateBegin": get_ddmmyyyy(data.dateBegin),
-      "dateEnd":  get_ddmmyyyy(data.dateEnd),
+      "dateBegin": get_yyyymmdd(data.dateBegin),
+      "dateEnd":  get_yyyymmdd(data.dateEnd),
       "isSolved": data.isSolved,
       "damageDescription": data.damageDescription,
       "location": data.location,
@@ -169,13 +171,3 @@ const CrimeEditForm = () => {
 }
 
 export default CrimeEditForm
-
-const get_ddmmyyyy = (str_date) =>{
-
-  const date = new Date(str_date);
-  const yyyy = date.getFullYear();
-  const mm = String(date.getMonth() + 1).padStart(2,'0');
-  const dd = String(date.getDate()).padStart(2,'0');
-
-  return `${dd}-${mm}-${yyyy}`
-}

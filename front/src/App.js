@@ -24,7 +24,6 @@ import DetectivesPage from './components/contents/detective/DetectivesPage';
 import CreateDetectivePage from './components/contents/detective/CreateDetectivePage';
 import AddDetectiveToCrime from './components/contents/detective/AddDetectiveToCrime';
 import AddCriminalsToCrime from './components/contents/criminals/AddCriminalsToCrime';
-import CreateCriminalPage from './components/contents/criminals/CreateCriminalPage';
 import CriminalEditPage from './components/contents/criminals/CriminalEditPage';
 import DetectiveEditPage from './components/contents/detective/DetectiveEditPage';
 
@@ -51,7 +50,6 @@ function App() {
         <Route path="/create/creature" element={<CreateCreatureContainer/>}/>
         <Route path="/create/crime" element={<CreateCrimePage/>}/>
         <Route path='/create/detective' element={<CreateDetectivePage/>}/>
-        <Route path='/create/criminal' element={<CreateCriminalPage/>}/>
 
         <Route path="/edit/creature" element={<CreatureEditForm/>}/>
         <Route path="/edit/crime" element={<CrimeEditForm/>}/>

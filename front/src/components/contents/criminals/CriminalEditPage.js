@@ -27,7 +27,7 @@ const CriminalEditPage = () => {
 
     let token = ReactSession.get("token");
     //todo: check that func works properly
-      put("/crimes/"+ crime.id + "criminals" + criminal.id, {"isProved" : isProved}, token).then((json) => {
+      put("/crimes/"+ crime.id + "/criminals/" + criminal.id, {"isProved" : isProved}, token).then((json) => {
         if (json.status === 200) {
           setSucsess(true);
           setShowForm(true);
@@ -55,13 +55,14 @@ const CriminalEditPage = () => {
   const editCreature = () =>{
     console.log(criminal);
     let creature = {
-      "id": criminal.creauture_id,
+      "id": criminal.creature_id,
       "name": criminal.name, 
       "isProved": criminal.isProved,
       "birthday": criminal.birthday,
       "deathDate": criminal.deathDate,
       "race": criminal.race,
       "sex": criminal.sex};
+      console.log(creature);
     navigate("/edit/creature", {state: {creature: creature}});
   }
 
@@ -71,8 +72,8 @@ const CriminalEditPage = () => {
 
   return (
     <div>
-      <button className='btn center' onClick={editCreature}>Редактировать существо преступника</button>
       {sucsess && <h2 className='center'>Преступник успешно обновлён!</h2>}
+      <br/>
       {someError && <h2 className='center'>{error}</h2>}
       {noSuch && <>
                   <h2 className='center'>Преступника, которого вы хотели обновиить ещё не существует. Создайте его!</h2>
@@ -83,6 +84,8 @@ const CriminalEditPage = () => {
                   <button className='btn center' onClick={showFormOnClick}>Внести изменения</button>
                 </>}
       {showForm && <CriminalForm criminal={criminal} onSubmit={updateCriminal}/>}
+      <button className='btn center' onClick={editCreature}>Редактировать существо преступника</button>
+      <br/>
       <Link  className='center' to="/creatures" >Вернуться к таблице</Link>
     </div>
   )

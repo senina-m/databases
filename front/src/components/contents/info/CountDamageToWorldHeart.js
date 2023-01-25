@@ -3,6 +3,8 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from 'react-router-dom';
 import get from "../../../api/Get";
 import {ReactSession} from 'react-client-session';
+import get_yyyymmdd from "../../ConvertData"
+
 
 
 const CountDamageToWorldHeart = () => {
@@ -25,7 +27,7 @@ const CountDamageToWorldHeart = () => {
 
     const countDamage = (data) => {
         let token = ReactSession.get("token");
-        get("/magicAmount", {"dateBegin": get_ddmmyyyy(data.begin), "dateEnd": get_ddmmyyyy(data.end)}, token).then((json) => {
+        get("/magicAmount", {"dateBegin": get_yyyymmdd(data.begin), "dateEnd": get_yyyymmdd(data.end)}, token).then((json) => {
             if (json.status === 200) {
                 delete json.status;
                 //todo проверить что правильно достаю данные
@@ -83,14 +85,5 @@ const CountDamageToWorldHeart = () => {
         </>
     );
 }
-
-const get_ddmmyyyy = (str_date) =>{
-    const date = new Date(str_date);
-    const yyyy = date.getFullYear();
-    const mm = String(date.getMonth() + 1).padStart(2,'0');
-    const dd = String(date.getDate()).padStart(2,'0');
-  
-    return `${dd}-${mm}-${yyyy}`
-  }
 
 export default CountDamageToWorldHeart

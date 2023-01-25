@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { ReactSession } from 'react-client-session';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import get_yyyymmdd from "../../ConvertData"
 
 
 const CreateCrimePage = () => {
@@ -30,8 +31,8 @@ const CreateCrimePage = () => {
     return {
       "title": data.title,
       "description": data.description,
-      "dateBegin": get_ddmmyyyy(data.dateBegin),
-      "dateEnd":  get_ddmmyyyy(data.dateEnd),
+      "dateBegin": get_yyyymmdd(data.dateBegin),
+      "dateEnd":  get_yyyymmdd(data.dateEnd),
       "isSolved": data.isSolved,
       "damageDescription": data.damageDescription,
       "location": data.location,
@@ -50,8 +51,8 @@ const CreateCrimePage = () => {
     //todo: check that func works properly
       post("/crimes", prepareDate(data), token).then((json) => {
         // put("/creatures/"+ 123456789, prepareDate(data), token).then((json) => {
-        if (json.status === 200) {
-          showForm(false);
+        if (json.status === 201) {
+          setShowForm(false);
           setSucsess(true);
         }else if (json.status === 400){
           setSomeError(true);
@@ -147,7 +148,8 @@ const CreateCrimePage = () => {
 
   return (
     <>
-      {sucsess && <h2 className='center'>Досье успешно обновлено!</h2>}
+      {sucsess && <h2 className='center green'>Досье успешно обновлено!</h2>}
+      <br/>
       {someError && <h2 className='center'>{error}</h2>}
       {noSuch && <>
                   <h2 className='center'>Досье, которое вы хотели обновиить ещё не существует. Создайте его!</h2>
@@ -165,14 +167,4 @@ const CreateCrimePage = () => {
 }
 
 export default CreateCrimePage
-
-const get_ddmmyyyy = (str_date) =>{
-
-  const date = new Date(str_date);
-  const yyyy = date.getFullYear();
-  const mm = String(date.getMonth() + 1).padStart(2,'0');
-  const dd = String(date.getDate()).padStart(2,'0');
-
-  return `${dd}-${mm}-${yyyy}`
-}
 

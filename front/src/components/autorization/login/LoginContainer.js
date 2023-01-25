@@ -38,12 +38,14 @@ const LoginContainer = () => {
   return <form className="form container" onSubmit={handleSubmit(loginAction)} >
     <h1>Войти</h1>
     <input placeholder='Логин' className='form-control'
-    {...register("login", {required: true, pattern: /^[A-Za-z0-9]+$/i, })} />
+    {...register("login", {required: true, })} />
+     {/* pattern: /^[A-Za-z0-9]+$/i, */}
     {errors?.login?.type === "pattern" && ( <p className='error'>Русские буквы и цифры</p>)}
     {errors?.login?.type === "required" && <p className='error'>Это поле обязательно</p>}
 
     <input type="password" placeholder='Пароль' className='form-control'
-    {...register("password", { required: true, pattern: /^[A-Za-z0-9]+$/i, minLength: 8,})} />
+    // pattern: /^[A-Za-z0-9]+$/i, minLength: 8,
+    {...register("password", { required: true, })} />
     {errors?.password?.type === "pattern" && (<p className='error'>Русские буквы и цифры</p>)}
     {errors?.password?.type === "minLength" && <p className='error'>Хотя бы 8 символов</p>}
     {errors?.password?.type === "required" && <p className='error'>Это поле обязательно</p>}

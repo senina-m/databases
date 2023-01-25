@@ -5,6 +5,8 @@ import { useForm } from "react-hook-form";
 import { ReactSession } from 'react-client-session';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import get_yyyymmdd from "../../ConvertData"
+
 
 const CreatureEditForm = () => {
   const {
@@ -27,15 +29,16 @@ const CreatureEditForm = () => {
   birthday.current = watch("birthday", "");
   
   const {state} = useLocation();
-  const { creature } = state;
+  const {creature} = state;
+  
   // setIsMale();
   const [isMale, setIsMale] = useState(creature.sex === "Мужчина");
 
   const prepareDate = (data)=>{
     return {"name": data.name,
-    "birthday": get_ddmmyyyy(data.birthday),
+    "birthday": get_yyyymmdd(data.birthday),
     "race": data.race,
-    "deathDate": get_ddmmyyyy(data.deathDate),
+    "deathDate": get_yyyymmdd(data.deathDate),
     "sex": (isMale ? "Мужчина" : "Женщина")
     }
   }
@@ -51,7 +54,7 @@ const CreatureEditForm = () => {
       put("/creatures/"+ creature.id, prepareDate(data), token).then((json) => {
         // put("/creatures/"+ 123456789, prepareDate(data), token).then((json) => {
         if (json.status === 200) {
-          showForm(false);
+          setShowForm(false);
           setSucsess(true);
         }else if (json.status === 400){
           setSomeError(true);
@@ -136,7 +139,7 @@ const CreatureEditForm = () => {
 
   return (
     <>
-      {sucsess && <h2 className='center'>Существо успешно обновлено!</h2>}
+      {sucsess && <h2 className='center green'>Существо успешно обновлено!</h2>}
       {someError && <h2 className='center'>{error}</h2>}
       {noSuch && <>
                   <h2 className='center'>Существа, которое вы хотели обновиить ещё не существует. Создайте его!</h2>
@@ -154,13 +157,3 @@ const CreatureEditForm = () => {
 }
 
 export default CreatureEditForm
-
-const get_ddmmyyyy = (str_date) =>{
-
-  const date = new Date(str_date);
-  const yyyy = date.getFullYear();
-  const mm = String(date.getMonth() + 1).padStart(2,'0');
-  const dd = String(date.getDate()).padStart(2,'0');
-
-  return `${dd}-${mm}-${yyyy}`
-}
