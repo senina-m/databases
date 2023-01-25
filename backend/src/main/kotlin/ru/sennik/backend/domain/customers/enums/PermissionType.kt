@@ -9,8 +9,8 @@ enum class PermissionType(
    val value: String,
    val role: String,
 ) {
-   ROLE_WRITER("Летописец", "WRITER"),
-   ROLE_DETECTIVE("Детектив", "DETECTIVE");
+   ROLE_WRITER("writer", "WRITER"),
+   ROLE_DETECTIVE("detective", "DETECTIVE");
 
    companion object {
       private val valueMap = values().associateBy { it.value }

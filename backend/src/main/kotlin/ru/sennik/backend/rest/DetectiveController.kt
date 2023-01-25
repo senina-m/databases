@@ -12,6 +12,7 @@ import ru.sennik.backend.generated.dto.CreatureDto
 import ru.sennik.backend.generated.dto.DetectiveRequestDto
 import ru.sennik.backend.generated.dto.DetectiveResponseDto
 import ru.sennik.backend.generated.dto.NumberResponseDto
+import ru.sennik.backend.generated.dto.PositionNameObjectDto
 import ru.sennik.backend.utils.createdResponseEntity
 import ru.sennik.backend.utils.successDeleteDto
 
@@ -44,9 +45,12 @@ class DetectiveController(
         )
     }
 
-    override fun updateDetective(detectiveId: Long, body: String): ResponseEntity<DetectiveResponseDto> {
-        logger.info { "request received: updateDetective: id=$detectiveId, dto=$body" }
-        return ResponseEntity.ok(detectiveService.updateDetective(detectiveId, body).toDto())
+    override fun updateDetective(
+        detectiveId: Long,
+        positionNameObjectDto: PositionNameObjectDto
+    ): ResponseEntity<DetectiveResponseDto> {
+        logger.info { "request received: updateDetective: id=$detectiveId, dto=$positionNameObjectDto" }
+        return ResponseEntity.ok(detectiveService.updateDetective(detectiveId, positionNameObjectDto.value).toDto())
     }
 
     override fun deleteDetective(detectiveId: Long): ResponseEntity<BooleanResponseDto> {

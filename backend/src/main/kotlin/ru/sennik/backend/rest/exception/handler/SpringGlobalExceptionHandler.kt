@@ -1,5 +1,6 @@
 package ru.sennik.backend.rest.exception.handler
 
+import io.jsonwebtoken.security.SignatureException
 import mu.KLogging
 import org.hibernate.exception.ConstraintViolationException
 import org.springframework.beans.ConversionNotSupportedException
@@ -57,7 +58,7 @@ class SpringGlobalExceptionHandler {
    @ExceptionHandler(JpaSystemException::class)
    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
    fun handlePSQLException(ex: JpaSystemException): ErrorDto {
-      val pattern = Pattern.compile("ОШИБКА: (.+)\\n  Где: функция PL")
+      val pattern = Pattern.compile("ERROR: (.+) Where: PL/pgSQL function")
       val errorMessage = ex.rootCause?.message ?: ""
       val matcher = pattern.matcher(errorMessage)
       val message = if (matcher.find()) "Поля не прошли валидацию: ${matcher.group(1)}" else errorMessage
@@ -211,6 +212,12 @@ class SpringGlobalExceptionHandler {
    @ResponseStatus(HttpStatus.BAD_REQUEST)
    fun handleClientException(ex: ClientException): ErrorDto {
       return ErrorDto("BAD_REQUEST", ex.message!!)
+   }
+
+   @ExceptionHandler(SignatureException::class)
+   @ResponseStatus(HttpStatus.UNAUTHORIZED)
+   fun handleSignatureException(ex: SignatureException): ErrorDto {
+      return ErrorDto("UNAUTHORIZED", "Невалидный или истекший JWT токен")
    }
 
    companion object : KLogging() {

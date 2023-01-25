@@ -1,5 +1,6 @@
 package ru.sennik.backend.domain.crime.service
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
@@ -11,6 +12,7 @@ import ru.sennik.backend.domain.customers.service.CustomerService
 import ru.sennik.backend.domain.detectivies.service.DetectiveService
 import ru.sennik.backend.domain.location.service.LocationService
 import ru.sennik.backend.generated.controller.NotFoundException
+import ru.sennik.backend.rest.exception.AlreadyExistException
 import javax.transaction.Transactional
 
 /**
@@ -21,10 +23,14 @@ class CrimeService(
    private val locationService: LocationService,
    private val repository: CrimeRepository,
    private val dosseirRepository: DosseirRepository,
-   private val detectiveService: DetectiveService,
    private val customerService: CustomerService,
 ) {
+   @org.springframework.context.annotation.Lazy
+   @Autowired
+   private lateinit var detectiveService: DetectiveService
    fun getCrimes(): List<Dosseir> = dosseirRepository.findAll()
+
+   fun getCrimesByMainDetectiveId(id: Long): List<Crime> = repository.findAllByMainDetectiveId(id)
 
    fun getCrimeById(crimeId: Long): Dosseir = dosseirRepository.findByCrimeId(crimeId)
       ?: throw NotFoundException("Преступление с id=$crimeId не найдено")
@@ -35,6 +41,7 @@ class CrimeService(
          location = locationService.findOrSave(location.name)
          detectiveService.getDetectiveById(mainDetectiveId)
       }
+      checkUniqueTitle(crime.title)
       val dosseir = Dosseir(
          crime = repository.save(crime),
          author = customerService.getCustomerCreatureByName(SecurityContextHolder.getContext().authentication.name)
@@ -53,7 +60,10 @@ class CrimeService(
                detectiveService.getDetectiveById(crime.mainDetectiveId)
                mainDetectiveId = crime.mainDetectiveId
             }
-            title = crime.title
+            if (title != crime.title) {
+               checkUniqueTitle(crime.title)
+               title = crime.title
+            }
             description = crime.description
             dateBegin = crime.dateBegin
             dateEnd = crime.dateEnd
@@ -69,4 +79,9 @@ class CrimeService(
 
    private fun getById(id: Long) = repository.findByIdOrNull(id)
       ?: throw NotFoundException("Преступление с id=$id не найдено")
+
+   private fun checkUniqueTitle(title: String) {
+      repository.findByTitle(title)
+         ?.let { throw AlreadyExistException("Преступление с названием $title уже существует") }
+   }
 }
