@@ -1,22 +1,23 @@
-import React, {useRef, useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { useLocation } from 'react-router-dom';
 import put from '../../../api/Put';
 import { useForm } from "react-hook-form";
 import { ReactSession } from 'react-client-session';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import get_yyyymmdd from "../../ConvertData"
+import get_yyyymmdd from "../../ConvertData";
+import checkAuth from '../../../api/CheckAuth';
 
 
 const CreatureEditForm = () => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors }
   } = useForm();
 
   const navigate = useNavigate();
+  useEffect( () => {if(checkAuth()) navigate("/forbidden", { replace: true });});
 
   const [noSuch, setNoSuch] = useState(false);
   const [nothingUpdate, setNothingUpdate] = useState(false);
@@ -24,9 +25,6 @@ const CreatureEditForm = () => {
   const [error, setError] = useState("");
   const [sucsess, setSucsess] = useState(false);
   const [showForm, setShowForm] = useState(true);
-  
-  const birthday = useRef({});
-  birthday.current = watch("birthday", "");
   
   const {state} = useLocation();
   const {creature} = state;
@@ -52,7 +50,6 @@ const CreatureEditForm = () => {
     let token = ReactSession.get("token");
     //todo: check that func works properly
       put("/creatures/"+ creature.id, prepareDate(data), token).then((json) => {
-        // put("/creatures/"+ 123456789, prepareDate(data), token).then((json) => {
         if (json.status === 200) {
           setShowForm(false);
           setSucsess(true);
@@ -92,27 +89,14 @@ const CreatureEditForm = () => {
 
     <label className='form-label'>День рождения (мм/дд/гггг)</label>
     <input  type="date" placeholder='День рождения' className='form-control' defaultValue={creature.birthday}
-    {...register("birthday", {required: true, valueAsDate: true,
-    validate: date => {
-      let bd = Date.parse(date);
-      return bd <= new Date();
-      }})} />
+    {...register("birthday", {required: true, valueAsDate: true})} />
     {errors?.birthday?.type === "required" && <p className='error'>Это поле обязательно</p>}
     {errors?.birthday?.type === "validate" && <p className='error'>Дата должна быть не больше настоящей</p>}
 
 
     <label className='form-label'>День смерти (мм/дд/гггг)</label>
     <input type="date" placeholder='Дата смерти' className='form-control' defaultValue={creature.deathDate}
-    {...register("deathDate", {valueAsDate: true, 
-    validate: deathDate => {
-      let death = Date.parse(deathDate);
-      let birth = Date.parse(birthday.current);
-      return death > birth
-      }})} />
-    {errors?.deathDate?.type === "required" && <p className='error'>Это поле обязательно</p>}
-    {errors?.deathDate?.type === "validate" && <p className='error'>Дата смерти должна быть больше даты рождения</p>}
-    {/* TODO: check deathDate if it isn't greater then currnt date as birthdaty*/}
-
+    {...register("deathDate", {valueAsDate: true})} />
 
     <label className='form-label'>Раса</label>
     <input placeholder='Раса' className='form-control' defaultValue={creature.race}

@@ -1,14 +1,18 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { useLocation } from 'react-router-dom';
 import CriminalForm from './CriminalForm';
 import put from '../../../api/Put';
 import { ReactSession } from 'react-client-session';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import checkAuth from '../../../api/CheckAuth';
 
 
 const CriminalEditPage = () => {
   const navigate = useNavigate();
+
+  useEffect( () => {if(checkAuth()) navigate("/forbidden", { replace: true });});
+
   const {state} = useLocation();
   const {criminal} = state;
   const {crime} = state;

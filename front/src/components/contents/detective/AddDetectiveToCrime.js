@@ -5,10 +5,13 @@ import {ReactSession} from 'react-client-session'
 import { useNavigate } from 'react-router-dom';
 import Table from "../table/Table";
 import { useLocation } from 'react-router-dom';
+import checkAuth from '../../../api/CheckAuth';
  
 
 const AddDetectiveToCrime = () => {
     const navigate = useNavigate();
+    useEffect( () => {if(checkAuth()) navigate("/forbidden", { replace: true });});
+
     // const role = ReactSession.get("permission");
     //todo: uncomment upper code
     // const role = "writer";

@@ -6,6 +6,7 @@ import {ReactSession} from 'react-client-session';
 import { useNavigate } from 'react-router-dom';
 import CreatureContainer from './CreatureContainer';
 import { useLocation } from 'react-router-dom';
+import checkAuth from '../../../api/CheckAuth';
 
 
 const CreatureInfoPage = () => {
@@ -18,6 +19,8 @@ const CreatureInfoPage = () => {
     const {creature} = state;
 
     const navigate = useNavigate();
+    useEffect( () => {if(checkAuth()) navigate("/forbidden", { replace: true });});
+
     const [deleteStatus, setDeleteStatus] = useState(false);
     const [deleteError, setDeleteError] = useState(false);
     const [deleteErrorMessage, setDeleteErrorMessage] = useState("");
@@ -92,7 +95,7 @@ const CreatureInfoPage = () => {
 
   return (
     <>
-        {deleteStatus ? <h2 className='center green'> Существо успешно удалено!" </h2> :
+        {deleteStatus ? <h2 className='center green'>Существо успешно удалено!</h2> :
           <>
             {deleteError && <h2 className='center error'>{deleteErrorMessage}</h2>}
             <CreatureContainer creature={creature}/>

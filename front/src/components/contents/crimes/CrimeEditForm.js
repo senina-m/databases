@@ -1,22 +1,23 @@
-import React, {useRef, useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { useLocation } from 'react-router-dom';
 import put from '../../../api/Put';
 import { useForm } from "react-hook-form";
 import { ReactSession } from 'react-client-session';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import get_yyyymmdd from "../../ConvertData"
+import get_yyyymmdd from "../../ConvertData";
+import checkAuth from '../../../api/CheckAuth';
 
 
 const CrimeEditForm = () => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors }
   } = useForm();
 
   const navigate = useNavigate();
+  useEffect( () => {if(checkAuth()) navigate("/forbidden", { replace: true });});
 
   const [noSuch, setNoSuch] = useState(false);
   const [nothingUpdate, setNothingUpdate] = useState(false);
@@ -24,9 +25,6 @@ const CrimeEditForm = () => {
   const [error, setError] = useState("");
   const [sucsess, setSucsess] = useState(false);
   const [showForm, setShowForm] = useState(true);
-
-  const dateBegin = useRef({});
-  dateBegin.current = watch("dateBegin", "");
 
   const {state} = useLocation();
   const { crime } = state;
@@ -111,14 +109,7 @@ const CrimeEditForm = () => {
 
     <label className='form-label'>Дата конца(мм/дд/гггг)</label>
     <input type="date" placeholder='дата конца' className='form-control  crime' defaultValue={crime.dateEnd}
-    {...register("dateEnd", { required: true, valueAsDate: true, 
-    validate: dateEnd => {
-      let death = Date.parse(dateEnd);
-      let birth = Date.parse(dateBegin.current);
-      return death >= birth
-      }})} />
-    {errors?.dateEnd?.type === "required" && <p className='error'>Это поле обязательно</p>}
-    {errors?.dateEnd?.type === "validate" && <p className='error'>Дата начала должна быть больше даты конца</p>}
+    {...register("dateEnd", {valueAsDate: true})} />
 
     <label className='form-label'>Раскрыто ли</label>
     {/* <input type="checkbox"  onChange={this.handleChangeChk} /> */}
@@ -127,9 +118,8 @@ const CrimeEditForm = () => {
 
     <label className='form-label'>Описание урона</label>
     <textarea placeholder='описание урона' className='form-control textarea crime' defaultValue={crime.damageDescription}
-    {...register("damageDescription", {required: true, pattern: /^[А-Яа-я 0-9]+$/i, })} />
+    {...register("damageDescription", {pattern: /^[А-Яа-я 0-9]+$/i, })} />
     {errors?.damageDescription?.type === "pattern" && ( <p className='error'>Русские буквы</p>)}
-    {errors?.damageDescription?.type === "required" && <p className='error'>Это поле обязательно</p>}          
 
     <label className='form-label'>Локация</label>
     <input placeholder='локация' className='form-control  crime' defaultValue={crime.location}

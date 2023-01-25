@@ -3,10 +3,14 @@ import get from '../../../api/Get'
 import {ReactSession} from 'react-client-session'
 import { useNavigate } from 'react-router-dom';
 import Table from "../table/Table";
+import checkAuth from '../../../api/CheckAuth';
  
 
 const DetectivesPage = () => {
   const navigate = useNavigate();
+
+  useEffect( () => {if(checkAuth()) navigate("/forbidden", { replace: true });});
+
   // const role = ReactSession.get("permission");
   //todo: uncomment upper code
   const role = "writer";

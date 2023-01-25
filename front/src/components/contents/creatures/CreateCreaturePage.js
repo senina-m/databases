@@ -1,22 +1,23 @@
-import React, {useRef, useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import post from '../../../api/Post';
 import { useForm } from "react-hook-form";
 import { ReactSession } from 'react-client-session';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import get_yyyymmdd from "../../ConvertData"
+import get_yyyymmdd from "../../ConvertData";
+import checkAuth from '../../../api/CheckAuth';
 
 
 const CreateCreaturePage = () => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors }
   } = useForm();
 
-
   const navigate = useNavigate();
+
+  useEffect( () => {if(checkAuth()) navigate("/forbidden", { replace: true });});
 
   const [nothingUpdate, setNothingUpdate] = useState(false);
   const [sucsess, setSucsess] = useState(false);
@@ -24,10 +25,6 @@ const CreateCreaturePage = () => {
   const [someError, setSomeError] = useState(false);
   const [error, setError] = useState("");
   const [isMale, setIsMale] = useState(true);
-
-
-  const birthday = useRef({});
-  birthday.current = watch("birthday", "");
 
   const prepareDate = (data)=>{
     return {"name": data.name,
@@ -90,15 +87,7 @@ const CreateCreaturePage = () => {
 
     <label className='form-label'>День смерти (мм/дд/гггг)</label>
     <input type="date" placeholder='Дата смерти' className='form-control' 
-    {...register("deathDate", {valueAsDate: true, 
-    validate: deathDate => {
-      let death = Date.parse(deathDate);
-      let birth = Date.parse(birthday.current);
-      return death > birth
-      }})} />
-    {errors?.deathDate?.type === "required" && <p className='error'>Это поле обязательно</p>}
-    {errors?.deathDate?.type === "validate" && <p className='error'>Дата смерти должна быть больше даты рождения</p>}
-    {/* TODO: check deathDate if it isn't greater then currnt date as birthdaty*/}
+    {...register("deathDate", {valueAsDate: true })} />
 
 
     <label className='form-label'>Раса</label>

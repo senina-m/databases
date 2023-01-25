@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import del from '../../../api/Delete';
 import {ReactSession} from 'react-client-session';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import CriminalContainer from './CriminalContainer';
+import checkAuth from '../../../api/CheckAuth';
 
 const CriminalsInfoPage = () => {
     // const role = ReactSession.get("permission");
@@ -16,6 +17,8 @@ const CriminalsInfoPage = () => {
     const {crime} = state;
 
     const navigate = useNavigate();
+    useEffect( () => {if(checkAuth()) navigate("/forbidden", { replace: true });});
+
     const [deleteStatus, setDeleteStatus] = useState(false);
 
     const deleteCriminal = () =>{

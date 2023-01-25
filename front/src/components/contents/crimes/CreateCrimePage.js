@@ -1,21 +1,24 @@
-import React, {useRef, useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import post from '../../../api/Post';
 import { useForm } from "react-hook-form";
 import { ReactSession } from 'react-client-session';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import get_yyyymmdd from "../../ConvertData"
+import get_yyyymmdd from "../../ConvertData";
+import checkAuth from '../../../api/CheckAuth';
 
 
 const CreateCrimePage = () => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors }
   } = useForm();
 
   const navigate = useNavigate();
+
+  useEffect( () => {if(checkAuth()) navigate("/forbidden", { replace: true });});
+
 
   const [noSuch, setNoSuch] = useState(false);
   const [nothingUpdate, setNothingUpdate] = useState(false);
@@ -23,9 +26,6 @@ const CreateCrimePage = () => {
   const [error, setError] = useState("");
   const [sucsess, setSucsess] = useState(false);
   const [showForm, setShowForm] = useState(true);
-
-  const dateBegin = useRef({});
-  dateBegin.current = watch("dateBegin", "");
 
   const prepareDate = (data)=>{
     return {
@@ -81,21 +81,21 @@ const CreateCrimePage = () => {
 
   const renderForm = ()=>{
     return <form className="form cont form-crime" onSubmit={handleSubmit(sendCrimeData)} >
-    <h1>Редактирование досье</h1>
+    <h1>Создание досье</h1>
     <label className='form-label'>Заголовок</label>
-    <input placeholder='заголовок' className='form-control  crime'
+    <input placeholder='заголовок' className='form-control crime'
     {...register("title", {required: true, pattern: /^[А-Яа-я ]+$/i, })} />
     {errors?.title?.type === "pattern" && ( <p className='error'>Русские буквы</p>)}
     {errors?.title?.type === "required" && <p className='error'>Это поле обязательно</p>}
 
     <label className='form-label'>Описание</label>
-    <textarea type='text' placeholder='описание' className='form-control  crime textarea'
+    <textarea type='text' placeholder='описание' className='form-control crime textarea'
     {...register("description", {required: true, pattern: /^[А-Яа-я 0-9]+$/i, })} />
     {errors?.description?.type === "pattern" && ( <p className='error'>Русские буквы</p>)}
     {errors?.description?.type === "required" && <p className='error'>Это поле обязательно</p>}
 
     <label className='form-label'>Дата Начала (мм/дд/гггг)</label>
-    <input  type="date" placeholder='дата начала' className='form-control  crime'
+    <input  type="date" placeholder='дата начала' className='form-control crime'
     {...register("dateBegin", {required: true, valueAsDate: true,
     validate: date => {
       let bd = Date.parse(date);
@@ -105,15 +105,8 @@ const CreateCrimePage = () => {
     {errors?.dateBegin?.type === "validate" && <p className='error'>Дата должна быть не больше настоящей</p>}
 
     <label className='form-label'>Дата конца(мм/дд/гггг)</label>
-    <input type="date" placeholder='дата конца' className='form-control  crime'
-    {...register("dateEnd", { required: true, valueAsDate: true, 
-    validate: dateEnd => {
-      let death = Date.parse(dateEnd);
-      let birth = Date.parse(dateBegin.current);
-      return death >= birth
-      }})} />
-    {errors?.dateEnd?.type === "required" && <p className='error'>Это поле обязательно</p>}
-    {errors?.dateEnd?.type === "validate" && <p className='error'>Дата начала должна быть больше даты конца</p>}
+    <input type="date" placeholder='дата конца' className='form-control crime'
+    {...register("dateEnd", { valueAsDate: true})} />
 
     <label className='form-label'>Раскрыто ли</label>
     {/* <input type="checkbox"  onChange={this.handleChangeChk} /> */}
@@ -122,9 +115,8 @@ const CreateCrimePage = () => {
 
     <label className='form-label'>Описание урона</label>
     <textarea placeholder='описание урона' className='form-control textarea crime'
-    {...register("damageDescription", {required: true, pattern: /^[А-Яа-я 0-9]+$/i, })} />
+    {...register("damageDescription", {pattern: /^[А-Яа-я 0-9]+$/i, })} />
     {errors?.damageDescription?.type === "pattern" && ( <p className='error'>Русские буквы</p>)}
-    {errors?.damageDescription?.type === "required" && <p className='error'>Это поле обязательно</p>}          
 
     <label className='form-label'>Локация</label>
     <input placeholder='локация' className='form-control  crime'
@@ -150,7 +142,7 @@ const CreateCrimePage = () => {
     <>
       {sucsess && <h2 className='center green'>Досье успешно обновлено!</h2>}
       <br/>
-      {someError && <h2 className='center'>{error}</h2>}
+      {someError && <h2 className='center error'>{error}</h2>}
       {noSuch && <>
                   <h2 className='center'>Досье, которое вы хотели обновиить ещё не существует. Создайте его!</h2>
                   <button className='btn center' onClick={onCreateCrimeClick}>Создать новое досье</button>
