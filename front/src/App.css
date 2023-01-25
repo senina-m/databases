@@ -1,0 +1,256 @@
+.container {
+  max-width: 500px;
+  margin: 30px auto;
+  overflow: auto;
+  min-height: 300px;
+  border: 1px solid steelblue;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.cont {
+  /* min-width: 500px; */
+  width: 90%;
+  margin: 10px;
+  overflow: auto;
+  min-height: 300px;
+  border: 1px solid steelblue;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.box{
+  display: flex;
+  border-radius: 5px;
+  border: 1px solid steelblue;
+  padding: 10px;
+  margin: 10px;
+}
+
+.body{
+  margin: 0; 
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+.form {
+  margin-bottom: 40px;
+}
+  
+.form-control{
+  display: block;
+  width: 90%;
+  height: 40px;
+  margin: 5px;
+  padding: 3px 7px;
+  font-size: 17px;
+  max-width: 500px;
+}
+
+.textarea{
+  min-height: 100px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  /* min-width: 100px; */
+}
+
+.crime{
+  max-width: none;
+}
+
+.form-crime{
+  width: 70%;
+}
+
+.radio{
+  margin-right: 10px;
+}
+
+.btn {
+  display: inline-block;
+  background: #000;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 15px;
+  font-family: inherit;
+}
+
+/* .long{
+  min-width: 100px;
+} */
+
+.footer {
+  margin-top: 30px;
+  text-align: center;
+  min-height:20px;
+}
+
+.header {
+  margin-top: 30px;
+  text-align: center;
+  display: block;
+}
+
+.right{
+  float:right;
+}
+
+.navigation-link {
+  text-align: center;
+  position: absolute; width: 100%;
+}
+
+.back-to-main-link{
+  /* position: absolute; */
+  /* width: 100%; */
+  text-align: right;
+  font-size: 20px;
+  display: block;
+  margin: 30px auto;
+  margin-right:  15px;
+}
+
+.error{
+  color:red;
+}
+
+.green{
+  color:green;
+}
+
+
+.form-label{
+  margin: 5px auto;
+  margin-left: 10px;
+  font-size: 17px;
+  font-weight: bold;
+}
+
+
+.link-container-element{
+  display: block;
+  margin: 7px;
+  padding: 7px 60px;
+  font-size: 25px;
+}
+
+.blocks{
+  width: 33%;
+}
+
+.table {
+  display: block;
+	width: 80%;
+	border: none;
+  margin: 30px auto;
+  margin-bottom: 10px;
+}
+
+.table thead th {
+  font-weight: bold;
+	text-align: left;
+	border: none;
+	padding: 10px 15px;
+	background: #d8d8d8;
+	font-size: 14px;
+	border-left: 1px solid #ddd;
+	border-right: 1px solid #ddd;
+  text-align: center;
+}
+.table tbody td {
+  text-align: left;
+	border-left: 1px solid #ddd;
+	border-right: 1px solid #ddd;
+	padding: 10px 15px;
+	font-size: 14px;
+	vertical-align: top;
+}
+
+.table thead tr th:first-child, .table tbody tr td:first-child {
+	border-left: none;
+}
+.table thead tr th:last-child, .table tbody tr td:last-child {
+  border-right: none;
+}
+.table tbody tr:nth-child(even){
+  background: #f3f3f3;
+}
+
+.table tbody tr:hover {
+  background-color: #EBECCD;
+}
+
+.filer-input {
+  outline: 0;
+  border-width: 0 0 2px;
+  border-color: rgb(40, 40, 48);
+  background-color: #d8d8d8;
+  width: 90%;
+}
+
+.filer-input:focus {
+  border-color: green;
+}
+
+.center{
+  margin: 0 auto;
+  display: block;
+  text-align: center;
+}
+
+.img-relogin{
+  /* height: 300px;
+  width: auto; */
+  max-height: 500px;
+  max-width: 500px;
+  object-fit: cover;
+}
+
+/* make dates be dd/mm/yyyy */
+/* input[type="date"]::-webkit-datetime-edit, input[type="date"]::-webkit-inner-spin-button, input[type="date"]::-webkit-clear-button {
+  color: #fff;
+  position: relative;
+}
+
+input[type="date"]::-webkit-datetime-edit-year-field{
+  position: absolute !important;
+  border-left:1px solid #8c8c8c;
+  padding: 2px;
+  color:#000;
+  left: 56px;
+}
+
+input[type="date"]::-webkit-datetime-edit-month-field{
+  position: absolute !important;
+  border-left:1px solid #8c8c8c;
+  padding: 2px;
+  color:#000;
+  left: 26px;
+}
+
+
+input[type="date"]::-webkit-datetime-edit-day-field{
+  position: absolute !important;
+  color:#000;
+  padding: 2px;
+  left: 4px;
+  
+} */
+
+
+.crime-container{
+  display: flex;
+  max-width: 500px;
+  margin: 30px auto;
+  /* overflow: auto; */
+  min-height: 300px;
+  border: 1px solid steelblue;
+  padding: 20px;
+  border-radius: 5px;
+}
