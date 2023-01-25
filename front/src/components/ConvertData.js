@@ -1,10 +1,11 @@
 
-const get_yyyymmdd = (date) => {
+const get_yyyymmdd = (d) => {
+    console.log("date", d);
 
-    if (date === undefined){
+    if (d === undefined){
         return "null"
     }else{
-        const date = new Date(date);
+        const date = new Date(d);
         
         const yyyy = date.getFullYear();
         const mm = String(date.getMonth() + 1).padStart(2,'0');

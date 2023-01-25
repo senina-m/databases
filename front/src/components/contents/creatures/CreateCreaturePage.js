@@ -86,7 +86,7 @@ const CreateCreaturePage = () => {
 
 
     <label className='form-label'>День смерти (мм/дд/гггг)</label>
-    <input type="date" placeholder='Дата смерти' className='form-control' 
+    <input type="date" placeholder='Дата смерти' className='form-control' defaultValue={"yyyy-MM-dd"}
     {...register("deathDate", {valueAsDate: true })} />
 
 
@@ -129,6 +129,7 @@ const CreateCreaturePage = () => {
                           <button className='btn center' onClick={showFormOnClick}>Внести изменения</button>
                         </>}
       {showForm && form()}
+      <br/>
       <Link  className='center' to="/creatures" >Вернуться к таблице</Link>
     </>
   )

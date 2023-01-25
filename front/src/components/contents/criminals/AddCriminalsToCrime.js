@@ -10,8 +10,8 @@ import checkAuth from '../../../api/CheckAuth';
  
 
 const AddCriminalsToCrime = () => {
-    const navigate = useNavigate();
-    useEffect( () => {if(checkAuth()) navigate("/forbidden", { replace: true });});
+  const navigate = useNavigate();
+  useEffect( () => {if(checkAuth()) navigate("/forbidden", { replace: true });});
 
     // const role = ReactSession.get("permission");
     //todo: uncomment upper code

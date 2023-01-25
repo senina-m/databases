@@ -21,7 +21,6 @@ const RegistrContainer = () => {
     // console.log(Object.hasOwn(state, 'creature'));
     const {id} = state;
 
-
     const {
         register,
         handleSubmit,
@@ -58,7 +57,8 @@ const RegistrContainer = () => {
         }else if (json.status === 403) {
           navigate("/forbidden", { replace: true });
         }else if (json.status === 404) {
-          navigate("/forbidden", { replace: true });
+          setError(json.message);
+          setSomeError(true);
         }else if (json.status === 409) {
           setError(json.message);
           setSomeError(true);
@@ -108,8 +108,7 @@ const RegistrContainer = () => {
             <label className='radio'>Летописец
               <input type="radio" name="Летописец" permission="writer" className='radio' checked={permission === 'writer' ? true : false} onChange={(e) => {setPermission(e.currentTarget.permission)}} />
             </label>
-          </div>
-    
+          </div>   
           <input type="submit" value="Зарегистрироваться" className='btn-block btn' />
         </form>
     );

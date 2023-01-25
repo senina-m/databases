@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { useForm } from "react-hook-form";
-import { useNavigate } from 'react-router-dom';
+import { json, useNavigate } from 'react-router-dom';
 import post from '../../../api/Post';
 import { ReactSession } from 'react-client-session';
 
@@ -14,10 +14,11 @@ const LoginContainer = () => {
   } = useForm();
 
   const navigate = useNavigate();
-  const [incorrectLogin, setIncorrectLogin] = useState(false);
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(false);
 
   let loginAction = (data) => {
-    setIncorrectLogin(false);
+    setError(false);
     post("/auth", {"name": data.login, "password": data.password}, '').then(
     (response) => {
       if(response.status === 200){
@@ -27,7 +28,11 @@ const LoginContainer = () => {
         ReactSession.set("creature_id", response.creatureId);
         navigate('/main', {replace: true});
       }else if(response.status === 400){
-        setIncorrectLogin(true);
+        setError(true);
+        setErrorMessage(json.message);
+      }else if(response.status === 404){
+        setError(true);
+        setErrorMessage(json.message);
       }
     }).catch((response) => {
       console.log("Fail to request token, maybe login or password are incorrect!");
@@ -49,7 +54,9 @@ const LoginContainer = () => {
     {errors?.password?.type === "pattern" && (<p className='error'>Русские буквы и цифры</p>)}
     {errors?.password?.type === "minLength" && <p className='error'>Хотя бы 8 символов</p>}
     {errors?.password?.type === "required" && <p className='error'>Это поле обязательно</p>}
-    {incorrectLogin && <p className='error'>Неправильный логин или пароль</p>}
+    {error && <p className='error'>Неправильный логин или пароль</p>}
+
+    {error && <p className='error'>{errorMessage}</p>}
     
     <input type="submit" value='Вход' className='btn btn-block'/>
   </form>;
