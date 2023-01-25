@@ -3,8 +3,10 @@ import post from '../../../api/Post';
 import { useForm } from "react-hook-form";
 import { ReactSession } from 'react-client-session';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-const CreateCrimeConteiner = () => {
+
+const CreateCrimePage = () => {
   const {
     register,
     handleSubmit,
@@ -157,11 +159,12 @@ const CreateCrimeConteiner = () => {
                   <button className='btn center' onClick={showFormOnClick}>Внести изменения</button>
                 </>}
       {showForm && renderForm()}
+      <Link  className='center' to="/crimes" >Вернуться к таблице</Link>
     </>
   )
 }
 
-export default CreateCrimeConteiner
+export default CreateCrimePage
 
 const get_ddmmyyyy = (str_date) =>{
 

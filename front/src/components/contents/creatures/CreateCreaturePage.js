@@ -3,9 +3,10 @@ import post from '../../../api/Post';
 import { useForm } from "react-hook-form";
 import { ReactSession } from 'react-client-session';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 
-const CreateCreatureContainer = () => {
+const CreateCreaturePage = () => {
   const {
     register,
     handleSubmit,
@@ -21,6 +22,8 @@ const CreateCreatureContainer = () => {
   const [showForm, setShowForm] = useState(true);
   const [someError, setSomeError] = useState(false);
   const [error, setError] = useState("");
+  const [isMale, setIsMale] = useState(true);
+
 
   const birthday = useRef({});
   birthday.current = watch("birthday", "");
@@ -29,8 +32,9 @@ const CreateCreatureContainer = () => {
     return {"name": data.name,
     "birthday": get_ddmmyyyy(data.birthday),
     "race": data.race,
-    "death_date": get_ddmmyyyy(data.death_date),
-    "sex": data.sex}
+    "deathDate": get_ddmmyyyy(data.deathDate),
+    "sex": (isMale ? "Мужчина" : "Женщина")
+  }
   }
 
   const sendCreatureData = (data) => {
@@ -63,7 +67,7 @@ const CreateCreatureContainer = () => {
       });
   }
 
-  const renderForm = ()=>{
+  const form = ()=>{
     return <form className="form container" onSubmit={handleSubmit(sendCreatureData)} >
     <h1>Создание существа</h1>
     <label className='form-label'>Имя</label>
@@ -85,15 +89,15 @@ const CreateCreatureContainer = () => {
 
     <label className='form-label'>День смерти (мм/дд/гггг)</label>
     <input type="date" placeholder='Дата смерти' className='form-control' 
-    {...register("death_date", { required: true, valueAsDate: true, 
-    validate: death_date => {
-      let death = Date.parse(death_date);
+    {...register("deathDate", {valueAsDate: true, 
+    validate: deathDate => {
+      let death = Date.parse(deathDate);
       let birth = Date.parse(birthday.current);
       return death > birth
       }})} />
-    {errors?.death_date?.type === "required" && <p className='error'>Это поле обязательно</p>}
-    {errors?.death_date?.type === "validate" && <p className='error'>Дата смерти должна быть больше даты рождения</p>}
-    {/* TODO: check death_date if it isn't greater then currnt date as birthdaty*/}
+    {errors?.deathDate?.type === "required" && <p className='error'>Это поле обязательно</p>}
+    {errors?.deathDate?.type === "validate" && <p className='error'>Дата смерти должна быть больше даты рождения</p>}
+    {/* TODO: check deathDate if it isn't greater then currnt date as birthdaty*/}
 
 
     <label className='form-label'>Раса</label>
@@ -102,11 +106,15 @@ const CreateCreatureContainer = () => {
     {errors?.race?.type === "pattern" && ( <p className='error'>Русские буквы</p>)}
     {errors?.race?.type === "required" && <p className='error'>Это поле обязательно</p>}
 
-    <label className='form-label'>Пол</label>
-    <input placeholder='Пол' className='form-control'
-    {...register("sex", {required: true, pattern: /^[А-Яа-я ]+$/i, })} />
-    {errors?.sex?.type === "pattern" && ( <p className='error'>Русские буквы</p>)}
-    {errors?.sex?.type === "required" && <p className='error'>Это поле обязательно</p>}          
+    <div className='form-control'>
+      <label className='radio'>Мужчина
+        <input type="radio" name="sex" className='radio' checked={isMale} onChange={() => {setIsMale(!isMale)}} />
+      </label>
+      <label className='radio'>Женщина
+        <input type="radio" name="sex" className='radio' checked={!isMale} onChange={() => {setIsMale(!isMale)}} />
+      </label>
+    </div>
+
     <input type="submit" value='Отправить' className='btn btn-block'/>
   </form>
   }
@@ -130,12 +138,13 @@ const CreateCreatureContainer = () => {
                           <br/>
                           <button className='btn center' onClick={showFormOnClick}>Внести изменения</button>
                         </>}
-      {showForm && renderForm()}
+      {showForm && form()}
+      <Link  className='center' to="/creatures" >Вернуться к таблице</Link>
     </>
   )
 }
 
-export default CreateCreatureContainer
+export default CreateCreaturePage
 
 const get_ddmmyyyy = (str_date) =>{
 

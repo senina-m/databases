@@ -4,7 +4,7 @@ import put from '../../../api/Put';
 import { useForm } from "react-hook-form";
 import { ReactSession } from 'react-client-session';
 import { useNavigate } from 'react-router-dom';
-
+import { Link } from 'react-router-dom';
 
 const CreatureEditForm = () => {
   const {
@@ -22,19 +22,22 @@ const CreatureEditForm = () => {
   const [error, setError] = useState("");
   const [sucsess, setSucsess] = useState(false);
   const [showForm, setShowForm] = useState(true);
-
+  
   const birthday = useRef({});
   birthday.current = watch("birthday", "");
-
+  
   const {state} = useLocation();
   const { creature } = state;
+  // setIsMale();
+  const [isMale, setIsMale] = useState(creature.sex === "Мужчина");
 
   const prepareDate = (data)=>{
     return {"name": data.name,
     "birthday": get_ddmmyyyy(data.birthday),
     "race": data.race,
-    "death_date": get_ddmmyyyy(data.death_date),
-    "sex": data.sex}
+    "deathDate": get_ddmmyyyy(data.deathDate),
+    "sex": (isMale ? "Мужчина" : "Женщина")
+    }
   }
 
   const sendCreatureData = (data) => {
@@ -96,16 +99,16 @@ const CreatureEditForm = () => {
 
 
     <label className='form-label'>День смерти (мм/дд/гггг)</label>
-    <input type="date" placeholder='Дата смерти' className='form-control' defaultValue={creature.death_date}
-    {...register("death_date", { required: true, valueAsDate: true, 
-    validate: death_date => {
-      let death = Date.parse(death_date);
+    <input type="date" placeholder='Дата смерти' className='form-control' defaultValue={creature.deathDate}
+    {...register("deathDate", {valueAsDate: true, 
+    validate: deathDate => {
+      let death = Date.parse(deathDate);
       let birth = Date.parse(birthday.current);
       return death > birth
       }})} />
-    {errors?.death_date?.type === "required" && <p className='error'>Это поле обязательно</p>}
-    {errors?.death_date?.type === "validate" && <p className='error'>Дата смерти должна быть больше даты рождения</p>}
-    {/* TODO: check death_date if it isn't greater then currnt date as birthdaty*/}
+    {errors?.deathDate?.type === "required" && <p className='error'>Это поле обязательно</p>}
+    {errors?.deathDate?.type === "validate" && <p className='error'>Дата смерти должна быть больше даты рождения</p>}
+    {/* TODO: check deathDate if it isn't greater then currnt date as birthdaty*/}
 
 
     <label className='form-label'>Раса</label>
@@ -114,11 +117,15 @@ const CreatureEditForm = () => {
     {errors?.race?.type === "pattern" && ( <p className='error'>Русские буквы</p>)}
     {errors?.race?.type === "required" && <p className='error'>Это поле обязательно</p>}
 
-    <label className='form-label'>Пол</label>
-    <input placeholder='Пол' className='form-control' defaultValue={creature.sex}
-    {...register("sex", {required: true, pattern: /^[А-Яа-я ]+$/i, })} />
-    {errors?.sex?.type === "pattern" && ( <p className='error'>Русские буквы</p>)}
-    {errors?.sex?.type === "required" && <p className='error'>Это поле обязательно</p>}          
+    <div className='form-control'>
+      <label className='radio'>Мужчина
+        <input type="radio" name="sex" className='radio' checked={isMale} onChange={() => {setIsMale(!isMale)}} />
+      </label>
+      <label className='radio'>Женщина
+        <input type="radio" name="sex" className='radio' checked={!isMale} onChange={() => {setIsMale(!isMale)}} />
+      </label>
+    </div>
+
     <input type="submit" value='Отправить' className='btn btn-block'/>
   </form>
   }
@@ -141,6 +148,7 @@ const CreatureEditForm = () => {
                   <button className='btn center' onClick={showFormOnClick}>Внести изменения</button>
                 </>}
       {showForm && renderForm()}
+      <Link  className='center' to="/creatures" >Вернуться к таблице</Link>
     </>
   )
 }

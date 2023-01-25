@@ -89,15 +89,6 @@ const RegistrContainer = () => {
           {errors?.password?.type === "minLength" && <p className='error'>Хотя бы 8 символов</p>}
           {errors?.password?.type === "required" && <p className='error'>Это поле обязательно</p>}
 
-          <div className='form-control'>
-            <label className='radio'>Детектив
-              <input type="radio" name="Детектив" permission="detective" className='radio' checked={permission === 'detective' ? true : false} onChange={(e) => {setPermission(e.currentTarget.permission)}} />
-            </label>
-            <label className='radio'>Летописец
-              <input type="radio" name="Летописец" permission="writer" className='radio' checked={permission === 'writer' ? true : false} onChange={(e) => {setPermission(e.currentTarget.permission)}} />
-            </label>
-          </div>
-
           <input type="password" placeholder='Повторите пароль' className='form-control'
           {...register("repeatePassword", {
                required: true,
@@ -108,6 +99,15 @@ const RegistrContainer = () => {
           {errors?.repeatePassword?.type === "minLength" && <p className='error'> Хотя бы 8 символов</p>}
           {errors?.repeatePassword?.type === "required" && <p className='error'>Это поле обязательно</p>}
           {errors?.repeatePassword?.type === "validate" && <p className='error'>Пароли не совпадают</p>}
+
+          <div className='form-control'>
+            <label className='radio'>Детектив
+              <input type="radio" name="Детектив" permission="detective" className='radio' checked={permission === 'detective' ? true : false} onChange={(e) => {setPermission(e.currentTarget.permission)}} />
+            </label>
+            <label className='radio'>Летописец
+              <input type="radio" name="Летописец" permission="writer" className='radio' checked={permission === 'writer' ? true : false} onChange={(e) => {setPermission(e.currentTarget.permission)}} />
+            </label>
+          </div>
     
           <input type="submit" value="Зарегистрироваться" className='btn-block btn' />
         </form>

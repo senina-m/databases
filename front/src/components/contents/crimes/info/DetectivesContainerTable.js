@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import get from '../../../api/Get'
+import get from '../../../../api/Get'
 import {ReactSession} from 'react-client-session'
 import { useNavigate } from 'react-router-dom';
-import Table from "../table/Table";
+import Table from "../../table/Table";
 
 const DetectivesContainerTable = ({crime}) => {
     const navigate = useNavigate();
@@ -20,8 +20,15 @@ const DetectivesContainerTable = ({crime}) => {
             if (json.status === 200) {
                 delete json.status;
                 let table_data = []
-                json.forEach((item, i) => {
-                    table_data[i] = {"id":item.id, "name": (item.creature).name, "position":item.position};
+                json.forEach((e, i) => {
+                    table_data[i] = {"id":e.id,
+                                    "name": (e.creature).name,
+                                    "position":e.position,
+                                    "birthday": e.creature.birthday,
+                                    "deathDate": e.creature.deathDate,
+                                    "race": e.creature.race,
+                                    "sex": e.creature.sex,
+                                    "creature_id": e.creature.id};
                 });
                 setData(table_data);
                 // console.log(json);
@@ -60,8 +67,12 @@ const DetectivesContainerTable = ({crime}) => {
 
     const onRowClick = (e, row) =>{
           console.log(row.original);
-          navigate("/info/detective", { replace: true, state: {detective: row.original}});
-      }
+          navigate("/info/detective", {state: {detective: row.original}});
+    }
+    
+    const addDetective = () => {
+        navigate("/detectives/add", {state: {crime: crime}});
+    }
 
     return (
         <div className='blocks'> 
@@ -72,6 +83,7 @@ const DetectivesContainerTable = ({crime}) => {
                     {console.log(data)}
                     <Table data={data} columns={columns()} onRowClick={onRowClick}/>
                 </>)}
+            <button className='btn center' onClick={addDetective}>Добавить детектива</button>
         </div>
     );
 }

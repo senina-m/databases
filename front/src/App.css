@@ -21,6 +21,10 @@
 
 .box{
   display: flex;
+  border-radius: 5px;
+  border: 1px solid steelblue;
+  padding: 10px;
+  margin: 10px;
 }
 
 .body{

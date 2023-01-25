@@ -81,29 +81,30 @@ const CreatureInfoPage = () => {
     }
 
     const editCeature = () => {
-        navigate("/edit/creature", { replace: true, state: {creature: creature}});
+        navigate("/edit/creature", {state: {creature: creature}});
     }
     
 
     const createAccount = () => {
-        navigate("/register", { replace: true, state: {id: creature.id}});
+        navigate("/register", {state: {id: creature.id}});
     }
 
 
   return (
     <>
-        {deleteStatus && <h3 className='center'> Существо успешно удалено!" </h3>}
-        {!deleteStatus && deleteError && <h3 className='center'>{deleteErrorMessage}</h3>}
-        <CreatureContainer creature={creature}/>
-        {role === "writer" && (<>
-          <button className='btn center' onClick={editCeature}>Изменить</button>
-          <br/>
-          <button className='btn center' onClick={deleteCreature}>Удалить</button>
-          <br/>
-          {!hasAccount && <button className='btn center' onClick={createAccount}>Создать аккаунт</button>}
-          {/* todo: delete next line */}
-          <button className='btn center' onClick={createAccount}>Создать аккаунт</button>
-        </>)}
+        {deleteStatus ? <h2 className='center green'> Существо успешно удалено!" </h2> :
+          <>
+            {deleteError && <h2 className='center error'>{deleteErrorMessage}</h2>}
+            <CreatureContainer creature={creature}/>
+            {role === "writer" && (<>
+              <button className='btn center' onClick={editCeature}>Изменить</button>
+              <br/>
+              <button className='btn center' onClick={deleteCreature}>Удалить</button>
+              <br/>
+              {!hasAccount && <button className='btn center' onClick={createAccount}>Создать аккаунт</button>}
+            </>)}
+          </>
+        }
         <Link  className='center' to="/creatures" >Вернуться к таблице</Link>
     </>
   )

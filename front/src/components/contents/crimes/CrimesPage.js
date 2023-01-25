@@ -53,8 +53,8 @@ const CrimesPage = () => {
   //   "location": "string"
 
   const formatIsSolved = (cell) => {
-    return cell ? "да" : "нет"
-    ;
+    return cell ? 
+    <p className='green'>да</p> : <p className='error'>нет</p>;
   }
 
   const columns = () => {
@@ -87,7 +87,7 @@ const CrimesPage = () => {
       {
         Header: 'Закрыто ли',
         accessor: 'isSolved',
-        Cell: props => <div> {formatIsSolved(props.value)} </div>
+        Cell: props => formatIsSolved(props.value)
       },
       {
         Header: 'Описание урона',
@@ -108,7 +108,7 @@ const onCreateCrimeClick = () =>{
 const onRowClick = (e, row) =>{
   if(role === "writer"){
     console.log(row.original);
-    navigate("/info/crime", { replace: true, state: {crime: row.original}});
+    navigate("/info/crime", {state: {crime: row.original}});
   }
 }
 

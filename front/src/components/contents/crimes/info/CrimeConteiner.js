@@ -29,7 +29,7 @@ const CrimeConteiner = ({crime}) => {
         {crimeData()}
         <DetectivesContainerTable crime={crime}/>
         <CriminalsContainerTable crime={crime}/>
-        </div>
+    </div>
     )
 }
 

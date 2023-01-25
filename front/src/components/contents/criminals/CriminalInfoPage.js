@@ -1,39 +1,30 @@
 import React, {useState} from 'react';
 import del from '../../../api/Delete';
-import { Link } from 'react-router-dom';
 import {ReactSession} from 'react-client-session';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
-import DetectiveContainer from './DetectiveContainer';
+import CriminalContainer from './CriminalContainer';
 
-
-const DetectiveInfoPage = () => {
+const CriminalsInfoPage = () => {
     // const role = ReactSession.get("permission");
     //todo: uncomment upper code
     const role = "writer";
     // const role = "detective";
 
     const {state} = useLocation();
-    const {detective} = state;
+    const {criminal} = state;
+    const {crime} = state;
 
     const navigate = useNavigate();
     const [deleteStatus, setDeleteStatus] = useState(false);
-    const [deleteError, setDeleteError] = useState(false);
-    const [deleteErrorMessage, setDeleteErrorMessage] = useState("");
 
-    const deleteDetective = () =>{
+    const deleteCriminal = () =>{
         setDeleteStatus(false);
-        setDeleteError(false);
-        setDeleteErrorMessage("");
         let token = ReactSession.get("token");
-        del("/detectives", detective.id , token).then((json) => {
+        del("/crimes/" + crime.id + "/criminals/" + criminal.id, {}, token).then((json) => {
           if (json.status === 200) {
             delete json.status;
             setDeleteStatus(true);
-          }else if (json.status === 400){
-            setDeleteStatus(false);
-            setDeleteError(true);
-            setDeleteErrorMessage(json.message);
           }else if (json.status === 401){
             navigate("/relogin", { replace: true });
           }else if (json.status === 403) {
@@ -43,33 +34,30 @@ const DetectiveInfoPage = () => {
           }
         }).catch((e)=>{
           console.log("ERROR:", e);
-          setDeleteError(true);
           //todo: what to do if we are anable to load data from server?
           //or wrong json came
         });
     }
 
-    const editDetective = () => {
-        navigate("/edit/detective", {state: {detective: detective}});
+    const editCriminal = () => {
+        navigate("/edit/criminal", {state: {criminal: criminal}});
     }
 
   return (
     <>
-        {deleteStatus ? <h2 className='center green'> Детектив успешно удалён!" </h2> :
+        {deleteStatus ? <h2 className='center green'> Преступник успешно удалён!" </h2> :
           <>
-            {deleteError && <h2 className='center error'>{deleteErrorMessage}</h2>}
-            <DetectiveContainer detective={detective}/>
+            <CriminalContainer criminal={criminal}/>
             {role === "writer" && (<>
-              <button className='btn center' onClick={editDetective}>Изменить</button>
+              <button className='btn center' onClick={editCriminal}>Изменить</button>
               <br/>
-              <button className='btn center' onClick={deleteDetective}>Удалить</button>
+              <button className='btn center' onClick={deleteCriminal}>Удалить</button>
             </>)}
           </>
         }
         <br/>
-        <Link  className='center' to="/detectives" >К таблице детективов</Link>
     </>
   )
 }
 
-export default DetectiveInfoPage
+export default CriminalsInfoPage

@@ -5,13 +5,12 @@ import { useNavigate } from 'react-router-dom';
 import Table from "../table/Table";
  
 
-const CreaturesPage = () => {
+const DetectivesPage = () => {
   const navigate = useNavigate();
   // const role = ReactSession.get("permission");
   //todo: uncomment upper code
   const role = "writer";
   // const role = "detective";
-
 
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -23,10 +22,22 @@ const CreaturesPage = () => {
       setIsLoading(true);
       setError(false);
       let token = ReactSession.get("token");
-      get("/creatures", {}, token).then((json) => {
+      get("/detectives", {}, token).then((json) => {
         if (json.status === 200) {
           delete json.status;
-          setData(json);
+          let table_data = [];
+          json.forEach((e, i) => {
+              table_data[i] = {"id" : e.id,
+              "name": e.creature.name,
+              "position": e.position,
+              "birthday": e.creature.birthday,
+              "deathDate": e.creature.deathDate,
+              "race": e.creature.race,
+              "sex": e.creature.sex,
+              "creature_id": e.creature.id}
+            });
+          setData(table_data);
+          console.log(table_data);
         }else if (json.status === 401){
           navigate("/relogin", { replace: true });
         }else if (json.status === 403) {
@@ -46,8 +57,16 @@ const CreaturesPage = () => {
   const columns = () => {
       let columns = [
         {
+            Header: 'Табельный номер',
+            accessor: 'id'
+        },
+        {
           Header: 'Имя',
           accessor: 'name'
+        },
+        {
+            Header: 'Должность',
+            accessor: 'position'
         },
         {
           Header: 'День Рождения',
@@ -70,14 +89,14 @@ const CreaturesPage = () => {
       return columns;
   };
 
-  const onCreateCreatureClick = () =>{
-    navigate("/create/creature", { replace: true});
+  const onCreateDetectiveClick = () =>{
+    navigate("/create/detective", { replace: true});
   }
 
   const onRowClick = (e, row) =>{
     if(role === "writer"){
       console.log(row.original);
-      navigate("/info/creature", {state: {creature: row.original}});
+      navigate("/info/detective", {state: {detective: row.original}});
     }
   }
   
@@ -88,7 +107,7 @@ const CreaturesPage = () => {
         (<>
           <Table columns={columns()} data={data} onRowClick={onRowClick}/> 
           <br/>
-          <button className='btn center' onClick={onCreateCreatureClick}>Создать новое существо</button> 
+          <button className='btn center' onClick={onCreateDetectiveClick}>Добавить нового детектива</button> 
         </>) :
           <Table columns={columns()} data={data} onRowClick={onRowClick}/>
         )
@@ -97,4 +116,4 @@ const CreaturesPage = () => {
   </>);
 }
 
-export default CreaturesPage
+export default DetectivesPage

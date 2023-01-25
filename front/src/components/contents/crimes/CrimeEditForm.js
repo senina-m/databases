@@ -4,6 +4,7 @@ import put from '../../../api/Put';
 import { useForm } from "react-hook-form";
 import { ReactSession } from 'react-client-session';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const CrimeEditForm = () => {
   const {
@@ -162,6 +163,7 @@ const CrimeEditForm = () => {
                   <button className='btn center' onClick={showFormOnClick}>Внести изменения</button>
                 </>}
       {showForm && renderForm()}
+      <Link  className='center' to="/crimes" >Вернуться к таблице</Link>
     </>
   )
 }

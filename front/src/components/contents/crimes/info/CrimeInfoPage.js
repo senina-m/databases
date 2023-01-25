@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import del from '../../../api/Delete';
+import del from '../../../../api/Delete';
 import { Link } from 'react-router-dom';
 import {ReactSession} from 'react-client-session';
 import { useNavigate } from 'react-router-dom';
@@ -49,19 +49,24 @@ const CrimeInfoPage = () => {
 }
 
 const editCrime = () => {
-  navigate("/edit/crime", { replace: true, state: {crime: crime}});
+  navigate("/edit/crime", {state: {crime: crime}});
 }
 
 return (
   <>
-      {deleteStatus && <h3 className='center'> Досье успешно удалено!" </h3>}
-      {!deleteStatus && deleteError && <h3 className='center'>{deleteErrorMessage}</h3>}
-      <CrimeConteiner crime={crime}/>
-      {role === "writer" && (<>
-        <button className='btn long center' onClick={editCrime}>Изменить</button>
-        <br/>
-        <button className='btn long center' onClick={deleteCrime}>Удалить</button>
-      </>)}
+      {deleteStatus ? <h2 className='center green'>Досье успешно удалено!</h2>:
+        <>
+          {deleteError && <h2 className='center error'>{deleteErrorMessage}</h2>}
+          <CrimeConteiner crime={crime}/>
+          <br/>
+          <br/>
+          {role === "writer" && (<>
+            <button className='btn long center' onClick={editCrime}>Изменить</button>
+            <br/>
+            <button className='btn long center' onClick={deleteCrime}>Удалить</button>
+          </>)}
+        </>
+      }
       <br/>
       <Link  className='center' to="/crimes" >Вернуться к таблице</Link>
   </>

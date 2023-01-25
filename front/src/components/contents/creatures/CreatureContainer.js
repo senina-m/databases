@@ -20,7 +20,7 @@ const CreatureContainer = ({creature}) => {
             <tbody>
                 <tr><th><p>Имя</p></th><th><p>{creature.name}</p></th></tr>
                 <tr><th><p>День Рождения</p></th><th><p>{creature.birthday}</p></th></tr>
-                <tr><th><p>День Смерти</p></th><th><p>{creature.death_date}</p></th></tr>
+                <tr><th><p>День Смерти</p></th><th><p>{creature.deathDate}</p></th></tr>
                 <tr><th><p>Раса</p></th><th><p>{creature.race}</p></th></tr>
                 <tr><th><p>Пол</p></th><th><p>{creature.sex}</p></th></tr>
             </tbody>
