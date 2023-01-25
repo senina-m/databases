@@ -16,6 +16,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.servlet.HandlerExceptionResolver
 import ru.sennik.backend.domain.customers.enums.PermissionType
 import ru.sennik.backend.domain.customers.service.CustomerService
@@ -47,9 +48,16 @@ class SecurityConfig(
 
     override fun configure(http: HttpSecurity?) {
         if (http != null) {
+            val corsConfiguration = CorsConfiguration()
+            corsConfiguration.allowedHeaders = listOf("Authorization", "Cache-Control", "Content-Type")
+            //corsConfiguration.allowedOrigins = listOf("*")
+            corsConfiguration.allowedOriginPatterns = listOf("*")
+            corsConfiguration.allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "PUT","OPTIONS","PATCH", "DELETE")
+            corsConfiguration.allowCredentials = true
+            corsConfiguration.exposedHeaders = listOf("Authorization")
             http.httpBasic().disable()
             http.csrf().disable()
-            http.cors()
+            http.cors().configurationSource { corsConfiguration }
             http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
             http
