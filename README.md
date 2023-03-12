@@ -69,9 +69,21 @@ org.openapi.generator, таска openApiValidate.
 он не игнорирует в переданном на запрос dto поля, помеченные как readOnly. Из-за чего на корректный для основного
 сервера запрос он отдавал 418 код ответа и ошибку. Для применения изменений спецификации необходим рестарт.
 
-Запуск мока из windows(на порту 8080):
-
+**Запуск мока из windows(на порту 8080):**
+```
     ../databases/api/src/main/resources> docker run -t -v %cd%\openapi.json:/home/openapi.json -p 8080:8080 realfengjia/fakeit:latest --spec /home/openapi.json
+```
+**Запуск мока на Linux(на порту 8080):**
+
+Запустить fakeit на линуксе в docker не получается, потому что в репозитории на данный момент лежит не собирающийся образ. Единственный вариант -- установка через gem. 
+
+Скачиваем fakeit командой `gem install fakeit`
+
+Запускаем команой: 
+```
+fakeit --spec api/src/main/resources/openapi.json
+```
+
 
 Другие варианты моков сервера можно посмотреть здесь https://openapi.tools/#mock
 
@@ -117,3 +129,38 @@ org.openapi.generator, таска openApiValidate.
     gradlew bootRun
 
 ### frontend
+
+Стек: React
+
+Для запуска отдельно сервера на котором можно тестировать фронтэнд. Нужно установить `npm`, перейти в директорию `/front/`. И там выполнить команду `npm install --legacy-peer-deps`, чтобы npm скачал вам зависимости проекта. И затем `npm start` чтобы запустить npm-server. Удобнее будет вести разработку, если в браузере будет установлен [плагин react-a](https://addons.mozilla.org/en-US/firefox/addon/react-devtools/).
+
+Далее на порте 3000 на localhost вам будет доступен сервер: `http://localhost:3000/`
+
+### Развёртывание БД
+Чтобы развернуть у себя базу данных можно поднять образ в Docker. 
+Скачивайте образ [тут](https://hub.docker.com/_/postgres)
+
+Запускать удобнее всего через docker-compose:
+
+Создаёте файл `docker-compose.yml`:
+```
+version: '3.1'
+services:
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: secret_archive
+      POSTGRES_USER: luukfi_pentz
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "0.0.0.0:5432:5432"
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8088:8080"
+```
+Запускаете командой `docker-compose up`, и у вас готовая база данных на порту 5432!
